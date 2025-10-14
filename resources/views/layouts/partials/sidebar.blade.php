@@ -99,7 +99,7 @@
                         <li><a href="crypto-currencies.html" class="slide-item"> Crypto-currencies</a></li>
                     </ul>
                 </li>
-                <li class="sub-category">
+                {{-- <li class="sub-category">
                     <h3>Charts & Tables</h3>
                 </li>
                 <li class="slide">
@@ -197,7 +197,7 @@
                             </ul>
                         </li>
                     </ul>
-                </li>
+                </li> --}}
 
                 @role('admin')
                 <li class="sub-category">
