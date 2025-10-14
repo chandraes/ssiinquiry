@@ -1,31 +1,29 @@
 <!doctype html>
-<html lang="en" dir="ltr">
-
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
-
         <!-- META DATA -->
         <meta charset="UTF-8">
         <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=0'>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="description" content="Zanex – Bootstrap  Admin & Dashboard Template">
-        <meta name="author" content="Spruko Technologies Private Limited">
-        <meta name="keywords" content="admin, dashboard, dashboard ui, admin dashboard template, admin panel dashboard, admin panel html, admin panel html template, admin panel template, admin ui templates, administrative templates, best admin dashboard, best admin templates, bootstrap 4 admin template, bootstrap admin dashboard, bootstrap admin panel, html css admin templates, html5 admin template, premium bootstrap templates, responsive admin template, template admin bootstrap 4, themeforest html">
+        {{-- <meta name="description" content="Zanex – Bootstrap  Admin & Dashboard Template"> --}}
+        {{-- <meta name="author" content="Spruko Technologies Private Limited"> --}}
+        {{-- <meta name="keywords" content="admin, dashboard, dashboard ui, admin dashboard template, admin panel dashboard, admin panel html, admin panel html template, admin panel template, admin ui templates, administrative templates, best admin dashboard, best admin templates, bootstrap 4 admin template, bootstrap admin dashboard, bootstrap admin panel, html css admin templates, html5 admin template, premium bootstrap templates, responsive admin template, template admin bootstrap 4, themeforest html"> --}}
 
         <!-- FAVICON -->
         <link rel="shortcut icon" type="image/x-icon" href="../assets/images/brand/favicon.ico" />
-
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <!-- TITLE -->
-        <title>Zanex – Bootstrap Admin & Dashboard Template </title>
+         <title>{{ config('app.name', 'Laravel') }}</title>
 
         <!-- BOOTSTRAP CSS -->
-        <link id="style" href="../assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+        <link id="style" href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet" />
 
         <!-- STYLE CSS -->
-        <link href="../assets/css/style.css" rel="stylesheet" />
-        <link href="../assets/css/plugins.css" rel="stylesheet" />
+        <link href="{{asset('assets/css/style.css')}}" rel="stylesheet" />
+        <link href="{{asset('assets/css/plugins.css')}}" rel="stylesheet" />
 
         <!--- FONT-ICONS CSS -->
-        <link href="../assets/css/icons.css" rel="stylesheet" />
+        <link href="{{asset('assets/css/icons.css')}}" rel="stylesheet" />
 
     </head>
 
@@ -33,7 +31,7 @@
 
         <!-- GLOBAL-LOADER -->
         <div id="global-loader">
-            <img src="../assets/images/loader.svg" class="loader-img" alt="Loader">
+            <img src="{{asset('assets/images/loader.svg')}}" class="loader-img" alt="Loader">
         </div>
         <!-- /GLOBAL-LOADER -->
 
@@ -258,272 +256,7 @@
                 <!-- /app-Header -->
 
                 <!--APP-SIDEBAR-->
-                <div class="sticky">
-                    <div class="app-sidebar__overlay" data-bs-toggle="sidebar"></div>
-                    <aside class="app-sidebar">
-                        <div class="side-header">
-                            <a class="header-brand1" href="index.html">
-                                <img src="../assets/images/brand/logo.png" class="header-brand-img desktop-logo" alt="logo">
-                                <img src="../assets/images/brand/logo-1.png" class="header-brand-img toggle-logo" alt="logo">
-                                <img src="../assets/images/brand/logo-2.png" class="header-brand-img light-logo" alt="logo">
-                                <img src="../assets/images/brand/logo-3.png" class="header-brand-img light-logo1" alt="logo">
-                            </a>
-                            <!-- LOGO -->
-                        </div>
-                        <div class="main-sidemenu">
-                            <div class="slide-left disabled" id="slide-left"><svg xmlns="http://www.w3.org/2000/svg"
-                                    fill="#7b8191" width="24" height="24" viewBox="0 0 24 24">
-                                    <path d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z" />
-                                </svg></div>
-                            <ul class="side-menu">
-                                <li class="sub-category">
-                                    <h3>Main</h3>
-                                </li>
-                                <li class="slide">
-                                    <a class="side-menu__item" data-bs-toggle="slide" href="index.html"><i class="side-menu__icon fe fe-home"></i><span class="side-menu__label">Dashboard</span></a>
-                                </li>
-                                <li class="sub-category">
-                                    <h3>Widgets</h3>
-                                </li>
-                                <li>
-                                    <a class="side-menu__item" href="widgets.html"><i class="side-menu__icon fe fe-grid"></i><span class="side-menu__label">Widgets</span></a>
-                                </li>
-                                <li class="sub-category">
-                                    <h3>Elements</h3>
-                                </li>
-                                <li class="slide">
-                                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);"><i class="side-menu__icon fe fe-database"></i><span class="side-menu__label">Components</span><i class="angle fa fa-angle-right"></i></a>
-                                    <ul class="slide-menu">
-                                        <li class="side-menu-label1"><a href="javascript:void(0)">Components</a></li>
-                                        <li><a href="cards.html" class="slide-item"> Cards design</a></li>
-                                        <li><a href="calendar.html" class="slide-item"> Default calendar</a></li>
-                                        <li><a href="calendar2.html" class="slide-item"> Full calendar</a></li>
-                                        <li><a href="chat.html" class="slide-item"> Default Chat</a></li>
-                                        <li><a href="notify.html" class="slide-item"> Notifications</a></li>
-                                        <li><a href="sweetalert.html" class="slide-item"> Sweet alerts</a></li>
-                                        <li><a href="rangeslider.html" class="slide-item"> Range slider</a></li>
-                                        <li><a href="scroll.html" class="slide-item"> Content Scroll bar</a></li>
-                                        <li><a href="loaders.html" class="slide-item"> Loaders</a></li>
-                                        <li><a href="counters.html" class="slide-item"> Counters</a></li>
-                                        <li><a href="rating.html" class="slide-item"> Rating</a></li>
-                                        <li><a href="timeline.html" class="slide-item"> Timeline</a></li>
-                                        <li><a href="treeview.html" class="slide-item"> Treeview</a></li>
-                                    </ul>
-                                </li>
-                                <li class="slide">
-                                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);"><i class="side-menu__icon fe fe-package"></i><span class="side-menu__label">Elements</span><i class="angle fa fa-angle-right"></i></a>
-                                    <ul class="slide-menu">
-                                        <li class="side-menu-label1"><a href="javascript:void(0)">Elements</a></li>
-                                        <li><a href="alerts.html" class="slide-item"> Alerts</a></li>
-                                        <li><a href="buttons.html" class="slide-item"> Buttons</a></li>
-                                        <li><a href="colors.html" class="slide-item"> Colors</a></li>
-                                        <li><a href="avatarsquare.html" class="slide-item"> Avatar-Square</a></li>
-                                        <li><a href="avatar-round.html" class="slide-item"> Avatar-Rounded</a></li>
-                                        <li><a href="avatar-radius.html" class="slide-item"> Avatar-Radius</a></li>
-                                        <li><a href="dropdown.html" class="slide-item"> Drop downs</a></li>
-                                        <li><a href="list.html" class="slide-item"> List</a></li>
-                                        <li><a href="tags.html" class="slide-item"> Tags</a></li>
-                                        <li><a href="pagination.html" class="slide-item"> Pagination</a></li>
-                                        <li><a href="navigation.html" class="slide-item"> Navigation</a></li>
-                                        <li><a href="typography.html" class="slide-item"> Typography</a></li>
-                                        <li><a href="breadcrumbs.html" class="slide-item"> Breadcrumbs</a></li>
-                                        <li><a href="badge.html" class="slide-item"> Badges</a></li>
-                                        <li><a href="panels.html" class="slide-item"> Panels</a></li>
-                                        <li><a href="thumbnails.html" class="slide-item"> Thumbnails</a></li>
-                                    </ul>
-                                </li>
-                                <li class="slide">
-                                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);"><i class="side-menu__icon fe fe-file"></i><span class="side-menu__label">Advanced Elements</span><i class="angle fa fa-angle-right"></i></a>
-                                    <ul class="slide-menu">
-                                        <li class="side-menu-label1"><a href="javascript:void(0)">Advanced Elements</a></li>
-                                        <li><a href="mediaobject.html" class="slide-item"> Media Object</a></li>
-                                        <li><a href="accordion.html" class="slide-item"> Accordions</a></li>
-                                        <li><a href="tabs.html" class="slide-item"> Tabs</a></li>
-                                        <li><a href="chart.html" class="slide-item"> Charts</a></li>
-                                        <li><a href="modal.html" class="slide-item"> Modal</a></li>
-                                        <li><a href="tooltipandpopover.html" class="slide-item"> Tooltip and popover</a></li>
-                                        <li><a href="progress.html" class="slide-item"> Progress</a></li>
-                                        <li><a href="carousel.html" class="slide-item"> Carousels</a></li>
-                                        <li><a href="headers.html" class="slide-item"> Headers</a></li>
-                                        <li><a href="footers.html" class="slide-item"> Footers</a></li>
-                                        <li><a href="users-list.html" class="slide-item"> User List</a></li>
-                                        <li><a href="search.html" class="slide-item">Search</a></li>
-                                        <li><a href="crypto-currencies.html" class="slide-item"> Crypto-currencies</a></li>
-                                    </ul>
-                                </li>
-                                <li class="sub-category">
-                                    <h3>Charts & Tables</h3>
-                                </li>
-                                <li class="slide">
-                                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);"><i class="side-menu__icon fe fe-pie-chart"></i><span class="side-menu__label">Charts</span><i class="angle fa fa-angle-right"></i></a>
-                                    <ul class="slide-menu">
-                                        <li class="side-menu-label1"><a href="javascript:void(0)">Charts</a></li>
-                                        <li><a href="chart-chartist.html" class="slide-item">Chart Js</a></li>
-                                        <li><a href="chart-flot.html" class="slide-item"> Flot Charts</a></li>
-                                        <li><a href="chart-echart.html" class="slide-item"> ECharts</a></li>
-                                        <li><a href="chart-morris.html" class="slide-item"> Morris Charts</a></li>
-                                        <li><a href="chart-nvd3.html" class="slide-item"> Nvd3 Charts</a></li>
-                                        <li><a href="charts.html" class="slide-item"> C3 Bar Charts</a></li>
-                                        <li><a href="chart-line.html" class="slide-item"> C3 Line Charts</a></li>
-                                        <li><a href="chart-donut.html" class="slide-item"> C3 Donut Charts</a></li>
-                                        <li><a href="chart-pie.html" class="slide-item"> C3 Pie charts</a></li>
-                                    </ul>
-                                </li>
-                                <li class="slide">
-                                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);"><i class="side-menu__icon fe fe-clipboard"></i><span class="side-menu__label">Tables</span><span class="badge bg-secondary side-badge">2</span><i class="angle fa fa-angle-right hor-rightangle"></i></a>
-                                    <ul class="slide-menu">
-                                        <li class="side-menu-label1"><a href="javascript:void(0)">Tables</a></li>
-                                        <li><a href="tables.html" class="slide-item">Default table</a></li>
-                                        <li><a href="datatable.html" class="slide-item"> Data Tables</a></li>
-                                    </ul>
-                                </li>
-                                <li class="sub-category">
-                                    <h3>Pages</h3>
-                                </li>
-                                <li class="slide">
-                                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);"><i class="side-menu__icon fe fe-layers"></i><span class="side-menu__label">Pages</span><i class="angle fa fa-angle-right"></i></a>
-                                    <ul class="slide-menu">
-                                        <li class="side-menu-label1"><a href="javascript:void(0)">Pages</a></li>
-                                        <li><a href="profile.html" class="slide-item"> Profile</a></li>
-                                        <li><a href="editprofile.html" class="slide-item"> Edit Profile</a></li>
-                                        <li><a href="email.html" class="slide-item"> Mail-Inbox</a></li>
-                                        <li><a href="emailservices.html" class="slide-item"> Mail-Compose</a></li>
-                                        <li><a href="gallery.html" class="slide-item"> Gallery</a></li>
-                                        <li><a href="about.html" class="slide-item"> About Company</a></li>
-                                        <li><a href="services.html" class="slide-item"> Services</a></li>
-                                        <li><a href="faq.html" class="slide-item"> FAQS</a></li>
-                                        <li><a href="terms.html" class="slide-item"> Terms</a></li>
-                                        <li><a href="invoice.html" class="slide-item"> Invoice</a></li>
-                                        <li><a href="pricing.html" class="slide-item"> Pricing Tables</a></li>
-                                        <li><a href="empty.html" class="slide-item"> Empty Page</a></li>
-                                        <li><a href="construction.html" class="slide-item"> Under Construction</a></li>
-                                    	<li><a href="switcher.html" class="slide-item"> Theme Style</a></li>
-                                        <li class="sub-slide">
-                                            <a class="sub-side-menu__item" data-bs-toggle="sub-slide" href="javascript:void(0);"><span class="sub-side-menu__label">Blog</span><i class="sub-angle fa fa-angle-right"></i></a>
-                                            <ul class="sub-slide-menu">
-                                                <li><a href="blog.html" class="sub-slide-item">Blog</a></li>
-                                                <li><a href="blog-details.html" class="sub-slide-item">Blog Details</a></li>
-                                                <li><a href="blog-post.html" class="sub-slide-item">Blog Post</a></li>
-                                            </ul>
-                                        </li>
-                                        <li class="sub-slide">
-                                            <a class="sub-side-menu__item" data-bs-toggle="sub-slide" href="javascript:void(0);"><span class="sub-side-menu__label">Maps</span><i class="sub-angle fa fa-angle-right"></i></a>
-                                            <ul class="sub-slide-menu">
-                                                <li><a href="maps1.html" class="sub-slide-item">Leaflet Maps</a></li>
-                                                <li><a href="maps2.html" class="sub-slide-item">Mapel Maps</a></li>
-                                                <li><a href="maps.html" class="sub-slide-item">Vector Maps</a></li>
-                                            </ul>
-                                        </li>
-                                        <li class="sub-slide">
-                                            <a class="sub-side-menu__item" data-bs-toggle="sub-slide" href="javascript:void(0);"><span class="sub-side-menu__label">E-Commerce</span><i class="sub-angle fa fa-angle-right"></i></a>
-                                            <ul class="sub-slide-menu">
-                                                <li><a href="shop.html" class="sub-slide-item">Shop</a></li>
-                                                <li><a href="shop-description.html" class="sub-slide-item">Shopping Details</a></li>
-                                                <li><a href="cart.html" class="sub-slide-item">Shopping Cart</a></li>
-                                                <li><a href="wishlist.html" class="sub-slide-item">Wishlist</a></li>
-                                                <li><a href="checkout.html" class="sub-slide-item">Checkout</a></li>
-                                            </ul>
-                                        </li>
-                                        <li class="sub-slide">
-                                            <a class="sub-side-menu__item" data-bs-toggle="sub-slide" href="javascript:void(0);"><span class="sub-side-menu__label">File Manager</span><i class="sub-angle fa fa-angle-right"></i></a>
-                                            <ul class="sub-slide-menu">
-                                                <li><a href="file-manager.html" class="sub-slide-item">File Manager</a></li>
-                                                <li><a href="filemanager-list.html" class="sub-slide-item">File Manager List</a></li>
-                                                <li><a href="filemanager-details.html" class="sub-slide-item">File Details</a></li>
-                                                <li><a href="file-attachments.html" class="sub-slide-item">File Attachments</a></li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="sub-category">
-                                    <h3>Custom & Error Pages</h3>
-                                </li>
-                                <li class="slide">
-                                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);"><i class="side-menu__icon fe fe-settings"></i><span class="side-menu__label">Custom Pages</span><i class="angle fa fa-angle-right"></i></a>
-                                    <ul class="slide-menu">
-                                        <li class="side-menu-label1"><a href="javascript:void(0)">Custom Pages</a></li>
-                                        <li><a href="login.html" class="slide-item"> Login</a></li>
-                                        <li><a href="register.html" class="slide-item"> Register</a></li>
-                                        <li><a href="forgot-password.html" class="slide-item"> Forgot Password</a></li>
-                                        <li><a href="lockscreen.html" class="slide-item"> Lock screen</a></li>
-                                        <li class="sub-slide">
-                                            <a class="sub-side-menu__item" data-bs-toggle="sub-slide" href="javascript:void(0);"><span class="sub-side-menu__label">Error Pages</span><i class="sub-angle fa fa-angle-right"></i></a>
-                                            <ul class="sub-slide-menu">
-                                                <li><a class="sub-slide-item" href="400.html">400</a></li>
-                                                <li><a class="sub-slide-item" href="401.html">401</a></li>
-                                                <li><a class="sub-slide-item" href="403.html">403</a></li>
-                                                <li><a class="sub-slide-item" href="404.html">404</a></li>
-                                                <li><a class="sub-slide-item" href="500.html">500</a></li>
-                                                <li><a class="sub-slide-item" href="503.html">503</a></li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="slide">
-                                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
-                                        <i class="side-menu__icon fe fe-sliders"></i>
-                                        <span class="side-menu__label">Submenus</span><i class="angle fa fa-angle-right"></i></a>
-                                    <ul class="slide-menu">
-                                        <li class="side-menu-label1"><a href="javascript:void(0)">Submenus</a></li>
-                                        <li><a href="javascript:void(0);" class="slide-item">Level-1</a></li>
-                                        <li class="sub-slide">
-                                            <a class="sub-side-menu__item" data-bs-toggle="sub-slide" href="javascript:void(0);"><span class="sub-side-menu__label">Level-2</span><i class="sub-angle fa fa-angle-right"></i></a>
-                                            <ul class="sub-slide-menu">
-                                                <li><a class="sub-slide-item" href="javascript:void(0);">Level-2.1</a></li>
-                                                <li><a class="sub-slide-item" href="javascript:void(0);">Level-2.2</a></li>
-                                                <li class="sub-slide2">
-                                                    <a class="sub-side-menu__item2" href="javascript:void(0);" data-bs-toggle="sub-slide2"><span class="sub-side-menu__label2">Level-2.3</span><i class="sub-angle2 fa fa-angle-right"></i></a>
-                                                    <ul class="sub-slide-menu2">
-                                                        <li><a href="javascript:void(0);" class="sub-slide-item2">Level-2.3.1</a></li>
-                                                        <li><a href="javascript:void(0);" class="sub-slide-item2">Level-2.3.2</a></li>
-                                                        <li><a href="javascript:void(0);" class="sub-slide-item2">Level-2.3.3</a></li>
-                                                    </ul>
-                                                </li>
-                                                <li><a class="sub-slide-item" href="javascript:void(0);">Level-2.4</a></li>
-                                                <li><a class="sub-slide-item" href="javascript:void(0);">Level-2.5</a></li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="sub-category">
-                                    <h3>Forms & Icons</h3>
-                                </li>
-                                <li class="slide">
-                                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);"><i class="side-menu__icon fe fe-file-text"></i><span class="side-menu__label">Forms</span><span class="badge bg-success side-badge">5</span><i class="angle fa fa-angle-right hor-rightangle"></i></a>
-                                    <ul class="slide-menu">
-                                        <li class="side-menu-label1"><a href="javascript:void(0)">Forms</a></li>
-                                        <li><a href="form-elements.html" class="slide-item"> Form Elements</a></li>
-                                        <li><a href="form-advanced.html" class="slide-item"> Form Advanced</a></li>
-                                        <li><a href="wysiwyag.html" class="slide-item"> Form Editor</a></li>
-                                        <li><a href="form-wizard.html" class="slide-item"> Form Wizard</a></li>
-                                        <li><a href="form-validation.html" class="slide-item"> Form Validation</a></li>
-                                    </ul>
-                                </li>
-                                <li class="slide">
-                                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);"><i class="side-menu__icon fe fe-command"></i><span class="side-menu__label">Icons</span><i class="angle fa fa-angle-right"></i></a>
-                                    <ul class="slide-menu">
-                                        <li class="side-menu-label1"><a href="javascript:void(0)">Icons</a></li>
-                                        <li><a href="icons.html" class="slide-item"> Font Awesome</a></li>
-                                        <li><a href="icons2.html" class="slide-item"> Material Design Icons</a></li>
-                                        <li><a href="icons3.html" class="slide-item"> Simple Line Icons</a></li>
-                                        <li><a href="icons4.html" class="slide-item"> Feather Icons</a></li>
-                                        <li><a href="icons5.html" class="slide-item"> Ionic Icons</a></li>
-                                        <li><a href="icons6.html" class="slide-item"> Flag Icons</a></li>
-                                        <li><a href="icons7.html" class="slide-item"> pe7 Icons</a></li>
-                                        <li><a href="icons8.html" class="slide-item"> Themify Icons</a></li>
-                                        <li><a href="icons9.html" class="slide-item">Typicons Icons</a></li>
-                                        <li><a href="icons10.html" class="slide-item">Weather Icons</a></li>
-                                        <li><a href="icons11.html" class="slide-item">Bootstrap Icons</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                            <div class="slide-right" id="slide-right"><svg xmlns="http://www.w3.org/2000/svg" fill="#7b8191"
-                                    width="24" height="24" viewBox="0 0 24 24">
-                                    <path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z" />
-                                </svg></div>
-                        </div>
-                    </aside>
-                </div>
+                @include('layouts.partials.sidebar')
                 <!--/APP-SIDEBAR-->
 
                 <!--app-content open-->
@@ -556,9 +289,9 @@
                                 </div>
                             </div>
                             <!-- PAGE-HEADER END -->
-
+                            @yield('content')
                             <!-- ROW-1 -->
-                            <div class="row">
+                            {{-- <div class="row">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xl-12">
                                     <div class="row">
                                         <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
@@ -851,12 +584,12 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             <!-- COL END -->
                             <!-- ROW-3 END -->
 
                             <!-- ROW-5 -->
-                            <div class="row">
+                            {{-- <div class="row">
                                 <div class="col-12 col-sm-12">
                                     <div class="card ">
                                         <div class="card-header">
@@ -1035,7 +768,7 @@
                                     </div>
                                 </div>
                                 <!-- COL END -->
-                            </div>
+                            </div> --}}
                             <!-- ROW-5 END -->
                         </div>
                         <!-- CONTAINER END -->
@@ -1358,65 +1091,65 @@
         <a href="#top" id="back-to-top"><i class="fa fa-angle-up"></i></a>
 
         <!-- JQUERY JS -->
-        <script src="../assets/js/jquery.min.js"></script>
+        <script src="{{asset('assets/js/jquery.min.js')}}"></script>
 
         <!-- BOOTSTRAP JS -->
-        <script src="../assets/plugins/bootstrap/js/popper.min.js"></script>
-        <script src="../assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+        <script src="{{asset('assets/plugins/bootstrap/js/popper.min.js')}}"></script>
+        <script src="{{asset('assets/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
 
         <!-- SPARKLINE JS-->
-        <script src="../assets/js/jquery.sparkline.min.js"></script>
+        <script src="{{asset('assets/js/jquery.sparkline.min.js')}}"></script>
 
         <!-- CHART-CIRCLE JS-->
-        <script src="../assets/js/circle-progress.min.js"></script>
+        <script src="{{asset("assets/js/circle-progress.min.js")}}"></script>
 
         <!-- CHARTJS CHART JS-->
-        <script src="../assets/plugins/chart/Chart.bundle.js"></script>
-        <script src="../assets/plugins/chart/utils.js"></script>
+        <script src="{{asset('assets/plugins/chart/Chart.bundle.js')}}"></script>
+        <script src="{{asset("assets/plugins/chart/utils.js")}}"></script>
 
         <!-- PIETY CHART JS-->
-        <script src="../assets/plugins/peitychart/jquery.peity.min.js"></script>
-        <script src="../assets/plugins/peitychart/peitychart.init.js"></script>
+        <script src="{{asset("assets/plugins/peitychart/jquery.peity.min.js")}}"></script>
+        <script src="{{asset("assets/plugins/peitychart/peitychart.init.js")}}"></script>
 
         <!-- INTERNAL SELECT2 JS -->
-        <script src="../assets/plugins/select2/select2.full.min.js"></script>
+        <script src="{{asset('assets/plugins/select2/select2.full.min.js')}}"></script>
 
         <!-- INTERNAL Data tables js-->
-        <script src="../assets/plugins/datatable/js/jquery.dataTables.min.js"></script>
-        <script src="../assets/plugins/datatable/js/dataTables.bootstrap5.js"></script>
-        <script src="../assets/plugins/datatable/dataTables.responsive.min.js"></script>
+        <script src="{{asset("assets/plugins/datatable/js/jquery.dataTables.min.js")}}"></script>
+        <script src="{{asset("assets/plugins/datatable/js/dataTables.bootstrap5.js")}}"></script>
+        <script src="{{asset("assets/plugins/datatable/dataTables.responsive.min.js")}}"></script>
 
         <!-- ECHART JS-->
-        <script src="../assets/plugins/echarts/echarts.js"></script>
+        <script src="{{asset('assets/plugins/echarts/echarts.js')}}"></script>
 
         <!-- SIDE-MENU JS-->
-        <script src="../assets/plugins/sidemenu/sidemenu.js"></script>
+        <script src="{{asset('assets/plugins/sidemenu/sidemenu.js')}}"></script>
 
         <!-- Sticky js -->
-        <script src="../assets/js/sticky.js"></script>
+        <script src="{{asset('assets/js/sticky.js')}}"></script>
 
         <!-- SIDEBAR JS -->
-        <script src="../assets/plugins/sidebar/sidebar.js"></script>
+        <script src="{{asset('assets/plugins/sidebar/sidebar.js')}}"></script>
 
         <!-- Perfect SCROLLBAR JS-->
-        <script src="../assets/plugins/p-scroll/perfect-scrollbar.js"></script>
-        <script src="../assets/plugins/p-scroll/pscroll.js"></script>
-        <script src="../assets/plugins/p-scroll/pscroll-1.js"></script>
+        <script src="{{asset('assets/plugins/p-scroll/perfect-scrollbar.js')}}"></script>
+        <script src="{{asset('assets/plugins/p-scroll/pscroll.js')}}"></script>
+        <script src="{{asset('assets/plugins/p-scroll/pscroll-1.js')}}"></script>
 
         <!-- APEXCHART JS -->
-        <script src="../assets/js/apexcharts.js"></script>
+        <script src="{{asset('assets/js/apexcharts.js')}}"></script>
 
         <!-- INDEX JS -->
-        <script src="../assets/js/index1.js"></script>
+        <script src="{{asset('assets/js/index1.js')}}"></script>
 
         <!-- Color Theme js -->
-        <script src="../assets/js/themeColors.js"></script>
+        <script src="{{asset('assets/js/themeColors.js')}}"></script>
 
         <!-- swither styles js -->
-        <script src="../assets/js/swither-styles.js"></script>
+        <script src="{{asset('assets/js/swither-styles.js')}}"></script>
 
         <!-- CUSTOM JS -->
-        <script src="../assets/js/custom.js"></script>
+        <script src="{{asset('assets/js/custom.js')}}"></script>
 
     </body>
 
