@@ -56,8 +56,8 @@
                             @endphp
                             <div class="responsive-logo">
                                 <a href="index.html" class="header-logo">
-                                    <img src="{{ $logoUrl }}" class="mobile-logo logo-1" alt="logo">
-                                    <img src="{{ $logoUrl }}" class="mobile-logo dark-logo-1" alt="logo">
+                                    <img src="{{ $logoUrl }}" class="mobile-logo logo-1" alt="logo" height="50px">
+                                    <img src="{{ $logoUrl }}" class="mobile-logo dark-logo-1" alt="logo" height="50px">
                                 </a>
                             </div>
                             <!-- sidebar-toggle-->
