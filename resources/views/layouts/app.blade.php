@@ -240,11 +240,11 @@
                                                     </a>
                                                 </div>
                                             </div>
-                                            <div class="dropdown d-md-flex header-settings">
+                                            {{-- <div class="dropdown d-md-flex header-settings">
                                                 <a href="javascript:void(0);" class="nav-link icon " data-bs-toggle="sidebar-right" data-target=".sidebar-right">
                                                     <i class="fe fe-menu"></i>
                                                 </a>
-                                            </div>
+                                            </div> --}}
                                             <!-- SIDE-MENU -->
                                         </div>
                                     </div>
