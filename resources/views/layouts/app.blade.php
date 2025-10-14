@@ -8,12 +8,18 @@
         {{-- <meta name="description" content="Zanex – Bootstrap  Admin & Dashboard Template"> --}}
         {{-- <meta name="author" content="Spruko Technologies Private Limited"> --}}
         {{-- <meta name="keywords" content="admin, dashboard, dashboard ui, admin dashboard template, admin panel dashboard, admin panel html, admin panel html template, admin panel template, admin ui templates, administrative templates, best admin dashboard, best admin templates, bootstrap 4 admin template, bootstrap admin dashboard, bootstrap admin panel, html css admin templates, html5 admin template, premium bootstrap templates, responsive admin template, template admin bootstrap 4, themeforest html"> --}}
-
+        @vite(['resources/sass/app.scss'])
         <!-- FAVICON -->
-        <link rel="shortcut icon" type="image/x-icon" href="../assets/images/brand/favicon.ico" />
+        @php
+            $faviconPath = get_setting('app_favicon');
+            $faviconUrl = $faviconPath ? asset('storage/' . $faviconPath) : asset('favicon.ico');
+        @endphp
+
+        <link rel="shortcut icon" type="image/x-icon" href="{{ $faviconUrl }}" />
+
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <!-- TITLE -->
-        <title>@yield('title', config('app.name', 'Laravel'))</title>
+        <title>@yield('title', get_setting('app_name', config('app.name')))</title>
 
         <!-- BOOTSTRAP CSS -->
         <link id="style" href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet" />
@@ -21,14 +27,14 @@
         <!-- STYLE CSS -->
         <link href="{{asset('assets/css/style.css')}}" rel="stylesheet" />
         <link href="{{asset('assets/css/plugins.css')}}" rel="stylesheet" />
-
+        <script src="{{asset('assets/js/sweetalert.js')}}"></script>
         <!--- FONT-ICONS CSS -->
         <link href="{{asset('assets/css/icons.css')}}" rel="stylesheet" />
-
+        @stack('css')
     </head>
 
     <body class="app sidebar-mini ltr light-mode">
-
+        @include('swal')
         <!-- GLOBAL-LOADER -->
         <div id="global-loader">
             <img src="{{asset('assets/images/loader.svg')}}" class="loader-img" alt="Loader">
@@ -44,16 +50,20 @@
                     <div class="container-fluid main-container">
                         <div class="d-flex align-items-center">
                             <a aria-label="Hide Sidebar" class="app-sidebar__toggle" data-bs-toggle="sidebar" href="javascript:void(0);"></a>
+                            @php
+                                $logoPath = get_setting('app_logo');
+                                $logoUrl = $logoPath ? asset('storage/' . $logoPath) : asset('assets/images/brand/logo.png');
+                            @endphp
                             <div class="responsive-logo">
                                 <a href="index.html" class="header-logo">
-                                    <img src="../assets/images/brand/logo-3.png" class="mobile-logo logo-1" alt="logo">
-                                    <img src="../assets/images/brand/logo.png" class="mobile-logo dark-logo-1" alt="logo">
+                                    <img src="{{ $logoUrl }}" class="mobile-logo logo-1" alt="logo">
+                                    <img src="{{ $logoUrl }}" class="mobile-logo dark-logo-1" alt="logo">
                                 </a>
                             </div>
                             <!-- sidebar-toggle-->
                             <a class="logo-horizontal " href="index.html">
-                                <img src="../assets/images/brand/logo.png" class="header-brand-img desktop-logo" alt="logo">
-                                <img src="../assets/images/brand/logo-3.png" class="header-brand-img light-logo1"
+                                <img src="{{ $logoUrl }}" class="header-brand-img desktop-logo" alt="logo">
+                                <img src="{{ $logoUrl }}" class="header-brand-img light-logo1"
                                     alt="logo">
                             </a>
                             <!-- LOGO -->
@@ -174,7 +184,7 @@
         <script src="{{asset('assets/js/apexcharts.js')}}"></script>
 
         <!-- INDEX JS -->
-        {{-- <script src="{{asset('assets/js/index1.js')}}"></script> --}}
+        <script src="{{asset('assets/js/index1.js')}}"></script>
 
         <!-- Color Theme js -->
         <script src="{{asset('assets/js/themeColors.js')}}"></script>
@@ -184,7 +194,7 @@
 
         <!-- CUSTOM JS -->
         <script src="{{asset('assets/js/custom.js')}}"></script>
-
+        @stack('js')
     </body>
 
 </html>
