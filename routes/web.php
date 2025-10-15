@@ -30,6 +30,17 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:admin']], func
         Route::delete('/delete/{user}', [App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('admin.user.delete');
     });
 
+    Route::prefix('profil')->group(function () {
+        Route::get('/', [App\Http\Controllers\Admin\ProfileUserController::class, 'index'])->name('admin.profile.index');
+        Route::get('/ubah', [App\Http\Controllers\Admin\ProfileUserController::class, 'edit'])->name('admin.profile.edit');
+        Route::put('/update', [App\Http\Controllers\Admin\ProfileUserController::class, 'update'])->name('admin.profile.update');
+        Route::get('/delete-foto', [App\Http\Controllers\Admin\ProfileUserController::class, 'delete_foto'])->name('admin.profile.delete-foto');
+
+        // Route::post('/store', [App\Http\Controllers\Admin\UserController::class, 'store'])->name('admin.user.store');
+        // Route::post('/upload', [App\Http\Controllers\Admin\UserController::class, 'upload'])->name('admin.user.upload');
+        // Route::delete('/delete/{user}', [App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('admin.user.delete');
+    });
+
     Route::get('/settings', [SettingController::class, 'index'])->name('admin.settings.index');
     Route::put('/settings', [SettingController::class, 'update'])->name('admin.settings.update');
 });
