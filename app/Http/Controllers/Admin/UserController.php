@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
+use App\Models\Role;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Models\RoleUser;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -15,31 +19,14 @@ class UserController extends Controller
      */
     public function show()
     {
-        $data = User::orderBy('id', 'desc')->get();
-        return view('admin.users.index', compact('data'));
+        $data = User::with('roles')->get();
+        $roles = Role::all();
+
+        // dd($data);
+        return view('admin.users.index', compact('data', 'roles'));
     }
+
     
-    /**
-     * Show the form for creating the resource.
-     */
-    public function create(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'username' => 'required|string|max:255|unique:users',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
-
-        User::create([
-            'name' => $request->name,
-            'username' => $request->username,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-        ]);
-
-        return view('admin.users.create');
-    }
 
     /**
      * Store the newly created resource in storage.
@@ -51,6 +38,7 @@ class UserController extends Controller
             'username' => 'required|string|max:255',
             'email' => 'required|string|email|max:255',
             'password' => 'required|string|min:8|confirmed',
+            'role_id' => 'required|exists:roles,id',
         ]);
 
         try {
@@ -65,21 +53,23 @@ class UserController extends Controller
             }
 
             // Simpan user baru
-            User::create([
-                'name' => $request->name,
+            $user = User::create([
+                'name' => strtoupper($request->name), // ubah ke huruf besar
                 'username' => $request->username,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
             ]);
 
+            // Simpan ke tabel role_user
+            $user->roles()->attach($request->role_id);
+
             return redirect()->back()->with('success', 'Data user berhasil disimpan.');
         } catch (\Exception $e) {
-            // Log error agar bisa dilacak oleh developer
-            Log::error('Gagal menyimpan user: '.$e->getMessage());
-
+            Log::error('Gagal menyimpan user: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data.')->withInput();
         }
     }
+
 
     /**
      * Show the form for editing the resource.
@@ -92,62 +82,34 @@ class UserController extends Controller
     /**
      * Update the resource in storage.
      */
-    public function update(Request $request, User $user)
-{
-    // 1. Validasi dengan Rule::unique untuk mengabaikan user saat ini
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'username' => [
-            'required',
-            'string',
-            'max:255',
-            // PENTING: Mengecualikan ID user yang sedang diupdate
-            // Rule::unique('users', 'username')->ignore($user->id),
-        ],
-        'email' => [
-            'required',
-            'string',
-            'email',
-            'max:255',
-            // PENTING: Mengecualikan ID user yang sedang diupdate
-            // Rule::unique('users', 'email')->ignore($user->id),
-        ],
-        // Password bersifat opsional/nullable
-        'password' => 'nullable|string|min:8|confirmed',
-    ]);
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'username' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255',
+            'role_id' => 'required|exists:roles,id',
+        ]);
 
-    // dd($request->all(), $user->id);
+        try {
+            $user = User::findOrFail($id);
 
-    try {
-        // 2. Data yang akan diperbarui (tanpa field 'posisi')
-        $updateData = [
-            'name' => $request->name,
-            'username' => $request->username,
-            'email' => $request->email,
-        ];
+            $user->update([
+                'name' => strtoupper($request->name), // ubah ke huruf besar
+                'username' => $request->username,
+                'email' => $request->email,
+            ]);
 
-        // 3. Cek jika password diisi, maka hash dan update
-        if (!empty($request->password)) {
-            $updateData['password'] = Hash::make($request->password);
+            // Update relasi role, gunakan sync agar role lama tergantikan
+            $user->roles()->sync([$request->role_id]);
+
+            return redirect()->back()->with('success', 'Data user berhasil diperbarui.');
+        } catch (\Exception $e) {
+            Log::error('Gagal memperbarui user: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat memperbarui data.')->withInput();
         }
-
-        // dd($updateData);
-
-        // 4. Lakukan pembaruan data
-        $user->update($updateData);
-
-        // dd($user);
-        // 5. Redirect Response
-        // Ganti 'nama.route.kembali' dengan nama route list pengguna Anda, misalnya 'admin.user.index'
-        return redirect()->route('admin.user.update')->with('success', 'Data pengguna ' . $user->name . ' berhasil diperbarui.');
-
-    } catch (\Exception $e) {
-        // Log error untuk debugging internal
-        Log::error('Gagal memperbarui user (ID: '.$user->id.'): '.$e->getMessage());
-
-        return redirect()->back()->with('error', 'Terjadi kesalahan saat memperbarui data. Cek log.');
     }
-}
+
 
     /**
      * Remove the resource from storage.

@@ -18,17 +18,15 @@
                             <input name="name" id="name" required class="form-control">
                             </input>
                         </div>
-                        {{-- <div class="col-md-12 mb-3">
-                            <label for="role" class="form-label">Jenis Pengguna</label>
-                            <select name="role" id="role" required class="form-select">
-                                <option value="" selected disabled>-- Pilih Status --</option>
-                                <option value="0">Diajukan</option>
-                                <option value="2">Disetujui Prodi</option>
-                                <option value="3">Disetujui Fakultas</option>
-                                <option value="4">Disetujui BAK</option>
-                                <option value="5">Ditolak</option>
+                        <div class="col-md-12 mb-3">
+                        <label for="role_id" class="form-label">Role</label>
+                            <select name="role_id" id="role_id" class="form-select" required>
+                                <option value="">-- Pilih Role --</option>
+                                @foreach($roles as $role)
+                                    <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                @endforeach
                             </select>
-                        </div> --}}
+                        </div>
                         <div class="col-md-12 mb-3">
                             <label for="username" class="form-label">Nama Pengguna</label>
                             <input type="text" name="username" id="username" required class="form-control">
