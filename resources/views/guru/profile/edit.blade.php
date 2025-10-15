@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.guru')
 
 @section('title')
 Edit Profile
@@ -15,7 +15,7 @@ Edit Profile
                     <div class="card-title">Edit Profil</div>
                 </div>
 
-                <form action="{{ route('admin.profile.update') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('guru.profile.update') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
@@ -40,7 +40,7 @@ Edit Profile
                                     <a href="javascript:void(0);" 
                                         class="btn btn-danger btn-lg mt-1 mb-1" 
                                         id="hapusFotoBtn" 
-                                        data-url="{{ route('admin.profile.delete-foto') }}">
+                                        data-url="{{ route('guru.profile.delete-foto') }}">
                                         <i class="fe fe-camera-off me-1 float-start"></i>Hapus Foto
                                     </a>
                                 @endif

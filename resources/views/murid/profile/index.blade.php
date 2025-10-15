@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.murid')
 @section('title')
 Profile
 @endsection
@@ -27,11 +27,9 @@ Profile
                                 <div class="user-wrap">
                                     <h3>{{ $user->name ?? 'Guest' }}</h3>
                                     <h5 class="text-muted mb-3">{{ $user->roles->first()->name ?? 'Tanpa Role' }}</h5>
-                                    {{-- <a href="javascript:void(0);" class="btn btn-primary mt-1 mb-1"><i class="fa fa-rss"></i> Follow</a>
-                                    <a href="emailservices.html" class="btn btn-secondary mt-1 mb-1"><i class="fa fa-envelope"></i> E-mail</a> --}}
                                 </div>
                                 <div class="text-xl-left mt-4 mt-xl-0">
-                                    <a href="{{route('admin.profile.edit')}}" class="btn btn-lg btn-primary mb-1">Edit Profile</a>
+                                    <a href="{{route('murid.profile.edit')}}" class="btn btn-lg btn-primary mb-1">Edit Profile</a>
                                 </div>
                             </div>
                         </div>
@@ -69,11 +67,11 @@ Profile
                                             </tr>
                                             <tr>
                                                 <td><strong>Asal Sekolah </strong></td>
-                                                <td>: {{$user->profile->asal_sekolah}}</td>
+                                                <td>: {{$user->profile->asal_sekolah ?? '-'}}</td>
                                             </tr>
                                             <tr>
                                                 <td><strong>No. HP </strong></td>
-                                                <td>: {{$user->profile->nomor_hp}}</td>
+                                                <td>: {{$user->profile->nomor_hp ?? '-'}}</td>
                                             </tr>
                                             <tr>
                                                 <td><strong>Email </strong></td>
@@ -104,25 +102,6 @@ Profile
         $('#data').DataTable();
     });
 
-    function editButton(data, id) {
-        const form = document.getElementById('editForm');
-        form.action = '/admin/pengguna/ubah/' + id;
-
-        document.getElementById('edit_name').value = data.name ?? '';
-        document.getElementById('edit_password').value = '';
-        document.getElementById('edit_password_confirmation').value = '';
-
-        // isi role
-        const select = document.getElementById('edit_role');
-        if (data.roles && data.roles.length > 0) {
-            select.value = data.roles[0].id; // ambil role pertama
-        } else {
-            select.value = '';
-        }
-    }
-
-
-
     // Hapus data
     function deleteRuang(id) {
         Swal.fire({
@@ -141,14 +120,5 @@ Profile
         })
     }
 
-    // Hapus data (Langsung submit tanpa konfirmasi)
-    // function deleteRuang(id) {
-    //     const form = document.getElementById('delete-form-' + id);
-    //     if (form) {
-    //         form.submit(); // Langsung memicu aksi DELETE
-    //     } else {
-    //         console.error('Form penghapusan tidak ditemukan untuk ID:', id);
-    //     }
-    // }
 </script>
 @endpush

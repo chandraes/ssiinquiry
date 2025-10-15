@@ -68,14 +68,14 @@
                             </a>
                             <!-- LOGO -->
 
-                            @include('admin.partials.sidebar-right')
+                            @include('guru.partials.sidebar-right')
                         </div>
                     </div>
                 </div>
                 <!-- /app-Header -->
 
                 <!--APP-SIDEBAR-->
-                @include('admin.partials.sidebar')
+                @include('guru.partials.sidebar')
                 <!--/APP-SIDEBAR-->
 
                 <!--app-content open-->
@@ -86,7 +86,7 @@
                         <div class="main-container container-fluid">
 
                             <!-- PAGE-HEADER -->
-                            @include('admin.partials.header-content')
+                            @include('guru.partials.header-content')
                             <!-- PAGE-HEADER END -->
                             @yield('content')
 
@@ -103,7 +103,8 @@
                 <div class="container">
                     <div class="row align-items-center flex-row-reverse">
                         <div class="col-md-12 col-sm-12 text-center">
-                            Copyright © <span id="year"></span> <a href="javascript:void(0);">Zanex</a>. Designed with <span class="fa fa-heart text-danger"></span> by <a href="javascript:void(0);"> Spruko </a> All rights reserved
+                            Copyright © <span id="year"></span> <a href="javascript:void(0);">
+                                {{-- </a>. Designed with <span class="fa fa-heart text-danger"></span> by <a href="javascript:void(0);"> Spruko </a> All rights reserved --}}
                         </div>
                     </div>
                 </div>
