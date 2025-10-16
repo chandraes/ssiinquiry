@@ -70,7 +70,10 @@
                         <span>
                             <div class="position-relative">
                                 {{-- @if($user->profile && $user->profile->foto) --}}
-                                    <img src="{{ asset('storage/' . $user->profile->foto) }}" class="avatar  profile-user brround cover-image" alt="Foto Profil">
+                                @php
+                                    $path = auth()->user()->profile?->foto ? 'storage/'.auth()->user()->profile?->foto : 'assets/images/users/8.jpg';
+                                @endphp
+                                    <img src="{{ asset($path) }}" class="avatar  profile-user brround cover-image" alt="Foto Profil">
                                 {{-- @else
                                     <img src="{{ asset('assets/images/users/default.png') }}" class="rounded-circle avatar-lg" alt="Default Foto">
                                 @endif --}}

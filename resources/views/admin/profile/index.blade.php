@@ -69,11 +69,11 @@ Profile
                                             </tr>
                                             <tr>
                                                 <td><strong>Asal Sekolah </strong></td>
-                                                <td>: {{$user->profile->asal_sekolah}}</td>
+                                                <td>: {{$user->profile?->asal_sekolah}}</td>
                                             </tr>
                                             <tr>
                                                 <td><strong>No. HP </strong></td>
-                                                <td>: {{$user->profile->nomor_hp}}</td>
+                                                <td>: {{$user->profile?->nomor_hp}}</td>
                                             </tr>
                                             <tr>
                                                 <td><strong>Email </strong></td>
