@@ -10,6 +10,10 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])
     ->withoutMiddleware(['auth'])
     ->name('home');
 
+Route::get('/home-2', [App\Http\Controllers\HomeController::class, 'sample'])
+    ->withoutMiddleware(['auth'])
+    ->name('sample.home');
+
 Route::get('/register', [App\Http\Controllers\HomeController::class, 'index'])
     ->withoutMiddleware(['auth'])
     ->name('register');
