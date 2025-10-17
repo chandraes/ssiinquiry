@@ -20,12 +20,12 @@
                     <h3>Main</h3>
                 </li>
                 <li class="slide">
-                    <a class="side-menu__item" data-bs-toggle="slide" href="{{route('home')}}"><i
+                    <a class="side-menu__item {{request()->routeIs('home') ? 'active' : ''}}" data-bs-toggle="slide" href="{{route('home')}}"><i
                             class="side-menu__icon fe fe-home"></i><span class="side-menu__label">Dashboard</span></a>
                 </li>
                 @role(['admin','guru'])
                 <li class="slide">
-                    <a class="side-menu__item" data-bs-toggle="slide" href="{{route('user')}}"><i
+                    <a class="side-menu__item {{request()->routeIs('user') ? 'active' : ''}}" data-bs-toggle="slide" href="{{route('user')}}"><i
                             class="side-menu__icon fe fe-user"></i><span class="side-menu__label">User</span></a>
                 </li>
                 @endrole
@@ -210,7 +210,7 @@
                     <h3>Pengaturan</h3>
                 </li>
                 <li>
-                    <a class="side-menu__item" href="{{route('admin.settings.index')}}"><i class="side-menu__icon fa fa-gears"></i><span
+                    <a class="side-menu__item {{request()->routeIs('admin.settings.*') ? 'active' : ''}}" href="{{route('admin.settings.index')}}"><i class="side-menu__icon fa fa-gears"></i><span
                             class="side-menu__label">Aplikasi</span></a>
                 </li>
                 @endrole
