@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.app')
 @section('title')
 Profile
 @endsection
@@ -16,7 +16,7 @@ Profile
                                 <div class="wideget-user-desc text-xl-right">
                                     <div class="wideget-user-img">
                                         @if($user->profile && $user->profile->foto)
-                                            <img class="" style="height:300px; width:300px" src="{{ asset('storage/' . $user->profile->foto) }}" alt="Foto Profil">
+                                            <img class="" style="height:300px; width:300px" src="{{ asset('storage/' . $user->profile?->foto) }}" alt="Foto Profil">
                                          @else
                                             <img class="" style="height:300px; width:300px" src="{{ asset('assets/images/users/default.jpg') }}" alt="Foto Profil">
                                         @endif
@@ -31,7 +31,7 @@ Profile
                                     <a href="emailservices.html" class="btn btn-secondary mt-1 mb-1"><i class="fa fa-envelope"></i> E-mail</a> --}}
                                 </div>
                                 <div class="text-xl-left mt-4 mt-xl-0">
-                                    <a href="{{route('admin.profile.edit')}}" class="btn btn-lg btn-primary mb-1">Edit Profile</a>
+                                    <a href="{{route('profile.edit')}}" class="btn btn-lg btn-primary mb-1">Edit Profile</a>
                                 </div>
                             </div>
                         </div>
@@ -104,22 +104,7 @@ Profile
         $('#data').DataTable();
     });
 
-    function editButton(data, id) {
-        const form = document.getElementById('editForm');
-        form.action = '/admin/pengguna/ubah/' + id;
 
-        document.getElementById('edit_name').value = data.name ?? '';
-        document.getElementById('edit_password').value = '';
-        document.getElementById('edit_password_confirmation').value = '';
-
-        // isi role
-        const select = document.getElementById('edit_role');
-        if (data.roles && data.roles.length > 0) {
-            select.value = data.roles[0].id; // ambil role pertama
-        } else {
-            select.value = '';
-        }
-    }
 
 
 
@@ -141,14 +126,6 @@ Profile
         })
     }
 
-    // Hapus data (Langsung submit tanpa konfirmasi)
-    // function deleteRuang(id) {
-    //     const form = document.getElementById('delete-form-' + id);
-    //     if (form) {
-    //         form.submit(); // Langsung memicu aksi DELETE
-    //     } else {
-    //         console.error('Form penghapusan tidak ditemukan untuk ID:', id);
-    //     }
-    // }
+   
 </script>
 @endpush

@@ -1,15 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
-use App\Models\RoleUser;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -23,10 +18,10 @@ class UserController extends Controller
         $roles = Role::all();
 
         // dd($data);
-        return view('admin.users.index', compact('data', 'roles'));
+        return view('users.index', compact('data', 'roles'));
     }
 
-    
+
 
     /**
      * Store the newly created resource in storage.
@@ -65,18 +60,9 @@ class UserController extends Controller
 
             return redirect()->back()->with('success', 'Data user berhasil disimpan.');
         } catch (\Exception $e) {
-            Log::error('Gagal menyimpan user: ' . $e->getMessage());
+            // Log::error('Gagal menyimpan user: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data.')->withInput();
         }
-    }
-
-
-    /**
-     * Show the form for editing the resource.
-     */
-    public function edit()
-    {
-        //
     }
 
     /**
@@ -105,7 +91,7 @@ class UserController extends Controller
 
             return redirect()->back()->with('success', 'Data user berhasil diperbarui.');
         } catch (\Exception $e) {
-            Log::error('Gagal memperbarui user: ' . $e->getMessage());
+            // Log::error('Gagal memperbarui user: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Terjadi kesalahan saat memperbarui data.')->withInput();
         }
     }

@@ -8,7 +8,7 @@
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{route('admin.user.store')}}" method="post" id="storeForm">
+            <form action="{{route('user.store')}}" method="post" id="storeForm">
                 @csrf
 
                 <div class="modal-body">
@@ -35,7 +35,7 @@
                         <div class="col-md-12 mb-3">
                             <label for="email" class="form-label">Email</label>
                             <input type="email" name="email" id="email" required class="form-control">
-                            </input>    
+                            </input>
                         </div>
                         <div class="col-md-12 mb-3">
                             <label for="password" class="form-label">Kata Sandi</label>

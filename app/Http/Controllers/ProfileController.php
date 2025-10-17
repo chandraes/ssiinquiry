@@ -1,58 +1,27 @@
 <?php
 
-namespace App\Http\Controllers\Murid;
+namespace App\Http\Controllers;
 
 use App\Models\ProfileUser;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
-class ProfileUserController extends Controller
+class ProfileController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $user = Auth::user();
 
-        return view('murid.profile.index', compact('user'));
+        return view('profile.index', compact('user'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(ProfileUser $profileUser)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(ProfileUser $profileUser)
+     public function edit()
     {
         $user = Auth::user();
-        return view('murid.profile.edit', compact('user'));
+        return view('profile.edit', compact('user'));
     }
 
     /**
@@ -122,14 +91,8 @@ class ProfileUserController extends Controller
             $profile->save();
         }
 
-    return redirect()->back()->with('success', 'Foto profil berhasil dihapus!');
+        return redirect()->back()->with('success', 'Foto profil berhasil dihapus!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(ProfileUser $profileUser)
-    {
-        //
-    }
+
 }

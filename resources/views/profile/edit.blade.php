@@ -1,4 +1,4 @@
-@extends('layouts.murid')
+@extends('layouts.app')
 
 @section('title')
 Edit Profile
@@ -15,7 +15,7 @@ Edit Profile
                     <div class="card-title">Edit Profil</div>
                 </div>
 
-                <form action="{{ route('murid.profile.update') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
@@ -23,8 +23,8 @@ Edit Profile
                         <div class="d-flex mb-5 align-items-center">
                             <div class="position-relative mx-2">
                                 @if($user->profile && $user->profile->foto)
-                                    <img style="width: 300px; height: 300px;" src="{{ asset('storage/' . $user->profile->foto) }}" 
-                                    class="avatar-xl" 
+                                    <img style="width: 300px; height: 300px;" src="{{ asset('storage/' . $user->profile->foto) }}"
+                                    class="avatar-xl"
                                     alt="Foto Profil">
                                 @else
                                     <img style="width: 300px; height: 300px;" src="{{ asset('assets/images/users/default.jpg') }}" class="avatar-xl" alt="Default Foto">
@@ -37,10 +37,10 @@ Edit Profile
                                 </label>
 
                                 @if($user->profile && $user->profile->foto)
-                                    <a href="javascript:void(0);" 
-                                        class="btn btn-danger btn-lg mt-1 mb-1" 
-                                        id="hapusFotoBtn" 
-                                        data-url="{{ route('murid.profile.delete-foto') }}">
+                                    <a href="javascript:void(0);"
+                                        class="btn btn-danger btn-lg mt-1 mb-1"
+                                        id="hapusFotoBtn"
+                                        data-url="{{ route('admin.profile.delete-foto') }}">
                                         <i class="fe fe-camera-off me-1 float-start"></i>Hapus Foto
                                     </a>
                                 @endif
@@ -54,21 +54,21 @@ Edit Profile
 
                         <div class="form-group mb-3">
                             <label class="form-label">Asal Sekolah</label>
-                            <input 
-                                type="text" 
-                                class="form-control" 
-                                name="asal_sekolah" 
-                                value="{{ old('asal_sekolah', $user->profile->asal_sekolah ?? '') }}" 
+                            <input
+                                type="text"
+                                class="form-control"
+                                name="asal_sekolah"
+                                value="{{ old('asal_sekolah', $user->profile->asal_sekolah ?? '') }}"
                                 placeholder="Masukkan asal sekolah">
                         </div>
 
                         <div class="form-group mb-3">
                             <label class="form-label">Nomor HP</label>
-                            <input 
-                                type="text" 
-                                class="form-control" 
-                                name="nomor_hp" 
-                                value="{{ old('nomor_hp', $user->profile->nomor_hp ?? '') }}" 
+                            <input
+                                type="text"
+                                class="form-control"
+                                name="nomor_hp"
+                                value="{{ old('nomor_hp', $user->profile->nomor_hp ?? '') }}"
                                 placeholder="Masukkan nomor HP">
                         </div>
 
