@@ -4,18 +4,28 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\Auth\LoginController;
 
+
+// ✅ Route bisa diakses tanpa login
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])
+    ->withoutMiddleware(['auth'])
+    ->name('home');
+
+Route::get('/register', [App\Http\Controllers\HomeController::class, 'index'])
+    ->withoutMiddleware(['auth'])
+    ->name('register');
+
+// Redirect root ke login
 Route::get('/', function () {
     return redirect()->route('login');
 });
 
+// Middleware untuk halaman login
 Route::middleware('redirect.authenticated')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [LoginController::class, 'login']);
 });
 
 Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 //ROUTE ADMIN
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'role:admin']], function () {
