@@ -23,6 +23,12 @@
                     <a class="side-menu__item" data-bs-toggle="slide" href="{{route('home')}}"><i
                             class="side-menu__icon fe fe-home"></i><span class="side-menu__label">Dashboard</span></a>
                 </li>
+                @role(['admin','guru'])
+                <li class="slide">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="{{route('user')}}"><i
+                            class="side-menu__icon fe fe-user"></i><span class="side-menu__label">User</span></a>
+                </li>
+                @endrole
                 <li class="sub-category">
                     <h3>Widgets</h3>
                 </li>

@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.app')
 @section('title')
 DAFTAR PENGGUNA
 @endsection
@@ -9,7 +9,7 @@ DAFTAR PENGGUNA
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
                  {{-- @include('admin.users.upload') --}}
-                 @include('admin.users.create')
+                 @include('users.create')
                 <div class="box-body" style="height: 1200px">
                     <!-- Row -->
                     <div class="row row-sm">
@@ -24,7 +24,7 @@ DAFTAR PENGGUNA
                                 </div>
 
                                 <div class="ms-auto pageheader-btn">
-                                    
+
                                 </div>
                                 <div class="card-body">
                                     <div class="table-responsive">
@@ -42,7 +42,7 @@ DAFTAR PENGGUNA
                                             </thead>
                                             <tbody>
                                                 @foreach ($data as $d)
-                                                @include('admin.users.edit')
+                                                @include('users.edit')
                                                 <tr>
                                                     <td class="text-center align-middle">{{$loop->iteration}}</td>
                                                     <td class="text-start align-middle">{{$d->name}}</td>
@@ -62,10 +62,10 @@ DAFTAR PENGGUNA
                                                     <td class="text-start align-middle">{{$d->email}}</td>
                                                     <td class="text-center align-middle">
                                                         {{-- Tombol Edit --}}
-                                                        <button class="btn btn-icon bg-warning" 
-                                                            title="Edit Data" 
-                                                            data-bs-toggle="modal" 
-                                                            data-bs-target="#editModal" 
+                                                        <button class="btn btn-icon bg-warning"
+                                                            title="Edit Data"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#editModal"
                                                             onclick='editButton(@json($d), {{ $d->id }})'>
                                                             <i class="fa fa-pencil"></i>
                                                         </button>
@@ -76,7 +76,7 @@ DAFTAR PENGGUNA
                                                                 onclick="deleteRuang({{$d->id}})"> <i class="fe fe-trash"></i>
                                                         </button>
 
-                                                        <form action="{{ route('admin.user.delete', $d->id) }}"
+                                                        <form action="{{ route('user.delete', $d->id) }}"
                                                             method="POST"
                                                             id="delete-form-{{$d->id}}">
                                                             @csrf
@@ -86,7 +86,7 @@ DAFTAR PENGGUNA
                                                     </td>
                                                 </tr>
                                                 @endforeach
-                                                
+
                                             </tbody>
                                         </table>
                                     </div>
@@ -113,7 +113,7 @@ DAFTAR PENGGUNA
 
     function editButton(data, id) {
         const form = document.getElementById('editForm');
-        form.action = '/admin/pengguna/ubah/' + id;
+        form.action = '/pengguna/ubah/' + id;
 
         document.getElementById('edit_name').value = data.name ?? '';
         document.getElementById('edit_password').value = '';

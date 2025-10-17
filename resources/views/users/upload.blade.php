@@ -1,6 +1,6 @@
 <div class="modal fade" id="uploadModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
-    <form action="{{ route('admin.user.upload') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('user.upload') }}" method="POST" enctype="multipart/form-data">
       @csrf
       <div class="modal-content">
         <div class="modal-header">

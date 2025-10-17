@@ -22,12 +22,23 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // ✅ Blade directive untuk pengecekan role
-        Blade::if('role', function (string $role) {
-            return Auth::check() && Auth::user()->hasRole($role);
+        // ✅ Modifikasi Blade directive di sini
+        Blade::if('role', function (string|array $roles) {
+            // Selalu pastikan user sudah login
+            if (! Auth::check()) {
+                return false;
+            }
+
+            // Jika inputnya adalah array, gunakan method hasAnyRole()
+            if (is_array($roles)) {
+                return Auth::user()->hasAnyRole($roles);
+            }
+
+            // Jika bukan array (string), gunakan method hasRole() yang lama
+            return Auth::user()->hasRole($roles);
         });
 
-        // ✅ View composer global agar variabel $user selalu tersedia di semua view
+        // Bagian View composer ini tidak perlu diubah
         View::composer('*', function ($view) {
             if (Auth::check()) {
                 $view->with('user', Auth::user());
