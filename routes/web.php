@@ -36,3 +36,6 @@ Route::group(['middleware' => 'auth'], function () {
     });
 });
 
+Route::get('/landing-page', [App\Http\Controllers\HomeController::class, 'landing_page'])
+    ->withoutMiddleware(['auth'])
+    ->name('landing-page');

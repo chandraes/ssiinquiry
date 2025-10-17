@@ -116,11 +116,11 @@ DAFTAR PENGGUNA
         form.action = '/pengguna/ubah/' + id;
 
         document.getElementById('edit_name').value = data.name ?? '';
-        document.getElementById('edit_password').value = '';
-        document.getElementById('edit_password_confirmation').value = '';
-
+        document.getElementById('edit_username').value = data.username ?? '';
+        document.getElementById('edit_email').value = data.email ?? '';
+        
         // isi role
-        const select = document.getElementById('edit_role');
+        const select = document.getElementById('edit_role_id');
         if (data.roles && data.roles.length > 0) {
             select.value = data.roles[0].id; // ambil role pertama
         } else {

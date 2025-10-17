@@ -27,6 +27,11 @@ class HomeController extends Controller
         return view('home');
     }
 
+    public function landing_page()
+    {
+        return view('index');
+    }
+
     public function admin()
     {
         $user=Auth::user();

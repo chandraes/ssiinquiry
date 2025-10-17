@@ -13,29 +13,51 @@
 
                 <div class="modal-body">
                     <div class="col-md-12 mb-3">
-                        <label for="edit_name" class="form-label">Nama</label>
-                        <input type="text" name="name" id="edit_name" required class="form-control">
-                    </div>
-
-                    <div class="col-md-12">
-                        <label for="edit_role" class="form-label">Role</label>
-                        <select name="role_id" id="edit_role" class="form-select" required>
-                            <option value="">-- Pilih Role --</option>
-                            @foreach($roles as $role)
-                                <option value="{{ $role->id }}">{{ $role->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class=col-md-12 mb-3">
-                        <label for="edit_password" class="form-label">Kata Sandi</label>
-                        <input type="password" name="password" id="edit_password" class="form-control" placeholder="Kosongkan jika tidak ingin ganti">
+                        <div class="form-group">
+                            <label for="edit_name" class="form-label">Nama</label>
+                            <input type="text" name="name" id="edit_name" class="form-control" style="border-color: darkgrey">
+                        </div>
                     </div>
 
                     <div class="col-md-12 mb-3">
-                        <label for="edit_password_confirmation" class="form-label">Konfirmasi Kata Sandi</label>
-                        <input type="password" name="password_confirmation" id="edit_password_confirmation" class="form-control">
+                        <div class="form-group">
+                            <label for="edit_username" class="form-label">Username</label>
+                            <input type="text" name="username" id="edit_username" class="form-control" style="border-color: darkgrey">
+                        </div>
                     </div>
+
+                    <div class="col-md-12 mb-3">
+                        <div class="form-group">
+                            <label for="edit_email" class="form-label">Email</label>
+                            <input type="email" name="email" id="edit_email" class="form-control" style="border-color: darkgrey">
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="edit_role_id" class="form-label">Role</label>
+                            <select class="form-control form-select select2" data-bs-placeholder="Choose One" style="width:100%; border-color: darkgrey" name="role_id" id="edit_role_id">
+                                <option label>-- Pilih Role --</option>
+                                @foreach($roles as $role)
+                                    <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    {{-- <div class="col-md-12 mb-3">
+                        <div class="form-group">
+                            <label for="edit_password" class="form-label">Kata Sandi</label>
+                            <input type="password" name="password" id="edit_password" class="form-control" placeholder="Kosongkan jika tidak ingin ganti">
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                        <div class="form-group">
+                            <label for="edit_password_confirmation" class="form-label">Konfirmasi Kata Sandi</label>
+                            <input type="password" name="password_confirmation" id="edit_password_confirmation" class="form-control">
+                        </div>
+                    </div> --}}
                 </div>
 
                 <div class="modal-footer">
