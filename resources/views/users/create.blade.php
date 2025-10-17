@@ -12,42 +12,49 @@
                 @csrf
 
                 <div class="modal-body">
-                    <div class="row">
+                    {{-- <div class="row"> --}}
                         <div class="col-md-12 mb-3">
-                            <label for="name" class="form-label">Nama</label>
-                            <input name="name" id="name" required class="form-control">
-                            </input>
+                            <div class="form-group">
+                                <label for="name" class="form-label">Nama</label>
+                                <input name="name" id="name" required class="form-control" style="border-color:darkgrey"></input>
+                            </div>
                         </div>
                         <div class="col-md-12 mb-3">
-                        <label for="role_id" class="form-label">Role</label>
-                            <select name="role_id" id="role_id" class="form-select" required>
-                                <option value="">-- Pilih Role --</option>
-                                @foreach($roles as $role)
-                                    <option value="{{ $role->id }}">{{ $role->name }}</option>
-                                @endforeach
-                            </select>
+                            <div class="form-group">
+                                <label for="role_id" class="form-label">Role</label>
+                                <select class="form-control form-select select2" data-bs-placeholder="Choose One" style="width:100%; border-color: darkgrey" name="role_id" id="role_id">
+                                    <option label>-- Pilih Role --</option>
+                                    @foreach($roles as $role)
+                                        <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
                         <div class="col-md-12 mb-3">
-                            <label for="username" class="form-label">Nama Pengguna</label>
-                            <input type="text" name="username" id="username" required class="form-control">
-                            </input>
+                            <div class="form-group">
+                                <label for="username" class="form-label">Nama Pengguna</label>
+                                <input type="text" name="username" id="username" required class="form-control" style="border-color:darkgrey"></input>
+                            </div>
                         </div>
                         <div class="col-md-12 mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" name="email" id="email" required class="form-control">
-                            </input>
+                            <div class="form-group">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" name="email" id="email" required class="form-control" style="border-color:darkgrey"></input>
+                            </div>
                         </div>
                         <div class="col-md-12 mb-3">
-                            <label for="password" class="form-label">Kata Sandi</label>
-                            <input type="password" name="password" id="password" required class="form-control">
-                            </input>
+                            <div class="form-group">
+                                <label for="password" class="form-label">Kata Sandi</label>
+                                <input type="password" name="password" id="password" required class="form-control" style="border-color:darkgrey"></input>
+                            </div>
                         </div>
                         <div class="col-md-12 mb-3">
-                            <label for="password_confirmation" class="form-label">Konfirmasi Kata Sandi</label>
-                            <input type="password" name="password_confirmation" id="password_confirmation" required class="form-control">
-                            </input>
+                            <div class="form-group">
+                                <label for="password_confirmation" class="form-label">Konfirmasi Kata Sandi</label>
+                                <input type="password" name="password_confirmation" id="password_confirmation" required class="form-control" style="border-color:darkgrey"></input>
+                            </div>
                         </div>
-                    </div>
+                    {{-- </div> --}}
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">

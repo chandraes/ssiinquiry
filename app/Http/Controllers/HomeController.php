@@ -24,12 +24,12 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('index');
+        return view('home');
     }
 
-    public function sample()
+    public function landing_page()
     {
-        return view('sample');
+        return view('index');
     }
 
     public function admin()

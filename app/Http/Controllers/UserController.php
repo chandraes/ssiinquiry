@@ -36,6 +36,7 @@ class UserController extends Controller
             'role_id' => 'required|exists:roles,id',
         ]);
 
+        // dd($request->all());
         try {
             // Cek apakah username sudah ada
             if (User::where('username', $request->username)->exists()) {
@@ -77,6 +78,8 @@ class UserController extends Controller
             'role_id' => 'required|exists:roles,id',
         ]);
 
+        // dd($request);
+
         try {
             $user = User::findOrFail($id);
 
@@ -88,6 +91,8 @@ class UserController extends Controller
 
             // Update relasi role, gunakan sync agar role lama tergantikan
             $user->roles()->sync([$request->role_id]);
+
+            
 
             return redirect()->back()->with('success', 'Data user berhasil diperbarui.');
         } catch (\Exception $e) {

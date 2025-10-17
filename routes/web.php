@@ -4,21 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\Auth\LoginController;
 
-
-// ✅ Route bisa diakses tanpa login
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])
-    ->withoutMiddleware(['auth'])
-    ->name('home');
-
-Route::get('/home-2', [App\Http\Controllers\HomeController::class, 'sample'])
-    ->withoutMiddleware(['auth'])
-    ->name('sample.home');
-
-Route::get('/register', [App\Http\Controllers\HomeController::class, 'index'])
-    ->withoutMiddleware(['auth'])
-    ->name('register');
-
-// Redirect root ke login
 Route::get('/', function () {
     return redirect()->route('login');
 });
@@ -51,3 +36,6 @@ Route::group(['middleware' => 'auth'], function () {
     });
 });
 
+Route::get('/landing-page', [App\Http\Controllers\HomeController::class, 'landing_page'])
+    ->withoutMiddleware(['auth'])
+    ->name('landing-page');
