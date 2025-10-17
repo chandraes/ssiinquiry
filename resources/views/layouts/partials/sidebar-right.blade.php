@@ -68,31 +68,28 @@
                 <div class="dropdown d-md-flex profile-1">
                     <a href="javascript:void(0);" data-bs-toggle="dropdown" class="nav-link leading-none d-flex px-1">
                         <span>
-                            <img src="../assets/images/users/8.jpg" alt="profile-user"
+                            @php
+                                $fotoPath = auth()->user()->profile?->foto ? 'storage/'. auth()->user()->profile?->foto : 'assets/images/users/8.jpg' ;
+                            @endphp
+                            <img src="{{asset($fotoPath)}}" alt="profile-user"
                                 class="avatar  profile-user brround cover-image">
                         </span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                         <div class="drop-heading">
                             <div class="text-center">
-                                <h5 class="text-dark mb-0">Elizabeth Dyer</h5>
-                                <small class="text-muted">Administrator</small>
+                                <h5 class="text-dark mb-0">{{auth()->user()->name}}</h5>
+                                <small class="text-muted">{{auth()->user()->role?->name}}</small>
                             </div>
                         </div>
                         <div class="dropdown-divider m-0"></div>
-                        <a class="dropdown-item" href="profile.html">
+                        <a class="dropdown-item" href="{{route('profile.index')}}">
                             <i class="dropdown-icon fe fe-user"></i> Profile
                         </a>
-                        <a class="dropdown-item" href="email.html">
-                            <i class="dropdown-icon fe fe-mail"></i> Inbox
-                            <span class="badge bg-secondary float-end">3</span>
-                        </a>
-                        <a class="dropdown-item" href="emailservices.html">
-                            <i class="dropdown-icon fe fe-settings"></i> Settings
-                        </a>
-                        <a class="dropdown-item" href="faq.html">
+
+                        {{-- <a class="dropdown-item" href="faq.html">
                             <i class="dropdown-icon fe fe-alert-triangle"></i> Need help?
-                        </a>
+                        </a> --}}
                         <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                             <i class="dropdown-icon fe fe-alert-circle"></i> Sign out
