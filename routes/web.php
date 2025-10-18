@@ -42,6 +42,15 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/upload', [App\Http\Controllers\UserController::class, 'upload'])->name('user.upload');
         Route::delete('/delete/{user}', [App\Http\Controllers\UserController::class, 'destroy'])->name('user.delete');
     });
+
+    Route::group(['prefix' => 'modul', 'middleware' => ['role:admin,guru']], function () {
+        Route::get('/', [App\Http\Controllers\ModulController::class, 'index'])->name('modul');
+        Route::get('/tambah', [App\Http\Controllers\ModulController::class, 'create'])->name('modul.create');
+        Route::patch('/ubah/{id}', [App\Http\Controllers\ModulController::class, 'update'])->name('modul.update');
+        Route::post('/store', [App\Http\Controllers\ModulController::class, 'store'])->name('modul.store');
+        // Route::post('/upload', [App\Http\Controllers\ModulController::class, 'upload'])->name('modul.upload');
+        Route::delete('/delete/{id}', [App\Http\Controllers\ModulController::class, 'destroy'])->name('modul.delete');
+    });
 });
 
 Route::get('/landing-page', [App\Http\Controllers\HomeController::class, 'landing_page'])

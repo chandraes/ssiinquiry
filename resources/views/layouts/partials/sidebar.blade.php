@@ -28,6 +28,11 @@
                     <a class="side-menu__item {{request()->routeIs('user') ? 'active' : ''}}" data-bs-toggle="slide" href="{{route('user')}}"><i
                             class="side-menu__icon fe fe-user"></i><span class="side-menu__label">User</span></a>
                 </li>
+
+                <li class="slide">
+                    <a class="side-menu__item {{request()->routeIs('modul') ? 'active' : ''}}" data-bs-toggle="slide" href="{{route('modul')}}"><i
+                            class="side-menu__icon fe fe-file"></i><span class="side-menu__label">Modul</span></a>
+                </li>
                 @endrole
                 <li class="sub-category">
                     <h3>Widgets</h3>

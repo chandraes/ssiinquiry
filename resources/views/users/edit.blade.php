@@ -44,25 +44,11 @@
                             </select>
                         </div>
                     </div>
-
-                    {{-- <div class="col-md-12 mb-3">
-                        <div class="form-group">
-                            <label for="edit_password" class="form-label">Kata Sandi</label>
-                            <input type="password" name="password" id="edit_password" class="form-control" placeholder="Kosongkan jika tidak ingin ganti">
-                        </div>
-                    </div>
-
-                    <div class="col-md-12 mb-3">
-                        <div class="form-group">
-                            <label for="edit_password_confirmation" class="form-label">Konfirmasi Kata Sandi</label>
-                            <input type="password" name="password_confirmation" id="edit_password_confirmation" class="form-control">
-                        </div>
-                    </div> --}}
                 </div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                    <button type="button" id="btnUpdate" class="btn btn-primary">Simpan Perubahan</button>
                 </div>
             </form>
         </div>
