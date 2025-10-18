@@ -68,14 +68,11 @@
                 <div class="dropdown d-md-flex profile-1">
                     <a href="javascript:void(0);" data-bs-toggle="dropdown" class="nav-link leading-none d-flex px-1">
                         <span>
-                            @if($user->profile && $user->profile->foto)
-                            @php
-                                $path = auth()->user()->profile?->foto ? 'storage/'.auth()->user()->profile?->foto : 'assets/images/users/8.jpg';
+                             @php
+                                $fotoPath = auth()->user()->profile?->foto ? 'storage/'. auth()->user()->profile?->foto : 'assets/images/users/8.jpg' ;
                             @endphp
-                                <img src="{{ asset($path) }}" class="avatar  profile-user brround cover-image" alt="Foto Profil">
-                            @else
-                                <img src="{{ asset('assets/images/users/default.jpg') }}" class="rounded-circle avatar-lg" alt="Default Foto">
-                            @endif
+                            <img src="{{asset($fotoPath)}}" alt="profile-user"
+                                class="avatar  profile-user brround cover-image">
                         </span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
