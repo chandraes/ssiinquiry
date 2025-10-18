@@ -14,14 +14,30 @@ class UserController extends Controller
      */
     public function show()
     {
-        $data = User::with('roles')->get();
+        $userLogin = auth()->user(); // Ambil user yang sedang login
+
+        // Ambil semua data role
         $roles = Role::all();
 
-        // dd($data);
+        // Query default semua user dengan relasi roles
+        $query = User::with('roles');
+
+        // 🔒 Jika user login adalah Guru, tampilkan hanya user dengan role Murid
+        if ($userLogin->roles->contains(function ($role) {
+            return ($role->name) === 'Guru';
+        })) {
+            $query->whereHas('roles', function ($q) {
+                $q->where('name', 'Murid');
+            });
+
+            // Optional: filter juga roles agar di dropdown cuma role "murid"
+            $roles = Role::where('name', 'Murid')->get();
+        }
+
+        $data = $query->get();
+
         return view('users.index', compact('data', 'roles'));
     }
-
-
 
     /**
      * Store the newly created resource in storage.
@@ -105,10 +121,10 @@ class UserController extends Controller
     /**
      * Remove the resource from storage.
      */
-    public function destroy(User $peserta)
+    public function destroy(User $user)
     {
         // $peserta = User::findOrFail($id);
-        $peserta->delete();
+        $user->delete();
 
         return redirect()->back()->with('success', 'Data berhasil dihapus');
     }

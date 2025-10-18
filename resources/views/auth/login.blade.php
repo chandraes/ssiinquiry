@@ -1,14 +1,19 @@
 @extends('layouts.guest')
 
 @section('content')
-<div class="page login-page">
+@php
+    $logoPath = get_setting('app_logo');
+    $logoUrl = $logoPath ? asset('storage/' . $logoPath) : asset('assets/images/brand/logo.png');
+@endphp
+
+<div class="page login-page" style="background-color: aliceblue">
     <div>
         <!-- CONTAINER OPEN -->
         <div class="col col-login mx-auto mt-7">
-            <div class="text-center text-white">
-                <div class="">
-                    <img src="{{asset('assets/images/brand/logo.png')}}" class="" alt="" width="200">
-                </div>
+            <div class="text-center">
+                <img src="{{ $logoUrl }}" class="header-brand-img" alt="logo" style="width: 30%; height:30%">
+                <!-- LOGO -->
+            {{-- </div> --}}
                 <br>
                 {{-- <h2>SAIND</h2> --}}
                 <p>Login in. To see it in action.</p>

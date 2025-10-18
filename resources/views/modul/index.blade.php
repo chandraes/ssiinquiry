@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('title')
-Pengguna
+Modul
 @endsection
 @section('content')
 @include('swal')
@@ -8,15 +8,15 @@ Pengguna
     <div class="row">
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
-                 {{-- @include('admin.users.upload') --}}
-                 @include('users.create')
+                 {{-- @include('admin.modul.upload') --}}
+                 @include('modul.create')
                 <div class="box-body" style="height: 1200px">
                     <!-- Row -->
                     <div class="row row-sm">
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-header justify-content-between">
-                                    <h2 class="card-title">Daftar Pengguna</h2>
+                                    <h2 class="card-title">Daftar Modul</h2>
                                     <button
                                         type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#createModal">
                                         <i class="fa fa-plus me-2"></i>Tambah Data
@@ -32,34 +32,23 @@ Pengguna
                                             <thead>
                                                 <tr>
                                                     <th class="text-center align-middle">No</th>
-                                                    <th class="text-start align-middle">Nama</th>
-                                                    <th class="text-start align-middle">Nama Pengguna</th>
+                                                    <th class="text-start align-middle">Judul ID</th>
+                                                    <th class="text-start align-middle">Judul EN</th>
                                                     {{-- <th class="text-start align-middle">Jenis Kelamin</th> --}}
-                                                    <th class="text-start align-middle">Role</th>
-                                                    <th class="text-start align-middle">Email</th>
+                                                    <th class="text-start align-middle">Deskripsi</th>
+                                                    <th class="text-start align-middle">Owner</th>
                                                     <th class="text-center align-middle">Aksi</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @foreach ($data as $d)
-                                                @include('users.edit')
+                                                @include('modul.edit')
                                                 <tr>
                                                     <td class="text-center align-middle">{{$loop->iteration}}</td>
-                                                    <td class="text-start align-middle">{{$d->name}}</td>
-                                                    <td class="text-start align-middle">{{$d->username}}</td>
-                                                    {{-- <td class="text-start align-middle">
-                                                        @if($d->jenis_kelamin == 'L')
-                                                            Laki-laki
-                                                        @elseif($d->jenis_kelamin == 'P')
-                                                            Perempuan
-                                                        @elseif(empty($d->jenis_kelamin))
-                                                            Tidak diisi
-                                                        @else
-                                                            -
-                                                        @endif
-                                                    </td> --}}
-                                                    <td class="text-start align-middle">{{$d->roles[0]->name}}</td>
-                                                    <td class="text-start align-middle">{{$d->email}}</td>
+                                                    <td class="text-start align-middle">{{$d->judul_id}}</td>
+                                                    <td class="text-start align-middle">{{$d->judul_en}}</td>
+                                                    <td class="text-start align-middle">{{$d->deskripsi}}</td>
+                                                    <td class="text-start align-middle">{{$d->user->name}}</td>
                                                     <td class="text-center align-middle">
                                                         {{-- Tombol Edit --}}
                                                         <button class="btn btn-icon bg-warning"
@@ -76,7 +65,7 @@ Pengguna
                                                                 onclick="deleteButton({{$d->id}})"> <i class="fe fe-trash"></i>
                                                         </button>
 
-                                                        <form action="{{ route('user.delete', $d->id) }}"
+                                                        <form action="{{ route('modul.delete', $d->id) }}"
                                                             method="POST"
                                                             id="delete-form-{{$d->id}}">
                                                             @csrf
@@ -131,21 +120,14 @@ Pengguna
         });
     });
 
+
     function editButton(data, id) {
         const form = document.getElementById('editForm');
-        form.action = '/pengguna/ubah/' + id;
+        form.action = '/modul/ubah/' + id;
 
-        document.getElementById('edit_name').value = data.name ?? '';
-        document.getElementById('edit_username').value = data.username ?? '';
-        document.getElementById('edit_email').value = data.email ?? '';
-        
-        // isi role
-        const select = document.getElementById('edit_role_id');
-        if (data.roles && data.roles.length > 0) {
-            select.value = data.roles[0].id; // ambil role pertama
-        } else {
-            select.value = '';
-        }
+        document.getElementById('edit_judul_id').value = data.judul_id ?? '';
+        document.getElementById('edit_judul_en').value = data.judul_en ?? '';
+        document.getElementById('edit_deskripsi').value = data.deskripsi ?? '';
     }
 
     // Konfirmasi simpan perubahan
@@ -167,7 +149,7 @@ Pengguna
         });
     });
 
-    // Hapus data
+    // Konfirmasi Hapus data
     function deleteButton(id) {
         Swal.fire({
             title: 'Delete Data',
@@ -184,5 +166,6 @@ Pengguna
             }
         })
     }
+
 </script>
 @endpush

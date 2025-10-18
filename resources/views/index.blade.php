@@ -28,7 +28,7 @@
 				$logoUrl = $logoPath ? asset('storage/' . $logoPath) : asset('assets/images/brand/logo.png');
 			@endphp
 			{{-- <div class="font-bold text-2xl text-blue-700">SSI Inquiry</div> --}}
-			<a href="{{route('home')}}" style="display: block; position: relative; width: 120px; padding: 20px 0px;">
+			<a href="{{route('landing-page')}}" style="display: block; position: relative; width: 120px; padding: 20px 0px;">
 				<img src="{{$logoUrl}}" alt=""/>
 			</a>
 
@@ -63,8 +63,8 @@
 			<li><a href="#how" class="hover:text-blue-600">Cara Kerja</a></li>
 			{{-- <li><a href="#gallery" class="hover:text-blue-600">Galeri</a></li> --}}
 			{{-- <li><a href="#contact" class="hover:text-blue-600">Kontak</a></li> --}}
-			<li><a href="/login" class="border border-blue-700 text-blue-700 px-4 py-1 rounded-lg hover:bg-blue-700 hover:text-white transition">Login</a></li>
-			<li><a href="/register" class="bg-blue-700 text-white px-4 py-1 rounded-lg hover:bg-blue-800 transition">Daftar</a></li>
+			<li><a href="{{route('login')}}" class="border border-blue-700 text-blue-700 px-4 py-1 rounded-lg hover:bg-blue-700 hover:text-white transition">Login</a></li>
+			<li><a href="{{route('register')}}" class="bg-blue-700 text-white px-4 py-1 rounded-lg hover:bg-blue-800 transition">Daftar</a></li>
 		</ul>
 		</div>
 	</header>
@@ -184,7 +184,7 @@
 
   <!-- 🔹 FOOTER -->
   <footer class="bg-gray-900 text-gray-400 py-6 text-center text-sm">
-    © 2025 SSI Inquiry
+    Copyright © <span id="year"></span> by <a href="javascript:void(0);"> SSI Inquiry </a> All rights reserved
   </footer>
 
   <!-- 🔹 Script menu mobile -->

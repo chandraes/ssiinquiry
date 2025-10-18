@@ -40,7 +40,7 @@ Edit Profile
                                     <a href="javascript:void(0);"
                                         class="btn btn-danger btn-lg mt-1 mb-1"
                                         id="hapusFotoBtn"
-                                        data-url="{{ route('admin.profile.delete-foto') }}">
+                                        data-url="{{ route('profile.delete-foto') }}">
                                         <i class="fe fe-camera-off me-1 float-start"></i>Hapus Foto
                                     </a>
                                 @endif
