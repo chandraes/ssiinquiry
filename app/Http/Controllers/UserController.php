@@ -14,10 +14,26 @@ class UserController extends Controller
      */
     public function show()
     {
-        $data = User::with('roles')->get();
+        $userLogin = auth()->user(); // ambil user yang sedang login
+
+        // Ambil semua data role
         $roles = Role::all();
 
-        // dd($data);
+        // Query default
+        $query = User::with('roles');
+
+        // Cek role user login
+        if ($userLogin->roles->contains('name', 'Guru')) {
+            // Jika user login adalah guru, hanya tampilkan user dengan role murid
+            $query->whereHas('roles', function ($q) {
+                $q->where('name', 'Murid');
+            });
+        }
+
+        $data = $query->get();
+
+        // dd($data, $roles, $userLogin);
+
         return view('users.index', compact('data', 'roles'));
     }
 
