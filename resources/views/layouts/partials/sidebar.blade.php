@@ -2,7 +2,7 @@
     <div class="app-sidebar__overlay" data-bs-toggle="sidebar"></div>
     <aside class="app-sidebar">
         <div class="side-header">
-            <a class="header-brand1" href="index.html">
+            <a class="header-brand1" href="{{route('home')}}">
                 <img src="{{ $logoUrl }}" class="header-brand-img desktop-logo" alt="logo">
                 <img src="{{ $logoUrl }}" class="header-brand-img toggle-logo" alt="logo">
                 <img src="{{ $logoUrl }}" class="header-brand-img light-logo" alt="logo">

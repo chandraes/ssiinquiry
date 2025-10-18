@@ -16,7 +16,7 @@
                 </div>
 
                 <!-- FULL-SCREEN -->
-                <div class="dropdown d-md-flex notifications">
+                {{-- <div class="dropdown d-md-flex notifications">
                     <a class="nav-link icon" data-bs-toggle="dropdown"><i class="fe fe-bell"></i><span
                             class=" pulse"></span>
                     </a>
@@ -62,37 +62,40 @@
                         <a href="javascript:void(0);" class="dropdown-item text-center p-3 text-muted">View all
                             Notification</a>
                     </div>
-                </div>
+                </div> --}}
 
                 <!-- MESSAGE-BOX -->
                 <div class="dropdown d-md-flex profile-1">
                     <a href="javascript:void(0);" data-bs-toggle="dropdown" class="nav-link leading-none d-flex px-1">
                         <span>
-                            <img src="../assets/images/users/8.jpg" alt="profile-user"
-                                class="avatar  profile-user brround cover-image">
+                            @if($user->profile && $user->profile->foto)
+                            @php
+                                $path = auth()->user()->profile?->foto ? 'storage/'.auth()->user()->profile?->foto : 'assets/images/users/8.jpg';
+                            @endphp
+                                <img src="{{ asset($path) }}" class="avatar  profile-user brround cover-image" alt="Foto Profil">
+                            @else
+                                <img src="{{ asset('assets/images/users/default.jpg') }}" class="rounded-circle avatar-lg" alt="Default Foto">
+                            @endif
                         </span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                         <div class="drop-heading">
                             <div class="text-center">
-                                <h5 class="text-dark mb-0">Elizabeth Dyer</h5>
-                                <small class="text-muted">Administrator</small>
+                                <h5 class="text-dark mb-0">{{$user->name}}</h5>
+                                <small class="text-muted">{{$user->role->name}}</small>
                             </div>
                         </div>
                         <div class="dropdown-divider m-0"></div>
-                        <a class="dropdown-item" href="profile.html">
+                        <a class="dropdown-item" href="{{route('profile.index')}}">
                             <i class="dropdown-icon fe fe-user"></i> Profile
                         </a>
-                        <a class="dropdown-item" href="email.html">
-                            <i class="dropdown-icon fe fe-mail"></i> Inbox
-                            <span class="badge bg-secondary float-end">3</span>
-                        </a>
-                        <a class="dropdown-item" href="emailservices.html">
+                        
+                        @role(['admin'])
+                        <a class="dropdown-item" href="{{route('admin.settings.index')}}">
                             <i class="dropdown-icon fe fe-settings"></i> Settings
                         </a>
-                        <a class="dropdown-item" href="faq.html">
-                            <i class="dropdown-icon fe fe-alert-triangle"></i> Need help?
-                        </a>
+                        @endrole
+                        
                         <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                             <i class="dropdown-icon fe fe-alert-circle"></i> Sign out

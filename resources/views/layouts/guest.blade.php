@@ -22,6 +22,7 @@
 		<!-- STYLE CSS -->
 		<link href="{{asset('assets/css/style.css')}}" rel="stylesheet"/>
 		<link href="{{asset('assets/css/plugins.css')}}" rel="stylesheet"/>
+		<script src="{{asset('assets/js/sweetalert.js')}}"></script>
 
 		<!--- FONT-ICONS CSS -->
 		<link href="{{asset('assets/css/icons.css')}}" rel="stylesheet"/>
@@ -31,14 +32,15 @@
 	</head>
 
 	<body class="login-img">
-
 		<!-- BACKGROUND-IMAGE -->
 		<div>
+			@include('swal')
 
 			<!-- GLOABAL LOADER -->
 			<div id="global-loader">
 				<img src="{{asset('assets/images/loader.svg')}}" class="loader-img" alt="Loader">
 			</div>
+			
 			<!-- /GLOABAL LOADER -->
             @yield('content')
 
