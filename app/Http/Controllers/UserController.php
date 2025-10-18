@@ -14,30 +14,30 @@ class UserController extends Controller
      */
     public function show()
     {
-        $userLogin = auth()->user(); // ambil user yang sedang login
+        $userLogin = auth()->user(); // Ambil user yang sedang login
 
         // Ambil semua data role
         $roles = Role::all();
 
-        // Query default
+        // Query default semua user dengan relasi roles
         $query = User::with('roles');
 
-        // Cek role user login
-        if ($userLogin->roles->contains('name', 'Guru')) {
-            // Jika user login adalah guru, hanya tampilkan user dengan role murid
+        // 🔒 Jika user login adalah Guru, tampilkan hanya user dengan role Murid
+        if ($userLogin->roles->contains(function ($role) {
+            return ($role->name) === 'Guru';
+        })) {
             $query->whereHas('roles', function ($q) {
                 $q->where('name', 'Murid');
             });
+
+            // Optional: filter juga roles agar di dropdown cuma role "murid"
+            $roles = Role::where('name', 'Murid')->get();
         }
 
         $data = $query->get();
 
-        // dd($data, $roles, $userLogin);
-
         return view('users.index', compact('data', 'roles'));
     }
-
-
 
     /**
      * Store the newly created resource in storage.
