@@ -15,15 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('judul_id');
             $table->string('judul_en');
-            $table->text('deskripsi')->nullable();
-            $table->unsignedBigInteger('owner');
+            $table->text('deskripsi_id')->nullable();
+            $table->text('deskripsi_en')->nullable();
             $table->timestamps();
-
-            // Relasi ke tabel users
-            $table->foreign('owner')
-                  ->references('id')
-                  ->on('users')
-                  ->onDelete('cascade');
         });
     }
 

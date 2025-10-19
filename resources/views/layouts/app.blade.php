@@ -138,6 +138,16 @@
         <!-- INTERNAL SELECT2 JS -->
         <script src="{{asset('assets/plugins/select2/select2.full.min.js')}}"></script>
 
+        <!-- SELECT2 CSS -->
+        <link href="{{ asset('assets/plugins/select2/select2.min.css') }}" rel="stylesheet" />
+
+        <!-- SELECT2 Bootstrap 5 theme -->
+        <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+
+        <!-- Bootstrap CSS (wajib jika belum ada) -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+
         <!-- INTERNAL Data tables js-->
         <script src="{{asset("assets/plugins/datatable/js/jquery.dataTables.min.js")}}"></script>
         <script src="{{asset("assets/plugins/datatable/js/dataTables.bootstrap5.js")}}"></script>

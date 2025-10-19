@@ -15,84 +15,96 @@ class ModulController extends Controller
      */
     public function index()
     {
-        $userLogin = auth()->user(); // ambil user yang sedang login
-
-        // Ambil semua role
+        $userLogin = auth()->user();
         $roles = Role::all();
 
-        // Query dasar modul
-        $query = Modul::with('user', 'user.roles');
+        // Query dasar
+        $query = Modul::with('users.roles');
 
-        // Jika user login memiliki role Guru
+        // Jika user login adalah Guru
         if ($userLogin->roles->contains('name', 'Guru')) {
-            // Hanya tampilkan modul milik sendiri
-            $query->where('owner', $userLogin->id);
+            // Tampilkan semua modul, tapi nanti di Blade dicek apakah dia owner atau bukan
+            // Jika kamu hanya ingin tampilkan modul milik dia saja, pakai whereHas di bawah ini:
+            // $query->whereHas('users', fn($q) => $q->where('user_id', $userLogin->id));
         }
 
-        // Jika user login adalah Admin, tampilkan semua
-        elseif ($userLogin->roles->contains('name', 'Admin')) {
-            // Tidak ada filter owner, tampilkan semua modul
+        // Admin melihat semua modul
+        elseif ($userLogin->roles->contains('name', 'Administrator')) {
+            // Tidak perlu filter
         }
 
-        // Ambil data modul
+        // dd($userLogin);
+
         $data = $query->get();
 
-        return view('modul.index', compact('data', 'roles'));
+        return view('modul.index', compact('data', 'roles', 'userLogin'));
     }
 
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+
+    public function search(Request $request)
     {
-        //
+        $userLogin = auth()->user(); // ambil user login
+        $search = $request->q;
+
+        // Query dasar pencarian user
+        $query = User::where('name', 'like', "%{$search}%")
+                    ->select('id', 'name')
+                    ->limit(10);
+
+        // 🔒 Batasi hasil berdasarkan role user yang login
+        if ($userLogin->roles->contains('name', 'Guru')) {
+            // Guru hanya bisa melihat Guru
+            $query->whereHas('roles', function ($q) {
+                $q->where('name', 'Guru');
+            });
+        } elseif ($userLogin->roles->contains('name', 'Administrator')) {
+            // Admin bisa melihat Guru dan Admin
+            $query->whereHas('roles', function ($q) {
+                $q->whereIn('name', ['Guru', 'Administrator']);
+            });
+        } else {
+            // Role lain tidak boleh melihat siapa pun
+            $query->whereRaw('1 = 0'); // selalu false → hasil kosong
+        }
+
+        $users = $query->get();
+
+        return response()->json($users);
     }
+
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        // Validasi input
         $request->validate([
             'judul_id' => 'required|string|max:255',
             'judul_en' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
+            'deskripsi_id' => 'nullable|string',
+            'deskripsi_en' => 'nullable|string',
+            'owner' => 'required|array', // multiple owner
         ]);
 
+        // dd($request->all());
+
         try {
-            // Simpan data modul
             $modul = Modul::create([
                 'judul_id' => $request->judul_id,
                 'judul_en' => $request->judul_en,
-                'deskripsi'      => $request->deskripsi,
-                'owner'          => auth()->user()->id,
+                'deskripsi_id' => $request->deskripsi_id,
+                'deskripsi_en' => $request->deskripsi_en,
             ]);
 
-            // Jika berhasil, tampilkan notifikasi sukses
+            // Simpan relasi ke tabel pivot modul_user
+            $modul->owners()->attach($request->owner);
+
+            // dd($modul);
             return redirect()->back()->with('success', 'Data modul berhasil dibuat!');
         } catch (\Exception $e) {
-            // Jika gagal, tampilkan pesan error
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
-    }
-
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Modul $modul)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Modul $modul)
-    {
-        //
     }
 
     /**
@@ -100,21 +112,38 @@ class ModulController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Validasi input
         $request->validate([
-            'judul_id' => 'required|string|max:255',
-            'judul_en' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
+            'judul_id'      => 'required|string|max:255',
+            'judul_en'      => 'required|string|max:255',
+            'deskripsi_id'  => 'nullable|string',
+            'deskripsi_en'  => 'nullable|string',
+            'owner'         => 'nullable|array',  // multiple owner
+            'owner.*'       => 'exists:users,id',
         ]);
 
         try {
-            $modul = Modul::findOrFail($id);
+            $modul = Modul::with('users')->findOrFail($id);
+            $userLogin = auth()->user();
 
+            // Cek apakah user login adalah owner atau admin
+            $isOwner = $modul->users->contains('id', $userLogin->id) || $userLogin->roles->contains('name', 'Administrator');
+
+            if (!$isOwner) {
+                return redirect()->back()->with('error', 'Kamu tidak memiliki izin untuk mengubah data modul ini.');
+            }
+
+            // Update data modul
             $modul->update([
-                'judul_id' => $request->judul_id,
-                'judul_en' => $request->judul_en,
-                'deskripsi' => $request->deskripsi,
+                'judul_id'      => $request->judul_id,
+                'judul_en'      => $request->judul_en,
+                'deskripsi_id'  => $request->deskripsi_id,
+                'deskripsi_en'  => $request->deskripsi_en,
             ]);
+
+            // Sinkronisasi owner di tabel pivot (jika diubah)
+            if ($request->has('owner')) {
+                $modul->users()->sync($request->owner);
+            }
 
             return redirect()->back()->with('success', 'Data modul berhasil diperbarui!');
         } catch (\Exception $e) {
@@ -123,13 +152,23 @@ class ModulController extends Controller
     }
 
 
+
     /**
      * Remove the specified resource from storage.
      */
     public function destroy($id)
     {
         try {
-            $modul = Modul::findOrFail($id);
+            $modul = Modul::with('users')->findOrFail($id);
+            $userLogin = auth()->user();
+
+            // Cek apakah user login adalah owner atau admin
+            $isOwner = $modul->users->contains('id', $userLogin->id) || $userLogin->roles->contains('name', 'Administrator');
+
+            if (!$isOwner) {
+                return redirect()->back()->with('error', 'Kamu tidak memiliki izin untuk menghapus data modul ini.');
+            }
+
             $modul->delete();
 
             return redirect()->back()->with('success', 'Data berhasil dihapus!');
@@ -137,5 +176,6 @@ class ModulController extends Controller
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
+
 
 }

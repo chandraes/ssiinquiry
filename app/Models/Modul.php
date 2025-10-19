@@ -11,13 +11,19 @@ class Modul extends Model
     protected $fillable = [
         'judul_id',
         'judul_en',
-        'deskripsi',
-        'owner',
+        'deskripsi_id',
+        'deskripsi_en',
     ];
 
-    public function user()
+    public function users()
     {
-        return $this->belongsTo(User::class, 'owner');
+        return $this->belongsToMany(User::class, 'modul_user', 'modul_id', 'user_id');
     }
+
+    public function owners()
+    {
+        return $this->belongsToMany(User::class, 'modul_user', 'modul_id', 'user_id');
+    }
+
     
 }

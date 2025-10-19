@@ -63,4 +63,10 @@ class User extends Authenticatable
         return $this->hasOne(ProfileUser::class);
     }
 
+    public function moduls()
+    {
+        return $this->belongsToMany(Modul::class, 'modul_user', 'user_id', 'modul_id');
+    }
+
+
 }

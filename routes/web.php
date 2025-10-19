@@ -50,6 +50,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/store', [App\Http\Controllers\ModulController::class, 'store'])->name('modul.store');
         // Route::post('/upload', [App\Http\Controllers\ModulController::class, 'upload'])->name('modul.upload');
         Route::delete('/delete/{id}', [App\Http\Controllers\ModulController::class, 'destroy'])->name('modul.delete');
+        Route::get('/search', [App\Http\Controllers\ModulController::class, 'search'])->name('modul.search-user');
     });
 });
 

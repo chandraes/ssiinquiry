@@ -17,19 +17,43 @@
                             <input name="judul_id" id="edit_judul_id" required class="form-control" style="border-color:darkgrey">
                         </div>
                     </div>
+
                     <div class="col-md-12 mb-3">
                         <div class="form-group">
                             <label for="edit_judul_en" class="form-label">Judul Modul EN</label>
                             <input type="text" name="judul_en" id="edit_judul_en" required class="form-control" style="border-color:darkgrey">
                         </div>
                     </div>
+
                     <div class="col-md-12 mb-3">
                         <div class="form-group">
-                            <label for="edit_deskripsi" class="form-label">Deskripsi</label>
-                            <textarea name="deskripsi" id="edit_deskripsi" required class="form-control" style="border-color:darkgrey"></textarea>
+                            <label for="edit_deskripsi_id" class="form-label">Deskripsi (ID)</label>
+                            <textarea name="deskripsi_id" id="edit_deskripsi_id" class="form-control" style="border-color:darkgrey"></textarea>
                         </div>
                     </div>
+
+                    <div class="col-md-12 mb-3">
+                        <div class="form-group">
+                            <label for="edit_deskripsi_en" class="form-label">Deskripsi (EN)</label>
+                            <textarea name="deskripsi_en" id="edit_deskripsi_en" class="form-control" style="border-color:darkgrey"></textarea>
+                        </div>
+                    </div>
+
+                    {{-- Select Owner --}}
+                    <div class="col-md-12 mb-3">
+                        <div class="form-group">
+                            <label for="edit_owner" class="form-label">Pilih Owner</label>
+                            <select name="owner[]" id="edit_owner" class="form-control" multiple="multiple" style="width: 100%; border-color:darkgrey">
+                                {{-- @foreach ($users as $user)
+                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                @endforeach --}}
+                            </select>
+                            <small class="text-muted">Kamu bisa memilih lebih dari satu owner</small>
+                        </div>
+                    </div>
+
                 </div>
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                     <button type="button" id="btnUpdate" class="btn btn-primary">Simpan Perubahan</button>
