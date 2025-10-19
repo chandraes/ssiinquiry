@@ -34,7 +34,7 @@
                             class="side-menu__icon fe fe-file"></i><span class="side-menu__label">Modul</span></a>
                 </li>
                 @endrole
-                <li class="sub-category">
+                {{-- <li class="sub-category">
                     <h3>Widgets</h3>
                 </li>
                 <li>
@@ -109,8 +109,8 @@
                         <li><a href="search.html" class="slide-item">Search</a></li>
                         <li><a href="crypto-currencies.html" class="slide-item"> Crypto-currencies</a></li>
                     </ul>
-                </li>
-                
+                </li> --}}
+
                 @role('admin')
                 <li class="sub-category">
                     <h3>Pengaturan</h3>
