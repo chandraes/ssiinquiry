@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('title')
-DAFTAR PENGGUNA
+Pengguna
 @endsection
 @section('content')
 @include('swal')
@@ -18,7 +18,7 @@ DAFTAR PENGGUNA
                                 <div class="card-header justify-content-between">
                                     <h2 class="card-title">Daftar Pengguna</h2>
                                     <button
-                                        type="button" class="btn btn-primary waves-effect waves-light m-5 mx-2" data-bs-toggle="modal" data-bs-target="#createModal">
+                                        type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#createModal">
                                         <i class="fa fa-plus me-2"></i>Tambah Data
                                     </button>
                                 </div>
@@ -73,7 +73,7 @@ DAFTAR PENGGUNA
                                                         <button type="button"
                                                                 class="btn btn-icon bg-danger my-2"
                                                                 title="Delete Data"
-                                                                onclick="deleteRuang({{$d->id}})"> <i class="fe fe-trash"></i>
+                                                                onclick="deleteButton({{$d->id}})"> <i class="fe fe-trash"></i>
                                                         </button>
 
                                                         <form action="{{ route('user.delete', $d->id) }}"
@@ -111,6 +111,26 @@ DAFTAR PENGGUNA
         $('#data').DataTable();
     });
 
+    // Konfirmasi Simpan
+    document.getElementById('btnCreate').addEventListener('click', function (e) {
+        e.preventDefault();
+
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Data akan disimpan!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Simpan!',
+            cancelButtonText: 'Batal',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Submit form jika user klik "Ya, Simpan!"
+                document.getElementById('storeForm').submit();
+            }
+        });
+    });
+
     function editButton(data, id) {
         const form = document.getElementById('editForm');
         form.action = '/pengguna/ubah/' + id;
@@ -128,10 +148,27 @@ DAFTAR PENGGUNA
         }
     }
 
+    // Konfirmasi simpan perubahan
+    document.getElementById('btnUpdate').addEventListener('click', function (e) {
+        e.preventDefault();
 
+        Swal.fire({
+            title: 'Simpan Perubahan?',
+            text: "Apakah Anda yakin ingin menyimpan perubahan pada modul ini?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Simpan',
+            cancelButtonText: 'Batal',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('editForm').submit();
+            }
+        });
+    });
 
     // Hapus data
-    function deleteRuang(id) {
+    function deleteButton(id) {
         Swal.fire({
             title: 'Delete Data',
             text: "Apakah anda yakin ingin menghapus data?",
@@ -147,15 +184,5 @@ DAFTAR PENGGUNA
             }
         })
     }
-
-    // Hapus data (Langsung submit tanpa konfirmasi)
-    // function deleteRuang(id) {
-    //     const form = document.getElementById('delete-form-' + id);
-    //     if (form) {
-    //         form.submit(); // Langsung memicu aksi DELETE
-    //     } else {
-    //         console.error('Form penghapusan tidak ditemukan untuk ID:', id);
-    //     }
-    // }
 </script>
 @endpush

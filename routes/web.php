@@ -3,6 +3,14 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+
+
+// Form register (GET)
+Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+
+// Proses register (POST)
+Route::post('/register', [RegisterController::class, 'register']);
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -20,10 +28,10 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     Route::prefix('profil')->group(function () {
-        Route::get('/', [App\Http\Controllers\Admin\ProfileUserController::class, 'index'])->name('profile.index');
-        Route::get('/ubah', [App\Http\Controllers\Admin\ProfileUserController::class, 'edit'])->name('profile.edit');
-        Route::put('/update', [App\Http\Controllers\Admin\ProfileUserController::class, 'update'])->name('profile.update');
-        Route::get('/delete-foto', [App\Http\Controllers\Admin\ProfileUserController::class, 'delete_foto'])->name('profile.delete-foto');
+        Route::get('/', [App\Http\Controllers\ProfileController::class, 'index'])->name('profile.index');
+        Route::get('/ubah', [App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
+        Route::put('/update', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
+        Route::get('/delete-foto', [App\Http\Controllers\ProfileController::class, 'delete_foto'])->name('profile.delete-foto');
     });
 
     Route::group(['prefix' => 'pengguna', 'middleware' => ['role:admin,guru']], function () {
@@ -33,6 +41,16 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/store', [App\Http\Controllers\UserController::class, 'store'])->name('user.store');
         Route::post('/upload', [App\Http\Controllers\UserController::class, 'upload'])->name('user.upload');
         Route::delete('/delete/{user}', [App\Http\Controllers\UserController::class, 'destroy'])->name('user.delete');
+    });
+
+    Route::group(['prefix' => 'modul', 'middleware' => ['role:admin,guru']], function () {
+        Route::get('/', [App\Http\Controllers\ModulController::class, 'index'])->name('modul');
+        Route::get('/tambah', [App\Http\Controllers\ModulController::class, 'create'])->name('modul.create');
+        Route::patch('/ubah/{id}', [App\Http\Controllers\ModulController::class, 'update'])->name('modul.update');
+        Route::post('/store', [App\Http\Controllers\ModulController::class, 'store'])->name('modul.store');
+        // Route::post('/upload', [App\Http\Controllers\ModulController::class, 'upload'])->name('modul.upload');
+        Route::delete('/delete/{id}', [App\Http\Controllers\ModulController::class, 'destroy'])->name('modul.delete');
+        Route::get('/search', [App\Http\Controllers\ModulController::class, 'search'])->name('modul.search-user');
     });
 });
 

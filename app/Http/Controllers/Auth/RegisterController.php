@@ -7,6 +7,9 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
+use Exception;
 
 class RegisterController extends Controller
 {
@@ -49,11 +52,13 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
+            'username' => ['required', 'string', 'max:255', 'unique:users'],
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => ['required', 'string', 'min:6', 'confirmed'],
         ]);
     }
+
 
     /**
      * Create a new user instance after a valid registration.
@@ -61,12 +66,45 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\Models\User
      */
+    // protected function create(array $data)
+    // {
+    //     return User::create([
+    //         'username' => $data['username'],
+    //         'name' => $data['name'],
+    //         'email' => $data['email'],
+    //         'password' => Hash::make($data['password']),
+    //     ]);
+    // }
+
     protected function create(array $data)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+        try {
+            return DB::transaction(function () use ($data) {
+                // Simpan user baru
+                $user = User::create([
+                    'username' => $data['username'],
+                    'name' => $data['name'],
+                    'email' => $data['email'],
+                    'password' => Hash::make($data['password']),
+                ]);
+
+                // Tambahkan data ke tabel role_user
+                DB::table('role_user')->insert([
+                    'user_id' => $user->id,
+                    'role_id' => 3, // role "murid"
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+
+                // Tambahkan pesan sukses ke session
+                session()->flash('success', 'Akun berhasil dibuat!');
+
+                return $user;
+            });
+        } catch (QueryException $e) {
+            throw new \Exception('Terjadi kesalahan saat menyimpan data ke database.');
+        } catch (Exception $e) {
+            throw new \Exception('Terjadi kesalahan saat membuat user.');
+        }
     }
 }

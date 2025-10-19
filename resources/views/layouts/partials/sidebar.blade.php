@@ -2,7 +2,7 @@
     <div class="app-sidebar__overlay" data-bs-toggle="sidebar"></div>
     <aside class="app-sidebar">
         <div class="side-header">
-            <a class="header-brand1" href="index.html">
+            <a class="header-brand1" href="{{route('home')}}">
                 <img src="{{ $logoUrl }}" class="header-brand-img desktop-logo" alt="logo">
                 <img src="{{ $logoUrl }}" class="header-brand-img toggle-logo" alt="logo">
                 <img src="{{ $logoUrl }}" class="header-brand-img light-logo" alt="logo">
@@ -27,6 +27,11 @@
                 <li class="slide">
                     <a class="side-menu__item {{request()->routeIs('user') ? 'active' : ''}}" data-bs-toggle="slide" href="{{route('user')}}"><i
                             class="side-menu__icon fe fe-user"></i><span class="side-menu__label">User</span></a>
+                </li>
+
+                <li class="slide">
+                    <a class="side-menu__item {{request()->routeIs('modul') ? 'active' : ''}}" data-bs-toggle="slide" href="{{route('modul')}}"><i
+                            class="side-menu__icon fe fe-file"></i><span class="side-menu__label">Modul</span></a>
                 </li>
                 @endrole
                 <li class="sub-category">
@@ -105,7 +110,7 @@
                         <li><a href="crypto-currencies.html" class="slide-item"> Crypto-currencies</a></li>
                     </ul>
                 </li>
-              
+                
                 @role('admin')
                 <li class="sub-category">
                     <h3>Pengaturan</h3>
