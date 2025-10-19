@@ -8,7 +8,7 @@
 		$faviconPath = get_setting('app_favicon');
 		$faviconUrl = $faviconPath ? asset('storage/' . $faviconPath) : asset('favicon.ico');
 	@endphp
-	
+
 	<link rel="icon" href="{{ $faviconUrl }}">
 
 	<!-- TIITLE -->
@@ -73,7 +73,7 @@
 	<section id="home" class="h-screen flex flex-col justify-center items-center bg-gradient-to-br from-blue-50 to-blue-200 text-center px-6 pt-20">
 		<h1 class="text-5xl font-bold text-blue-800 mb-4">Eksperimen, Analisis, dan Diskusi Sains Interaktif</h1>
 		<p class="text-lg text-gray-600 mb-6 max-w-2xl">
-		<strong>SSI Inquiry</strong> membantu siswa memahami fenomena ilmiah melalui data eksperimen dari <strong>Phypox</strong>, 
+		<strong>SSI Inquiry</strong> membantu siswa memahami fenomena ilmiah melalui data eksperimen dari <strong>Phypox</strong>,
 		forum diskusi, dan video studi kasus pembelajaran yang interaktif.
 		</p>
 		<div>
@@ -88,11 +88,11 @@
 		<div>
 			<h2 class="text-3xl font-bold text-blue-700 mb-4">Apa itu SSI Inquiry?</h2>
 			<p class="text-gray-700 mb-4 leading-relaxed">
-				<strong>SSI Inquiry</strong> adalah platform pembelajaran berbasis eksperimen ilmiah. 
+				<strong>SSI Inquiry</strong> adalah platform pembelajaran berbasis eksperimen ilmiah.
 				Siswa dapat melakukan perekaman data melalui aplikasi <strong>Phypox</strong>, kemudian membandingkan hasilnya dengan data referensi di SSI Inquiry.
 			</p>
 			<p class="text-gray-700 leading-relaxed">
-				Selain itu, tersedia forum diskusi untuk berkolaborasi dan berbagi ide antar siswa, 
+				Selain itu, tersedia forum diskusi untuk berkolaborasi dan berbagi ide antar siswa,
 				serta video studi kasus dari YouTube yang bisa dijadikan bahan analisis ilmiah.
 			</p>
 		</div>
@@ -124,7 +124,7 @@
 			</div>
 		</div>
 	</section>
-									
+
   	<!-- 🔹 CARA KERJA -->
 	<section id="how" class="py-20 text-center">
 		<h2 class="text-3xl font-bold text-blue-700 mb-10">Cara Kerja SSI Inquiry</h2>

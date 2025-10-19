@@ -14,7 +14,7 @@ Route::post('/register', [RegisterController::class, 'register']);
 
 Route::get('/', function () {
     return view('index');
-});
+})->name('landing-page');
 
 Auth::routes();
 
