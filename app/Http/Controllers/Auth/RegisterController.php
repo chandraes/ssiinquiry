@@ -8,7 +8,6 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Database\QueryException;
 use Exception;
 
@@ -103,12 +102,8 @@ class RegisterController extends Controller
                 return $user;
             });
         } catch (QueryException $e) {
-            Log::error('❌ Gagal membuat user (database error): ' . $e->getMessage());
-            session()->flash('error', 'Gagal membuat akun: ' . $e->getMessage());
             throw new \Exception('Terjadi kesalahan saat menyimpan data ke database.');
         } catch (Exception $e) {
-            Log::error('❌ Gagal membuat user: ' . $e->getMessage());
-            session()->flash('error', 'Terjadi kesalahan saat membuat akun.');
             throw new \Exception('Terjadi kesalahan saat membuat user.');
         }
     }
