@@ -13,7 +13,7 @@ Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->na
 Route::post('/register', [RegisterController::class, 'register']);
 
 Route::get('/', function () {
-    return redirect()->route('login');
+    return view('index');
 });
 
 Auth::routes();
@@ -53,7 +53,3 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/search', [App\Http\Controllers\ModulController::class, 'search'])->name('modul.search-user');
     });
 });
-
-Route::get('/landing-page', [App\Http\Controllers\HomeController::class, 'landing_page'])
-    ->withoutMiddleware(['auth'])
-    ->name('landing-page');
