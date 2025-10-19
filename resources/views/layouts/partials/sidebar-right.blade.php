@@ -69,7 +69,7 @@
                     <a href="javascript:void(0);" data-bs-toggle="dropdown" class="nav-link leading-none d-flex px-1">
                         <span>
                              @php
-                                $fotoPath = auth()->user()->profile?->foto ? 'storage/'. auth()->user()->profile?->foto : 'assets/images/users/8.jpg' ;
+                                $fotoPath = auth()->user()->profile?->foto ? 'storage/'. auth()->user()->profile?->foto : 'assets/images/users/default.jpg' ;
                             @endphp
                             <img src="{{asset($fotoPath)}}" alt="profile-user"
                                 class="avatar  profile-user brround cover-image">
