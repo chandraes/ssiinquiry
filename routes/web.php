@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\LocalizationController;
 
 
 // Form register (GET)
@@ -13,8 +14,13 @@ Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->na
 Route::post('/register', [RegisterController::class, 'register']);
 
 Route::get('/', function () {
-    return view('index');
+    return view('index'); // Asumsi nama view Anda
 })->name('landing-page');
+
+// ... route Anda yang lain ...
+
+// 👇 [TAMBAHKAN KODE INI] Route untuk menangani pengalihan bahasa
+Route::get('lang/{locale}', [LocalizationController::class, 'switch'])->name('language.switch');
 
 Auth::routes();
 
