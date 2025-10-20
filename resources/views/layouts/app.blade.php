@@ -22,7 +22,7 @@
         <title>@yield('title', get_setting('app_name', config('app.name')))</title>
 
         <!-- BOOTSTRAP CSS -->
-        <link id="style" href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet" />
+        {{-- <link id="style" href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet" /> --}}
 
         <!-- STYLE CSS -->
         <link href="{{asset('assets/css/style.css')}}" rel="stylesheet" />
@@ -145,7 +145,7 @@
         <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
 
         <!-- Bootstrap CSS (wajib jika belum ada) -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+        {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" /> --}}
 
 
         <!-- INTERNAL Data tables js-->
