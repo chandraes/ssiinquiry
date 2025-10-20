@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 {{-- Mengatur atribut 'lang' secara dinamis sesuai bahasa aktif --}}
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     @php
-        $faviconPath = get_setting('app_favicon');
-        $faviconUrl = $faviconPath ? asset('storage/' . $faviconPath) : asset('favicon.ico');
+    $faviconPath = get_setting('app_favicon');
+    $faviconUrl = $faviconPath ? asset('storage/' . $faviconPath) : asset('favicon.ico');
     @endphp
 
     <link rel="icon" href="{{ $faviconUrl }}">
@@ -19,14 +20,15 @@
 </head>
 
 <body class="font-poppins text-gray-800 scroll-smooth">
-  <header class="fixed top-0 left-0 w-full bg-white shadow z-50">
+    <header class="fixed top-0 left-0 w-full bg-white shadow z-50">
         <nav class="max-w-6xl mx-auto flex justify-between items-center py-4 px-6">
             @php
-                $logoPath = get_setting('app_logo');
-                $logoUrl = $logoPath ? asset('storage/' . $logoPath) : asset('assets/images/brand/logo.png');
+            $logoPath = get_setting('app_logo');
+            $logoUrl = $logoPath ? asset('storage/' . $logoPath) : asset('assets/images/brand/logo.png');
             @endphp
-            <a href="{{route('landing-page')}}" style="display: block; position: relative; width: 120px; padding: 20px 0px;">
-                <img src="{{$logoUrl}}" alt="SSI Inquiry Logo"/>
+            <a href="{{route('landing-page')}}"
+                style="display: block; position: relative; width: 120px; padding: 20px 0px;">
+                <img src="{{$logoUrl}}" alt="SSI Inquiry Logo" />
             </a>
 
             <ul class="hidden md:flex space-x-6">
@@ -37,17 +39,49 @@
             </ul>
 
             <div class="hidden md:flex items-center space-x-3">
-                <a href="/login" class="border border-blue-700 text-blue-700 px-4 py-2 rounded-lg hover:bg-blue-700 hover:text-white transition">{{ __('landing.button_login') }}</a>
-                <a href="/register" class="bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition">{{ __('landing.button_register') }}</a>
+                <a href="/login"
+                    class="border border-blue-700 text-blue-700 px-4 py-2 rounded-lg hover:bg-blue-700 hover:text-white transition">{{
+                    __('landing.button_login') }}</a>
+                <a href="/register" class="bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition">{{
+                    __('landing.button_register') }}</a>
 
                 {{-- 👇 [BARU] Language Switcher --}}
                 <div class="relative" x-data="{ open: false }" @click.away="open = false">
-                    <button @click="open = !open" class="flex items-center justify-center w-10 h-10 bg-gray-100 rounded-full focus:outline-none">
-                        {{ strtoupper(app()->getLocale()) }}
+                    {{-- [DIUBAH] Tombol utama kini menampilkan bendera dan teks --}}
+                    <button @click="open = !open"
+                        class="flex items-center justify-center w-auto px-3 h-9 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 overflow-hidden bg-white">
+                        @if(app()->getLocale() == 'id')
+                        <img src="https://flagcdn.com/id.svg" alt="Bendera Indonesia" class="w-7 h-5 object-cover">
+                        {{-- [BARU] Teks ID di sebelah bendera --}}
+                        <span class="ml-2 font-semibold text-sm text-gray-700">ID</span>
+                        @else
+                        <img src="https://flagcdn.com/gb.svg" alt="Bendera Inggris" class="w-7 h-5 object-cover">
+                        {{-- [BARU] Teks EN di sebelah bendera --}}
+                        <span class="ml-2 font-semibold text-sm text-gray-700">EN</span>
+                        @endif
                     </button>
-                    <div x-show="open" class="absolute right-0 mt-2 py-2 w-24 bg-white rounded-md shadow-xl z-20">
-                        <a href="{{ route('language.switch', 'id') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-500 hover:text-white">ID</a>
-                        <a href="{{ route('language.switch', 'en') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-500 hover:text-white">EN</a>
+
+                    {{-- Dropdown Pilihan Bahasa --}}
+                    <div x-show="open" x-transition
+                        class="absolute right-0 mt-2 py-1 w-40 bg-white rounded-md shadow-xl z-20"
+                        style="display: none;">
+
+                        {{-- [DIUBAH] Item dropdown kini lebih informatif --}}
+                        <a href="{{ route('language.switch', 'id') }}"
+                            class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-blue-100">
+                            <img src="https://flagcdn.com/id.svg" class="w-7 h-5 mr-3" alt="Bendera Indonesia">
+                            <span>Indonesia</span>
+                            {{-- [BARU] Teks ID di pojok kanan --}}
+                            <span class="ml-auto text-xs font-bold text-gray-400">ID</span>
+                        </a>
+
+                        <a href="{{ route('language.switch', 'en') }}"
+                            class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-blue-100">
+                            <img src="https://flagcdn.com/gb.svg" class="w-7 h-5 mr-3" alt="Bendera Inggris">
+                            <span>English</span>
+                            {{-- [BARU] Teks EN di pojok kanan --}}
+                            <span class="ml-auto text-xs font-bold text-gray-400">EN</span>
+                        </a>
                     </div>
                 </div>
                 {{-- 👆 [BARU] Akhir Language Switcher --}}
@@ -65,20 +99,28 @@
                 <li><a href="#about" class="hover:text-blue-600">{{ __('landing.navbar_about') }}</a></li>
                 <li><a href="#features" class="hover:text-blue-600">{{ __('landing.navbar_features') }}</a></li>
                 <li><a href="#how" class="hover:text-blue-600">{{ __('landing.navbar_how') }}</a></li>
-                <li><a href="{{route('login')}}" class="border border-blue-700 text-blue-700 px-4 py-1 rounded-lg hover:bg-blue-700 hover:text-white transition">{{ __('landing.button_login') }}</a></li>
-                <li><a href="{{route('register')}}" class="bg-blue-700 text-white px-4 py-1 rounded-lg hover:bg-blue-800 transition">{{ __('landing.button_register') }}</a></li>
+                <li><a href="{{route('login')}}"
+                        class="border border-blue-700 text-blue-700 px-4 py-1 rounded-lg hover:bg-blue-700 hover:text-white transition">{{
+                        __('landing.button_login') }}</a></li>
+                <li><a href="{{route('register')}}"
+                        class="bg-blue-700 text-white px-4 py-1 rounded-lg hover:bg-blue-800 transition">{{
+                        __('landing.button_register') }}</a></li>
             </ul>
         </div>
     </header>
 
-    <section id="home" class="h-screen flex flex-col justify-center items-center bg-gradient-to-br from-blue-50 to-blue-200 text-center px-6 pt-20">
+    <section id="home"
+        class="h-screen flex flex-col justify-center items-center bg-gradient-to-br from-blue-50 to-blue-200 text-center px-6 pt-20">
         <h1 class="text-5xl font-bold text-blue-800 mb-4">{!! __('landing.hero_title') !!}</h1>
         <p class="text-lg text-gray-600 mb-6 max-w-2xl">
             {!! __('landing.hero_subtitle') !!}
         </p>
         <div>
-            <a href="#about" class="bg-blue-700 text-white px-6 py-3 rounded-lg hover:bg-blue-800 transition">{{ __('landing.hero_button_learn') }}</a>
-            <a href="#contact" class="ml-3 border border-blue-700 text-blue-700 px-6 py-3 rounded-lg hover:bg-blue-700 hover:text-white transition">{{ __('landing.hero_button_start') }}</a>
+            <a href="#about" class="bg-blue-700 text-white px-6 py-3 rounded-lg hover:bg-blue-800 transition">{{
+                __('landing.hero_button_learn') }}</a>
+            <a href="#contact"
+                class="ml-3 border border-blue-700 text-blue-700 px-6 py-3 rounded-lg hover:bg-blue-700 hover:text-white transition">{{
+                __('landing.hero_button_start') }}</a>
         </div>
     </section>
 
@@ -151,7 +193,9 @@
     <section id="contact" class="py-20 bg-blue-700 text-white text-center">
         <h2 class="text-3xl font-bold mb-4">{{ __('landing.cta_title') }}</h2>
         <p class="mb-8">{{ __('landing.cta_subtitle') }}</p>
-        <a href="{{route('register')}}" class="bg-white text-blue-700 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">{{ __('landing.cta_button') }}</a>
+        <a href="{{route('register')}}"
+            class="bg-white text-blue-700 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">{{
+            __('landing.cta_button') }}</a>
     </section>
 
     <footer class="bg-gray-900 text-gray-400 py-6 text-center text-sm">
@@ -167,4 +211,5 @@
         document.getElementById('year').textContent = new Date().getFullYear();
     </script>
 </body>
+
 </html>
