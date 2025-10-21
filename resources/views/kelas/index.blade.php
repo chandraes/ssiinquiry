@@ -23,7 +23,7 @@ Kelas
                                 <div class="card-header justify-content-between">
                                     <h2 class="card-title">Daftar Kelas</h2>
                                     <button
-                                        type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#createModal">
+                                        type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#createModalKelas">
                                         <i class="fa fa-plus me-2"></i>Tambah Data
                                     </button>
                                 </div>
@@ -128,7 +128,7 @@ Kelas
     // Inisialisasi Select2
     $(document).ready(function() {
         $('#guru_id').select2({
-            dropdownParent: $('#createModal'),
+            dropdownParent: $('#createModalKelas'),
             placeholder: 'Pilih Guru Pengajar...',
             allowClear: true,
             minimumInputLength: 2,
@@ -154,7 +154,7 @@ Kelas
         });
 
         // SweetAlert konfirmasi sebelum submit
-        $('#btnCreate').on('click', function() {
+        $('#btnCreateKelas').on('click', function() {
             Swal.fire({
                 title: 'Simpan Data?',
                 text: "Pastikan semua data sudah benar!",

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\Modul;
+use App\Models\Phyphox;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -73,6 +74,32 @@ class ModulController extends Controller
         return response()->json($users);
     }
 
+    public function search_phyphox(Request $request)
+    {
+        $userLogin = auth()->user(); // Ambil user yang sedang login
+        $search = $request->q;
+
+        // 1. Query dasar pencarian data Phyphox
+        $query = Phyphox::where(function ($q) use ($search) {
+            $q->where('nama', 'like', "%{$search}%")
+            ->orWhere('kategori', 'like', "%{$search}%"); // Sesuaikan kolom pencarian
+        })
+        ->select('id', 'nama', 'kategori') // Pilih kolom yang dibutuhkan
+        ->limit(10);
+
+        $phyphoxData = $query->get();
+
+        // Opsional: Format output untuk kemudahan pada frontend (misalnya, Select2)
+        $formattedData = $phyphoxData->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'text' => $item->kategori . ' (' . $item->nama . ')' // Sesuaikan format teks
+            ];
+        });
+
+        return response()->json($formattedData);
+    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -84,7 +111,8 @@ class ModulController extends Controller
             'judul_en' => 'required|string|max:255',
             'deskripsi_id' => 'nullable|string',
             'deskripsi_en' => 'nullable|string',
-            'owner' => 'required|array', // multiple owner
+            // 'owner' => 'required|array', // multiple owner
+            'phyphox_id' => 'required|array', // multiple phyphox
         ]);
 
         // dd($request->all());
@@ -95,10 +123,11 @@ class ModulController extends Controller
                 'judul_en' => $request->judul_en,
                 'deskripsi_id' => $request->deskripsi_id,
                 'deskripsi_en' => $request->deskripsi_en,
+                'phyphox_id' => $request->phyphox_id, // Simpan array sebagai JSON
             ]);
 
             // Simpan relasi ke tabel pivot modul_user
-            $modul->owners()->attach($request->owner);
+            // $modul->owners()->attach($request->owner);
 
             // dd($modul);
             return redirect()->back()->with('success', 'Data modul berhasil dibuat!');

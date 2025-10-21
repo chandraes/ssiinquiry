@@ -20,7 +20,7 @@ class KelasUserController extends Controller
         $kelas = Kelas::with(['guru', 'modul'])->findOrFail($id);
 
         $siswa = User::whereHas('roles', function ($q) {
-            $q->where('name', 'Murid');
+            $q->where('name', 'Siswa');
             })->get();
 
         // dd($siswa);

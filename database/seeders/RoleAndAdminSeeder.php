@@ -16,7 +16,7 @@ class RoleAndAdminSeeder extends Seeder
     {
         Role::create(['name' => 'Administrator', 'slug' => 'admin']);
         Role::create(['name' => 'Guru', 'slug' => 'guru']);
-        Role::create(['name' => 'Murid', 'slug' => 'murid']);
+        Role::create(['name' => 'Siswa', 'slug' => 'siswa']);
 
         // Buat user admin default
         $adminUser = User::factory()->create([

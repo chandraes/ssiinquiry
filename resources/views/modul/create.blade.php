@@ -13,6 +13,24 @@
                 <div class="modal-body">
                     <div class="col-md-12 mb-3">
                         <div class="form-group">
+                            <label for="phyphox_id" class="form-label">Pilih Alat Phyphox</label>
+                            <select name="phyphox_id[]" id="phyphox_id" class="form-control"
+                                multiple="multiple" style="width: 100%; border-color:darkgrey">
+                                
+                                {{-- Hapus option 'Pilih Modul' yang disabled/selected karena tidak relevan untuk multiple select --}}
+                                
+                                @foreach ($phyphox as $p)
+                                    <option value="{{ $p->id }}" 
+                                        {{ in_array($p->id, (array) old('phyphox_id', [])) ? 'selected' : '' }}>
+                                        {{ $p->kategori }} ({{ $p->nama }})
+                                    </option>
+                                @endforeach
+                            </select>
+                            <small class="text-muted">Kamu bisa memilih lebih dari satu Alat Phyphox</small>
+                        </div>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <div class="form-group">
                             <label for="judul_id" class="form-label">Judul Modul ID</label>
                             <input name="judul_id" id="judul_id" required class="form-control"
                                 style="border-color:darkgrey">
@@ -43,7 +61,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-12 mb-3">
+                    {{-- <div class="col-md-12 mb-3">
                         <div class="form-group">
                             <label for="owner" class="form-label">Pilih Owner</label>
                             <select name="owner[]" id="owner" class="form-control" multiple="multiple"
@@ -52,7 +70,7 @@
                             </select>
                             <small class="text-muted">Kamu bisa memilih lebih dari satu owner</small>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
 
                 <div class="modal-footer">

@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Kelas;
 use App\Models\Modul;
 use App\Models\KelasUser;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -72,13 +73,21 @@ class KelasController extends Controller
                     'guru_id' => 'required|exists:users,id',
                 ]);
             }
+
+            $kodeJoin = (function() {
+                do {
+                    $k = strtoupper(Str::random(5));
+                } while (Kelas::where('kode_join', $k)->exists());
+                return $k;
+            })();
             
-            // dd($guruId);
+            // dd($guruId, $kodeJoin);
 
             Kelas::create([
                 'modul_id' => $request->modul_id,
                 'nama_kelas' => mb_strtoupper($request->nama_kelas, 'UTF-8'),
-                'guru_id'   => $guruId,
+                'owner'   => $guruId,
+                'kode_join' => $kodeJoin,
             ]);
 
             return redirect()->back()->with('success', 'Kelas berhasil ditambahkan!');
@@ -114,7 +123,8 @@ class KelasController extends Controller
             $kelas->update([
                 'modul_id' => $request->modul_id,
                 'nama_kelas' => $request->nama_kelas,
-                'guru_id'   => $guruId,
+                'owner'   => $guruId,
+                'kode_join' => $kelas->kode_join, // kode_join tidak berubah
             ]);
 
             return redirect()->back()->with('success', 'Kelas berhasil diperbarui!');

@@ -57,6 +57,7 @@ Route::group(['middleware' => 'auth'], function () {
         // Route::post('/upload', [App\Http\Controllers\ModulController::class, 'upload'])->name('modul.upload');
         Route::delete('/delete/{id}', [App\Http\Controllers\ModulController::class, 'destroy'])->name('modul.delete');
         Route::get('/search', [App\Http\Controllers\ModulController::class, 'search'])->name('search-guru');
+        Route::get('/search-phyphox', [App\Http\Controllers\ModulController::class, 'search_phyphox'])->name('search-phyphox');
     });
 
     Route::group(['prefix' => 'kelas', 'middleware' => ['role:admin,guru']], function () {

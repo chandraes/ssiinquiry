@@ -12,7 +12,13 @@ return new class extends Migration
             $table->id();
             $table->foreignId('modul_id')->constrained('moduls')->onDelete('cascade');
             $table->string('nama_kelas');
-            $table->foreignId('guru_id')->constrained('users')->onDelete('cascade');
+            
+            // ✅ Ganti guru_id menjadi owner (tetap relasi ke tabel users)
+            $table->foreignId('owner')->constrained('users')->onDelete('cascade');
+            
+            // ✅ Tambahkan kode_join (5 karakter)
+            $table->string('kode_join', 5)->unique()->comment('kode unik untuk bergabung ke kelas');
+
             $table->timestamps();
         });
     }

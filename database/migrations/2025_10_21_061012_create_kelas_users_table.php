@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('kelas_id')->constrained('kelas')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->enum('pro_kontra_id', ['1', '2'])->nullable()
-                  ->comment('1 = pro, 2 = kontra');
+            $table->enum('pro_kontra_id', ['1', '0'])->nullable()
+                  ->comment('1 = pro, 0 = kontra');
             $table->timestamps();
 
             // Tambahkan constraint unik agar user tidak bisa terdaftar dua kali di kelas yang sama

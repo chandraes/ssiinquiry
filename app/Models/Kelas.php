@@ -14,7 +14,8 @@ class Kelas extends Model
     protected $fillable = [
         'modul_id',
         'nama_kelas',
-        'guru_id',
+        'owner',
+        'kode_join',
     ];
 
     // Relasi ke Modul
