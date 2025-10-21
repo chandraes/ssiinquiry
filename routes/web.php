@@ -56,6 +56,26 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/store', [App\Http\Controllers\ModulController::class, 'store'])->name('modul.store');
         // Route::post('/upload', [App\Http\Controllers\ModulController::class, 'upload'])->name('modul.upload');
         Route::delete('/delete/{id}', [App\Http\Controllers\ModulController::class, 'destroy'])->name('modul.delete');
-        Route::get('/search', [App\Http\Controllers\ModulController::class, 'search'])->name('modul.search-user');
+        Route::get('/search', [App\Http\Controllers\ModulController::class, 'search'])->name('search-guru');
     });
+
+    Route::group(['prefix' => 'kelas', 'middleware' => ['role:admin,guru']], function () {
+        Route::get('/', [App\Http\Controllers\KelasController::class, 'index'])->name('kelas');
+        Route::get('/tambah', [App\Http\Controllers\KelasController::class, 'create'])->name('kelas.create');
+        Route::patch('/ubah/{id}', [App\Http\Controllers\KelasController::class, 'update'])->name('kelas.update');
+        Route::post('/store', [App\Http\Controllers\KelasController::class, 'store'])->name('kelas.store');
+        // Route::post('/upload', [App\Http\Controllers\ModulController::class, 'upload'])->name('modul.upload');
+        Route::delete('/delete/{id}', [App\Http\Controllers\KelasController::class, 'destroy'])->name('kelas.delete');
+        Route::get('/guru/search', [App\Http\Controllers\KelasController::class, 'search_guru_pengajar'])->name('search-pengajar');
+
+        Route::group(['prefix' => 'peserta', 'middleware' => ['role:admin,guru']], function () {
+            Route::get('/{id}', [App\Http\Controllers\KelasUserController::class, 'index'])->name('kelas.peserta');
+            Route::get('/tambah', [App\Http\Controllers\KelasUserController::class, 'create'])->name('kelas.peserta.create');
+            Route::post('/store', [App\Http\Controllers\KelasUserController::class, 'store'])->name('kelas.peserta.store');
+            Route::post('/upload', [App\Http\Controllers\KelasUserController::class, 'upload'])->name('kelas.peserta.upload');
+            Route::delete('/delete/{id}', [App\Http\Controllers\KelasUserController::class, 'destroy'])->name('kelas.peserta.delete');
+        });
+    });
+
+    Route::get('/download-template', [App\Http\Controllers\KelasUserController::class, 'downloadTemplate'])->name('kelas.peserta.download-template');
 });

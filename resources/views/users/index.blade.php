@@ -102,9 +102,9 @@ Pengguna
 @endsection
 
 @push('js')
-<script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
+{{-- <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/select2/dist/js/select2.min.js')}}"></script>
-<script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script>
+<script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script> --}}
 <script>
     $(function() {
         "use strict";

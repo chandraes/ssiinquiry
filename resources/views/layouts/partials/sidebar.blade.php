@@ -25,13 +25,14 @@
                 </li>
                 @role(['admin','guru'])
                 <li class="slide">
-                    <a class="side-menu__item {{request()->routeIs('user') ? 'active' : ''}}" data-bs-toggle="slide" href="{{route('user')}}"><i
-                            class="side-menu__icon fe fe-user"></i><span class="side-menu__label">User</span></a>
+                    <a class="side-menu__item {{request()->routeIs('user') ? 'active' : ''}}" 
+                        data-bs-toggle="slide" href="{{route('user')}}"><i class="side-menu__icon fe fe-user">
+                        </i><span class="side-menu__label">User</span></a>
                 </li>
-
                 <li class="slide">
-                    <a class="side-menu__item {{request()->routeIs('modul') ? 'active' : ''}}" data-bs-toggle="slide" href="{{route('modul')}}"><i
-                            class="side-menu__icon fe fe-file"></i><span class="side-menu__label">Modul</span></a>
+                    <a class="side-menu__item {{ (request()->routeIs('kelas') || request()->routeIs('kelas.peserta')) ? 'active' : '' }}" 
+                        data-bs-toggle="slide" href="{{route('kelas')}}"><i class="side-menu__icon fe fe-file">
+                        </i><span class="side-menu__label">Kelas</span></a>
                 </li>
                 @endrole
                 {{-- <li class="sub-category">
@@ -114,6 +115,10 @@
                 @role('admin')
                 <li class="sub-category">
                     <h3>Pengaturan</h3>
+                </li>
+                <li class="slide">
+                    <a class="side-menu__item {{request()->routeIs('modul') ? 'active' : ''}}" data-bs-toggle="slide" href="{{route('modul')}}"><i
+                            class="side-menu__icon fe fe-file"></i><span class="side-menu__label">Modul</span></a>
                 </li>
                 <li>
                     <a class="side-menu__item {{request()->routeIs('admin.settings.*') ? 'active' : ''}}" href="{{route('admin.settings.index')}}"><i class="side-menu__icon fa fa-gears"></i><span
