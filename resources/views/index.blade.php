@@ -105,6 +105,46 @@
                 <li><a href="{{route('register')}}"
                         class="bg-blue-700 text-white px-4 py-1 rounded-lg hover:bg-blue-800 transition">{{
                         __('landing.button_register') }}</a></li>
+                <li>
+                    <div class="relative" x-data="{ open: false }" @click.away="open = false">
+                        {{-- [DIUBAH] Tombol utama kini menampilkan bendera dan teks --}}
+                        <button @click="open = !open"
+                            class="flex items-center justify-center w-auto px-3 h-9 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 overflow-hidden bg-white">
+                            @if(app()->getLocale() == 'id')
+                            <img src="https://flagcdn.com/id.svg" alt="Bendera Indonesia" class="w-7 h-5 object-cover">
+                            {{-- [BARU] Teks ID di sebelah bendera --}}
+                            <span class="ml-2 font-semibold text-sm text-gray-700">ID</span>
+                            @else
+                            <img src="https://flagcdn.com/gb.svg" alt="Bendera Inggris" class="w-7 h-5 object-cover">
+                            {{-- [BARU] Teks EN di sebelah bendera --}}
+                            <span class="ml-2 font-semibold text-sm text-gray-700">EN</span>
+                            @endif
+                        </button>
+
+                        {{-- Dropdown Pilihan Bahasa --}}
+                        <div x-show="open" x-transition
+                            class="absolute right-0 mt-2 py-1 w-40 bg-white rounded-md shadow-xl z-20"
+                            style="display: none;">
+
+                            {{-- [DIUBAH] Item dropdown kini lebih informatif --}}
+                            <a href="{{ route('language.switch', 'id') }}"
+                                class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-blue-100">
+                                <img src="https://flagcdn.com/id.svg" class="w-7 h-5 mr-3" alt="Bendera Indonesia">
+                                <span>Indonesia</span>
+                                {{-- [BARU] Teks ID di pojok kanan --}}
+                                <span class="ml-auto text-xs font-bold text-gray-400">ID</span>
+                            </a>
+
+                            <a href="{{ route('language.switch', 'en') }}"
+                                class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-blue-100">
+                                <img src="https://flagcdn.com/gb.svg" class="w-7 h-5 mr-3" alt="Bendera Inggris">
+                                <span>English</span>
+                                {{-- [BARU] Teks EN di pojok kanan --}}
+                                <span class="ml-auto text-xs font-bold text-gray-400">EN</span>
+                            </a>
+                        </div>
+                    </div>
+                </li>
             </ul>
         </div>
     </header>
