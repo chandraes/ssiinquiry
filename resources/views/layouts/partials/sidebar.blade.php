@@ -31,11 +31,11 @@
                 </li>
                 
                 {{-- Modul & Kelas Dinamis --}}
-                @if(isset($moduls) && $moduls->count() > 0)
-                    <li class="sub-category">
-                        <h3>Modul dan Kelas</h3>
-                    </li>
+                <li class="sub-category">
+                    <h3>Modul dan Kelas</h3>
+                </li>
 
+                @if(isset($moduls) && $moduls->count() > 0)
                     @foreach($moduls as $modul)
                         <li class="slide {{ request()->routeIs('modul') || request()->routeIs('kelas.*') ? 'is-expanded' : '' }}">
                             <a class="side-menu__item {{ request()->routeIs('modul') || request()->routeIs('kelas.*') ? 'active' : '' }}" data-bs-toggle="slide" href="javascript:void(0);">
@@ -61,6 +61,53 @@
                             </ul>
                         </li>
                     @endforeach
+                @else 
+                    <li>
+                        <a class="side-menu__item" href=""><i class="side-menu__icon fe fe-alert-circle"></i><span
+                                class="side-menu__label">Modul Belum Tersedia</span></a>
+                    </li>
+                    
+                @endif
+                @endrole
+
+                @role('siswa')
+                {{-- Modul & Kelas Dinamis --}}
+                <li class="sub-category">
+                    <h3>Modul dan Kelas</h3>
+                </li>
+
+                @if(isset($moduls) && $moduls->count() > 0)
+                    @foreach($moduls as $modul)
+                        <li class="slide {{ request()->routeIs('siswa.modul') || request()->routeIs('siswa.kelas.*') ? 'is-expanded' : '' }}">
+                            <a class="side-menu__item {{ request()->routeIs('siswa.modul') || request()->routeIs('siswa.kelas.*') ? 'active' : '' }}" data-bs-toggle="slide" href="javascript:void(0);">
+                                <i class="side-menu__icon fe fe-book"></i>
+                                <span class="side-menu__label">{{ $modul->judul_id }}</span>
+                                <i class="angle fa fa-angle-right"></i>
+                            </a>
+                            <ul class="slide-menu">
+                                <li class="side-menu-label1">
+                                    <a href="javascript:void(0)">{{ $modul->judul_id }}</a>
+                                </li>
+
+                                {{-- Daftar kelas --}}
+                                @forelse($modul->kelas as $kelas)
+                                    <li>
+                                        <a href="{{ route('siswa.kelas', $kelas->id) }}" class="slide-item {{ (request()->routeIs('kelas.*') && ((int)(array_values(request()->route()->parameters())[0] ?? null) === (int) $kelas->id)) ? 'active' : '' }}">{{ $kelas->nama_kelas }}</a>
+                                    </li>
+                                @empty
+                                    <li>
+                                        <span>Belum Ada Kelas</span> 
+                                    </li>
+                                @endforelse
+                            </ul>
+                        </li>
+                    @endforeach
+                @else 
+                    <li>
+                        <a class="side-menu__item" href=""><i class="side-menu__icon fe fe-alert-circle"></i><span
+                                class="side-menu__label">Modul Belum Tersedia</span></a>
+                    </li>
+                    
                 @endif
                 @endrole
 

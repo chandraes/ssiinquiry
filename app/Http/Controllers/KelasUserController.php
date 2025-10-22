@@ -17,18 +17,40 @@ class KelasUserController extends Controller
      */
     public function index($id)
     {
+        $userLogin = auth()->user();
         $kelas = Kelas::with(['guru', 'modul'])->findOrFail($id);
 
         $siswa = User::whereHas('roles', function ($q) {
             $q->where('name', 'Siswa');
             })->get();
 
-        // dd($siswa);
+        // dd($userLogin);
         $peserta = KelasUser::with('user')
             ->where('kelas_id', $id)
             ->get();
 
-        return view('kelas.peserta.index', compact('kelas', 'peserta', 'siswa'));
+        $pengantar = DB::table('pengantar')
+            ->where('modul_id', $kelas->modul_id)
+            ->first();
+
+        $tujuan = DB::table('tujuan_modul')
+            ->where('modul_id', $kelas->modul_id)
+            ->get();
+
+        $materi_awal = DB::table('materi_awal')
+            ->where('modul_id', $kelas->modul_id)
+            ->get();
+            // dd($kelas->modul_id);
+
+        $refleksi_awal = DB::table('refleksi_awal')
+            ->where('modul_id', $kelas->modul_id)
+            ->get();
+
+        return view('kelas.peserta.index', 
+        compact('kelas', 'peserta', 'siswa', 
+        'userLogin', 'pengantar', 'tujuan',
+        'materi_awal', 'refleksi_awal'
+        ));
     }
 
 
@@ -40,7 +62,7 @@ class KelasUserController extends Controller
         $request->validate([
             'kelas_id' => 'required|exists:kelas,id',
             'user_id' => 'required|exists:users,id',
-            'pro_kontra_id' => 'nullable|in:1,2',
+            'pro_kontra_id' => 'required|in:0,1',
         ]);
 
         try {
@@ -66,94 +88,87 @@ class KelasUserController extends Controller
         }
     }
 
-//     public function upload(Request $request)
-// {
-//     $request->validate([
-//         'file' => 'required|file|mimetypes:text/csv,text/plain,application/vnd.ms-excel|max:2048',
-//     ]);
+    public function markPro(Request $request, $id)
+    {
 
+        try {
+            $peserta = KelasUser::findOrFail($id);
+            $peserta->update(['pro_kontra_id' => '1']);
 
-//     // dd($request->file('file'));
+            return redirect()->back()->with('success', 'Status pro berhasil diubah.');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Gagal mengubah status: ' . $e->getMessage());
+        }
+    }
 
+    public function markKontra(Request $request, $id)
+    {
+        try {
+            $peserta = KelasUser::findOrFail($id);
+            $peserta->update(['pro_kontra_id' => '0']);
 
-//     try {
-//         $file = $request->file('file');
-//         $path = $file->getRealPath();
+            return redirect()->back()->with('success', 'Status kontra berhasil diubah.');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Gagal mengubah status: ' . $e->getMessage());
+        }
+    }
 
-//         // Baca file CSV
-//         $data = array_map('str_getcsv', file($path));
-//         $inserted = 0;
-//         $skipped = 0;
-//         $errors = [];
+    /**
+     * Simpan jawaban peserta untuk sebuah kelas (route name: kelas.jawaban.simpan)
+     *
+     * Mengharapkan payload:
+     * - user_id (optional, default: auth user)
+     * - jawaban => [
+     *     ['pertanyaan_id' => int, 'jawaban_text' => string|null],
+     *     ...
+     *   ]
+     */
+    public function simpanJawaban(Request $request, $id)
+    {
+        $request->validate([
+            'user_id' => 'nullable|exists:users,id',
+            'jawaban' => 'required|array|min:1',
+            'jawaban.*.pertanyaan_id' => 'required|integer',
+            'jawaban.*.jawaban_text' => 'nullable|string',
+        ]);
 
-//         DB::beginTransaction();
+        // pastikan kelas ada
+        $kelas = Kelas::findOrFail($id);
 
-//         foreach ($data as $index => $row) {
-//             if ($index == 0) continue; // Lewati header
+        // gunakan user dari request jika ada, kalau tidak gunakan user yang sedang login
+        $userId = $request->input('user_id', auth()->id());
 
-//             $namaKelas = trim($row[0] ?? '');
-//             $namaSiswa = trim($row[1] ?? '');
+        DB::beginTransaction();
+        try {
+            $now = now();
+            $rows = [];
 
-//             if (!$namaKelas || !$namaSiswa) {
-//                 $skipped++;
-//                 continue;
-//             }
+            foreach ($request->input('jawaban', []) as $item) {
+                $rows[] = [
+                    'kelas_id' => $kelas->id,
+                    'user_id' => $userId,
+                    'pertanyaan_id' => $item['pertanyaan_id'],
+                    'jawaban' => $item['jawaban_text'] ?? null,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ];
+            }
 
-//             // Cari kelas berdasarkan nama_kelas
-//             $kelas = Kelas::whereRaw('LOWER(nama_kelas) = ?', [strtolower($namaKelas)])->first();
-//             if (!$kelas) {
-//                 $errors[] = "Kelas '{$namaKelas}' tidak ditemukan.";
-//                 $skipped++;
-//                 continue;
-//             }
+            // Simpan atau update jika sudah ada (menggunakan upsert)
+            // key unik: kelas_id + user_id + pertanyaan_id
+            DB::table('jawaban')->upsert(
+                $rows,
+                ['kelas_id', 'user_id', 'pertanyaan_id'],
+                ['jawaban', 'updated_at']
+            );
 
-//             // Cari user berdasarkan nama lengkap (nama_siswa)
-//             $user = User::whereRaw('LOWER(name) = ?', [strtolower($namaSiswa)])->first();
-//             if (!$user) {
-//                 $errors[] = "Siswa '{$namaSiswa}' belum membuat akun.";
-//                 $skipped++;
-//                 continue;
-//             }
-
-//             // Cek duplikat data
-//             $exists = KelasUser::where('kelas_id', $kelas->id)
-//                 ->where('user_id', $user->id)
-//                 ->exists();
-
-//             if ($exists) {
-//                 $skipped++;
-//                 continue;
-//             }
-
-//             // Simpan data peserta
-//             KelasUser::create([
-//                 'kelas_id' => $kelas->id,
-//                 'user_id' => $user->id,
-//                 'pro_kontra_id' => null,
-//             ]);
-
-//             $inserted++;
-//         }
-
-//         DB::commit();
-
-//         // Buat pesan sukses + error detail
-//         $message = "Upload selesai! {$inserted} peserta ditambahkan, {$skipped} dilewati.";
-//         if (count($errors) > 0) {
-//             $message .= "Detail Kesalahan:";
-//             foreach ($errors as $err) {
-//                 $message .= "$err";
-//             }
-//             $message .= "";
-//         }
-
-//         return redirect()->back()->with('success', $message);
-
-//     } catch (\Exception $e) {
-//         DB::rollBack();
-//         return redirect()->back()->with('error', 'Gagal upload peserta: ' . $e->getMessage());
-//     }
-// }
+            DB::commit();
+            return redirect()->back()->with('success', 'Jawaban berhasil disimpan.');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Gagal menyimpan jawaban: ' . $e->getMessage());
+        }
+    }
 
 
     public function downloadTemplate(): StreamedResponse

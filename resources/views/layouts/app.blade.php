@@ -56,6 +56,11 @@
                                 $logoPath = get_setting('app_logo');
                                 $logoUrl = $logoPath ? asset('storage/' . $logoPath) : asset('assets/images/brand/logo.png');
                                 $moduls = Modul::with('kelas')->get();
+                                $modul_siswa = Modul::with('kelas', 'kelas.kelas_user')
+                                        ->whereHas('kelas.kelas_user', function ($query) {
+                                            $query->where('user_id', auth()->id());
+                                        })
+                                        ->get();
                             @endphp
                             <div class="responsive-logo">
                                 <a href="index.html" class="header-logo">

@@ -30,9 +30,9 @@ class Kelas extends Model
         return $this->belongsTo(User::class, 'guru_id');
     }
 
-    // Relasi ke KelasUser (Peserta)
-    public function peserta()
+    public function kelas_user()
     {
-        return $this->hasMany(KelasUser::class, 'kelas_id');    
-    }        
+        // Parameter: Model tujuan, Nama tabel pivot
+        return $this->hasMany(KelasUser::class, 'kelas_id');
+    }      
 }

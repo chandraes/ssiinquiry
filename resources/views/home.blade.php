@@ -4,106 +4,186 @@
 @endsection
 @section('content')
 @include('swal')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">{{ __('Dashboard') }}</div>
-                @php
-                    // Cek apakah user login termasuk owner atau admin
-                    $isGuru = $userLogin->roles->contains('name', 'Guru');
-                    $isAdmin = $userLogin->roles->contains('name', 'Administrator');
-                @endphp
-                @if ($isAdmin)
-                    <div class="card-body">
-                        <div class="card-header">Modul</div>
-                        <div class="row">
-                            @include('modul.create')
-                            <!-- Card Tambah Modul -->
-                            <div class="col-md-4 col-sm-6 mb-4">
-                                <div class="card text-center shadow-sm border-0 hover-card"
-                                    style="cursor:pointer; transition: transform 0.2s ease;"
-                                    data-bs-toggle="modal" data-bs-target="#createModal">
-                                    <div class="card-body py-5">
-                                        <i class="fa fa-plus fa-3x text-primary mb-3"></i>
-                                        <h5 class="card-title text-primary mb-0">Buat Modul Baru</h5>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <!-- Card Statistik atau Info lain -->
-                            <div class="col-md-4 col-sm-6 mb-4">
-                                <div class="card text-center shadow-sm border-0">
-                                    <div class="card-body py-5">
-                                        <i class="fa fa-book fa-3x text-success mb-3"></i>
-                                        <h5 class="card-title mb-1">Total Modul</h5>
-                                        <h3 class="fw-bold text-success">{{ $modul->count() }}</h3>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Card lainnya -->
-                            <div class="col-md-4 col-sm-6 mb-4">
-                                <div class="card text-center shadow-sm border-0">
-                                    <div class="card-body py-5">
-                                        <i class="fa fa-users fa-3x text-info mb-3"></i>
-                                        <h5 class="card-title mb-1">Total Owner</h5>
-                                        <h3 class="fw-bold text-info">
-                                            {{ $modul->pluck('owners')->flatten()->unique('id')->count() }}
-                                        </h3>
-                                    </div>
-                                </div>
-                            </div>
+<div class="main-container container-fluid">
+    <div class="col-12">
+        @php
+            // Cek apakah user login termasuk owner atau admin
+            $isGuru = $userLogin->roles->contains('name', 'Guru');
+            $isAdmin = $userLogin->roles->contains('name', 'Administrator');
+            $isSiswa = $userLogin->roles->contains('name', 'Siswa');
+        @endphp
+        @if($isSiswa)
+            <!-- ROW-3 OPEN -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">MODUL DAN KELAS</h3>
                         </div>
+                        @if($modul->isEmpty())
+                            <div class="card-body">
+                                <div class="alert alert-info" role="alert">
+                                    Tidak ada modul tersedia. Silakan tambahkan modul baru.
+                                </div>
+                            </div>
+                        @else
+                            <div class="card-body">
+                                <div class="row">
+                                @foreach( $modul as $m )
+                                    @include('kelas.create')
+                                    <div class="col-md-4 col-xl-4">
+                                        <div class="card bg-info-transparent mb-4 shadow-md border-0">
+                                            <div class="card-status bg-blue br-tr-7 br-tl-7"></div>
+                                            <div class="card-header">
+                                                <h3 class="card-title">{{$m->judul_id}}</h3>
+                                                @if($isAdmin || $isGuru)
+                                                    <div class="card-options">
+                                                        <a type="button" data-bs-toggle="modal" data-bs-target="#createModalKelas"
+                                                            class="btn btn-success btn-icon text-white">
+                                                            <span>
+                                                                <i class="fe fe-plus"></i>
+                                                            </span> Tambah Kelas
+                                                        </a>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                            <div class="row card-body text-center justify-content-center">
+                                                {{-- Pastikan $m->modul tidak null sebelum mengakses relasi --}}
+                                                {{-- Pemeriksaan isNotEmpty() dilakukan pada relasi Phyphox yang ada di dalam Modul --}}
+                                                @if ($m->relatedPhyphox->isNotEmpty())
+                                                    {{-- Loop melalui relasi kustom relatedPhyphox --}}
+                                                    @foreach ($m->relatedPhyphox as $phyphox)
+                                                        <div class="col-md-6">
+                                                            {{-- TAMBAHKAN KELAS BACKGROUND DI SINI --}}
+                                                            <span class="avatar avatar-xxl brround cover-image " style="background-color: #007bff;"  data-bs-image-src="{{asset('storage/phyphox/'. $phyphox->icon)}}"></span>
+                                                            {{-- Atau jika Anda punya bg-blue kustom: --}}
+                                                            {{-- <span class="avatar avatar-xxl brround cover-image bg-blue" data-bs-image-src="{{asset('storage/phyphox_icons/'. $phyphox->icon)}}"></span> --}}
+                                                            <p>{{ $phyphox->nama }} ({{ $phyphox->kategori }})</p>
+                                                        </div>
+                                                    @endforeach
+                                                @else
+                                                    <p>Tidak ada alat Phyphox terkait.</p>
+                                                @endif
+                                            </div>
+                                            <div class="card-footer text-center">
+                                                @if(!$m)
+                                                    <p class="text-danger">Belum ada kelas untuk modul ini.</p>
+                                                    {{-- <span class="badge bg-success me-1 mb-1">Tambah Kelas</span> --}}
+                                                @else
+                                                @foreach($m->kelas as $k)
+                                                    <p class="text-primary mb-1"><strong>Daftar Kelas :</strong></p>
+                                                    <div class="col-md-12">
+                                                        <a href="{{route('siswa.kelas', $k->id)}}" type="button" class="btn btn-info  mt-1 mb-1 me-3">
+                                                            <span>{{ $k->nama_kelas }}</span>
+                                                            <span class="badge bg-white rounded-pill">{{ $k->kelas_user->count() }}</span>
+                                                        </a>
+                                                    </div>
+                                                @endforeach
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                                </div>
+                            </div>
+                        @endif
                     </div>
-                @endif
-                
-                @if ($isGuru || $isAdmin)
-                    <div class="card-body">
-                        <div class="card-header">Kelas</div>
-                        <div class="row">
-                            @include('kelas.create')
-                            <!-- Card Tambah Modul -->
-                            <div class="col-md-4 col-sm-6 mb-4">
-                                <div class="card text-center shadow-sm border-0 hover-card"
-                                    style="cursor:pointer; transition: transform 0.2s ease;"
-                                    data-bs-toggle="modal" data-bs-target="#createModalKelas">
-                                    <div class="card-body py-5">
-                                        <i class="fa fa-plus fa-3x text-primary mb-3"></i>
-                                        <h5 class="card-title text-primary mb-0">Buat Kelas Baru</h5>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Card Statistik atau Info lain -->
-                            <div class="col-md-4 col-sm-6 mb-4">
-                                <div class="card text-center shadow-sm border-0">
-                                    <div class="card-body py-5">
-                                        <i class="fa fa-book fa-3x text-success mb-3"></i>
-                                        <h5 class="card-title mb-1">Total Kelas</h5>
-                                        <h3 class="fw-bold text-success">{{ $data->count() }}</h3>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Card lainnya -->
-                            <div class="col-md-4 col-sm-6 mb-4">
-                                <div class="card text-center shadow-sm border-0">
-                                    <div class="card-body py-5">
-                                        <i class="fa fa-users fa-3x text-info mb-3"></i>
-                                        <h5 class="card-title mb-1">Total Peserta</h5>
-                                        <h3 class="fw-bold text-info">
-                                            {{ $data->pluck('peserta')->flatten()->unique('id')->count() }}
-                                        </h3>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @endif
+                </div>
             </div>
-        </div>
+        @else
+            <!-- ROW-3 OPEN -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">MODUL DAN KELAS</h3>
+                            @if($isAdmin)
+                                @include('modul.create')
+                                <div class="card-options">
+                                    <a type="button" data-bs-toggle="modal" data-bs-target="#createModal"
+                                        class="btn btn-primary btn-icon text-white me-2">
+                                        <span>
+                                            <i class="fe fe-plus"></i>
+                                        </span> Tambah Modul
+                                    </a>
+                                    {{-- <a href="javascript:void(0);" class="btn btn-secondary btn-md ms-2">Action 2</a> --}}
+                                </div>
+                            @endif
+                        </div>
+                        @if($modul->isEmpty())
+                            <div class="card-body">
+                                <div class="alert alert-info" role="alert">
+                                    Tidak ada modul tersedia. Silakan tambahkan modul baru.
+                                </div>
+                            </div>
+                        @else
+                            <div class="card-body">
+                                <div class="row">
+                                @foreach( $modul as $m )
+                                    @include('kelas.create')
+                                    <div class="col-md-4 col-xl-4">
+                                        <div class="card bg-info-transparent mb-4 shadow-md border-0">
+                                            <div class="card-status bg-blue br-tr-7 br-tl-7"></div>
+                                            <div class="card-header">
+                                                <h3 class="card-title">{{$m->judul_id}}</h3>
+                                                @if($isAdmin || $isGuru)
+                                                    <div class="card-options">
+                                                        <a type="button" data-bs-toggle="modal" data-bs-target="#createModalKelas"
+                                                            class="btn btn-success btn-icon text-white">
+                                                            <span>
+                                                                <i class="fe fe-plus"></i>
+                                                            </span> Tambah Kelas
+                                                        </a>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                            <div class="row card-body text-center justify-content-center">
+                                                @if ($m->relatedPhyphox->isNotEmpty())
+                                                    {{-- Loop melalui relasi kustom relatedPhyphox --}}
+                                                    @foreach ($m->relatedPhyphox as $phyphox)
+                                                        <div class="col-md-6">
+                                                            {{-- TAMBAHKAN KELAS BACKGROUND DI SINI --}}
+                                                            <span class="avatar avatar-xxl brround cover-image " style="background-color: #007bff;"  data-bs-image-src="{{asset('storage/phyphox/'. $phyphox->icon)}}"></span>
+                                                            {{-- Atau jika Anda punya bg-blue kustom: --}}
+                                                            {{-- <span class="avatar avatar-xxl brround cover-image bg-blue" data-bs-image-src="{{asset('storage/phyphox_icons/'. $phyphox->icon)}}"></span> --}}
+                                                            <p>{{ $phyphox->nama }} ({{ $phyphox->kategori }})</p>
+                                                        </div>
+                                                    @endforeach
+                                                @else
+                                                    <p>Tidak ada alat Phyphox terkait.</p>
+                                                @endif
+                                            </div>
+                                            <div class="card-footer text-center">
+                                                @if($m->kelas->isEmpty())
+                                                    <p class="text-danger">Belum ada kelas untuk modul ini.</p>
+                                                    {{-- <span class="badge bg-success me-1 mb-1">Tambah Kelas</span> --}}
+                                                @else
+                                                    <p class="text-primary mb-1"><strong>Daftar Kelas :</strong></p>
+                                                    @foreach($m->kelas as $m)
+                                                    <div class="col-md-12">
+                                                        <a href="{{route('kelas.peserta', $m->id)}}" type="button" class="btn btn-info  mt-1 mb-1 me-3">
+                                                            <span>{{ $m->nama_kelas }}</span>
+                                                            <span class="badge bg-white rounded-pill">{{ $m->kelas_user->count() }}</span>
+                                                        </a>
+                                                    </div>
+                                                    @endforeach
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        @endif
     </div>
+    
+    
+    <!-- ROW-3 CLOSED -->
 </div>
 @endsection
 @push('js')

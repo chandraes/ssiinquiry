@@ -15,5 +15,6 @@ class Phyphox extends Model
         'kategori',
         'nama',
         'is_active',
+        'icon',
     ];
 }

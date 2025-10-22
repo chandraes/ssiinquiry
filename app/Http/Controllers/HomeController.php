@@ -29,10 +29,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $phyphox = Phyphox::where('is_active', 1)->get();
         $userLogin = auth()->user();
         $data = Kelas::with(['modul', 'guru'])->latest()->get();
-        $modul = Modul::all();
+        $modul = Modul::with(['kelas', 'kelas.kelas_user'])->get();
 
         // Hanya tampilkan guru jika role user login adalah Administrator
         $guru = [];
@@ -40,7 +39,10 @@ class HomeController extends Controller
             $guru = User::where('role', 'guru')->get();
         }
 
-        return view('home', compact('phyphox','data', 'modul', 'guru', 'userLogin'));
+        $kelas_siswa = Modul::with('kelas.kelas_user', 'kelas')
+                ->get();
+
+        return view('home', compact('data', 'modul', 'guru', 'userLogin', 'kelas_siswa'));
     }
 
     public function landing_page()

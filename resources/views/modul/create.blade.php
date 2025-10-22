@@ -19,12 +19,6 @@
                                 
                                 {{-- Hapus option 'Pilih Modul' yang disabled/selected karena tidak relevan untuk multiple select --}}
                                 
-                                @foreach ($phyphox as $p)
-                                    <option value="{{ $p->id }}" 
-                                        {{ in_array($p->id, (array) old('phyphox_id', [])) ? 'selected' : '' }}>
-                                        {{ $p->kategori }} ({{ $p->nama }})
-                                    </option>
-                                @endforeach
                             </select>
                             <small class="text-muted">Kamu bisa memilih lebih dari satu Alat Phyphox</small>
                         </div>

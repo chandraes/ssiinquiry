@@ -13,6 +13,7 @@ Kelas
                     // Cek apakah user login termasuk owner atau admin
                     $isGuru = $userLogin->roles->contains('name', 'Guru');
                     $isAdmin = $userLogin->roles->contains('name', 'Administrator');
+                    $isSiswa = $userLogin->roles->contains('name', 'Siswa');
                 @endphp
                  @include('kelas.create')
                 <div class="box-body" style="height: 1200px">

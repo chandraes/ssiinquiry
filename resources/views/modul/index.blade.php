@@ -144,6 +144,32 @@ Modul
             }
         });
 
+        $('#phyphox_id').select2({
+            dropdownParent: $('#createModal'),
+            placeholder: 'Pilih Alat Ukur...',
+            allowClear: true,
+            minimumInputLength: 2,
+            ajax: {
+                url: '{{ route('search-phyphox') }}', // route pencarian user
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return { q: params.term };
+                },
+                processResults: function(data) {
+                    return {
+                        results: $.map(data, function(item) {
+                            return {
+                                id: item.id,
+                                text: item.text
+                            }
+                        })
+                    };
+                },
+                cache: true
+            }
+        });
+
         // SweetAlert konfirmasi sebelum submit
         $('#btnCreate').on('click', function() {
             Swal.fire({

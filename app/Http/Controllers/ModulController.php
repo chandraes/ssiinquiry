@@ -18,7 +18,7 @@ class ModulController extends Controller
     {
         $userLogin = auth()->user();
         $roles = Role::all();
-
+        
         // Query dasar
         $query = Modul::with('users.roles');
 
@@ -85,6 +85,7 @@ class ModulController extends Controller
             ->orWhere('kategori', 'like', "%{$search}%"); // Sesuaikan kolom pencarian
         })
         ->select('id', 'nama', 'kategori') // Pilih kolom yang dibutuhkan
+        ->where('is_active', '1') // Hanya yang aktif
         ->limit(10);
 
         $phyphoxData = $query->get();

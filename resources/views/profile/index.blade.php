@@ -16,7 +16,7 @@ Profile
                                 <div class="wideget-user-desc text-xl-right">
                                     <div class="wideget-user-img">
                                         @if($user->profile && $user->profile->foto)
-                                            <img class="" style="height:300px; width:300px" src="{{ asset('storage/' . $user->profile?->foto) }}" alt="Foto Profil">
+                                            <img class="" style="height:300px; width:300px" src="{{ asset('storage/' . $user->profile->foto) }}" alt="Foto Profil">
                                          @else
                                             <img class="" style="height:300px; width:300px" src="{{ asset('assets/images/users/default.jpg') }}" alt="Foto Profil">
                                         @endif

@@ -23,6 +23,16 @@
               @endforeach
             </select>
           </div>
+
+          <div class="form-group mb-3">
+            <label for="pro_kontra_id" class="form-label">Pilih Peserta</label>
+            <select class="form-control select2" name="pro_kontra_id" id="pro_kontra_id" required style="width: 100%">
+              <option value="">-- Pilih Status --</option>
+                <option value="1">Pro</option>
+                <option value="0">Kontra</option>
+            </select>
+          </div>
+
         </div>
 
         <div class="modal-footer">

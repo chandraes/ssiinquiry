@@ -36,10 +36,26 @@ class Modul extends Model
     }
 
     public function kelas()
-{
-    return $this->hasMany(Kelas::class, 'modul_id');
-}
+    {
+        return $this->hasMany(Kelas::class, 'modul_id');
+    }
 
+    /**
+     * Membuat accessor untuk mengambil data Phyphox yang terkait
+     * berdasarkan ID yang tersimpan di kolom phyphox_id (JSON).
+     * * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getRelatedPhyphoxAttribute()
+    {
+        // Pastikan kolom phyphox_id memiliki nilai dan berbentuk array
+        $phyphoxIds = $this->phyphox_id ?? [];
 
+        if (empty($phyphoxIds)) {
+            return collect(); // Mengembalikan koleksi kosong jika tidak ada ID
+        }
+
+        // Menggunakan whereIn untuk mencari semua model Phyphox berdasarkan ID
+        return Phyphox::whereIn('id', $phyphoxIds)->get();
+    }
     
 }

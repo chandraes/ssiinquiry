@@ -13,6 +13,7 @@ return new class extends Migration
             $table->string('kategori');
             $table->string('nama');
             $table->enum('is_active', ['0', '1'])->default('0');
+            $table->string('icon');
             $table->timestamps();
         });
     }
