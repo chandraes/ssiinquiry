@@ -25,15 +25,46 @@
                 </li>
                 @role(['admin','guru'])
                 <li class="slide">
-                    <a class="side-menu__item {{request()->routeIs('user') ? 'active' : ''}}" data-bs-toggle="slide" href="{{route('user')}}"><i
-                            class="side-menu__icon fe fe-user"></i><span class="side-menu__label">User</span></a>
+                    <a class="side-menu__item {{request()->routeIs('user') ? 'active' : ''}}" 
+                        data-bs-toggle="slide" href="{{route('user')}}"><i class="side-menu__icon fe fe-user">
+                        </i><span class="side-menu__label">User</span></a>
                 </li>
+                
+                {{-- Modul & Kelas Dinamis --}}
+                @if(isset($moduls) && $moduls->count() > 0)
+                    <li class="sub-category">
+                        <h3>Modul dan Kelas</h3>
+                    </li>
 
-                <li class="slide">
-                    <a class="side-menu__item {{request()->routeIs('modul') ? 'active' : ''}}" data-bs-toggle="slide" href="{{route('modul')}}"><i
-                            class="side-menu__icon fe fe-file"></i><span class="side-menu__label">Modul</span></a>
-                </li>
+                    @foreach($moduls as $modul)
+                        <li class="slide {{ request()->routeIs('modul') || request()->routeIs('kelas.*') ? 'is-expanded' : '' }}">
+                            <a class="side-menu__item {{ request()->routeIs('modul') || request()->routeIs('kelas.*') ? 'active' : '' }}" data-bs-toggle="slide" href="javascript:void(0);">
+                                <i class="side-menu__icon fe fe-book"></i>
+                                <span class="side-menu__label">{{ $modul->judul_id }}</span>
+                                <i class="angle fa fa-angle-right"></i>
+                            </a>
+                            <ul class="slide-menu">
+                                <li class="side-menu-label1">
+                                    <a href="javascript:void(0)">{{ $modul->judul_id }}</a>
+                                </li>
+
+                                {{-- Daftar kelas --}}
+                                @forelse($modul->kelas as $kelas)
+                                    <li>
+                                        <a href="{{ route('kelas.peserta', $kelas->id) }}" class="slide-item {{ (request()->routeIs('kelas.*') && ((int)(array_values(request()->route()->parameters())[0] ?? null) === (int) $kelas->id)) ? 'active' : '' }}">{{ $kelas->nama_kelas }}</a>
+                                    </li>
+                                @empty
+                                    <li>
+                                        <span>Belum Ada Kelas</span> 
+                                    </li>
+                                @endforelse
+                            </ul>
+                        </li>
+                    @endforeach
+                @endif
                 @endrole
+
+                
                 {{-- <li class="sub-category">
                     <h3>Widgets</h3>
                 </li>

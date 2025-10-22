@@ -51,8 +51,11 @@
                         <div class="d-flex align-items-center">
                             <a aria-label="Hide Sidebar" class="app-sidebar__toggle" data-bs-toggle="sidebar" href="javascript:void(0);"></a>
                             @php
+                                use App\Models\Modul;
+
                                 $logoPath = get_setting('app_logo');
                                 $logoUrl = $logoPath ? asset('storage/' . $logoPath) : asset('assets/images/brand/logo.png');
+                                $moduls = Modul::with('kelas')->get();
                             @endphp
                             <div class="responsive-logo">
                                 <a href="index.html" class="header-logo">

@@ -22,16 +22,16 @@ class UserController extends Controller
         // Query default semua user dengan relasi roles
         $query = User::with('roles');
 
-        // 🔒 Jika user login adalah Guru, tampilkan hanya user dengan role Murid
+        // 🔒 Jika user login adalah Guru, tampilkan hanya user dengan role Siswa
         if ($userLogin->roles->contains(function ($role) {
             return ($role->name) === 'Guru';
         })) {
             $query->whereHas('roles', function ($q) {
-                $q->where('name', 'Murid');
+                $q->where('name', 'Siswa');
             });
 
-            // Optional: filter juga roles agar di dropdown cuma role "murid"
-            $roles = Role::where('name', 'Murid')->get();
+            // Optional: filter juga roles agar di dropdown cuma role "siswa"
+            $roles = Role::where('name', 'Siswa')->get();
         }
 
         $data = $query->get();

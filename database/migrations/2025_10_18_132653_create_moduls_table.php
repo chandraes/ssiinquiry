@@ -17,6 +17,10 @@ return new class extends Migration
             $table->string('judul_en');
             $table->text('deskripsi_id')->nullable();
             $table->text('deskripsi_en')->nullable();
+
+            // ✅ Tambahan kolom phyphox_id sebagai JSON
+            $table->json('phyphox_id')->nullable()->comment('menyimpan daftar id phyphox terkait');
+
             $table->timestamps();
         });
     }
