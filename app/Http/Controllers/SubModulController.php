@@ -154,4 +154,35 @@ class SubModulController extends Controller
             return redirect()->back()->with('error', 'Gagal menghapus sub modul: ' . $e->getMessage());
         }
     }
+
+    public function show_siswa(SubModule $subModul)
+    {
+        // 1. Bagikan ID Modul Induk (untuk sidebar tetap aktif)
+        View::share('activeModulId', $subModul->module_id);
+
+        // 2. Tentukan View berdasarkan Tipe
+        if ($subModul->type == 'reflection') {
+
+            
+            // Tipe: Pertanyaan Refleksi
+            $subModul->load(['modul','reflectionQuestions' => function ($query) {
+                $query->orderBy('order', 'asc');
+            }]);
+
+            // TODO: Muat juga jawaban siswa untuk kelas yang aktif
+
+            // dd($subModul);
+            return view('submodul.siswa.show_reflection', compact('subModul'));
+
+        }
+
+        // Default (atau 'learning')
+        // Tipe: Materi Pembelajaran
+        $subModul->load(['learningMaterials' => function ($query) {
+            $query->orderBy('order', 'asc');
+        }]);
+
+        // [PENTING] GANTI NAMA VIEW LAMA ANDA
+        return view('submodul.siswa.show_learning', compact('subModul'));
+    }
 }

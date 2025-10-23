@@ -137,4 +137,15 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/{kelas_id}/join', [App\Http\Controllers\KelasController::class, 'siswa_join'])->name('siswa.kelas.join');
         Route::post('/jawaban/{id}/simpan', [App\Http\Controllers\KelasController::class, 'simpan_jawaban'])->name('kelas.jawaban.simpan');
     });
+    Route::group(['prefix' => 'siswa/modul', 'middleware' => ['role:siswa']], function () {
+        Route::get('/{modul}', [ModulController::class, 'show_siswa'])->name('siswa.modul.show');
+        // Route::post('/{kelas_id}/join', [App\Http\Controllers\KelasController::class, 'siswa_join'])->name('siswa.kelas.join');
+        // Route::post('/jawaban/{id}/simpan', [App\Http\Controllers\KelasController::class, 'simpan_jawaban'])->name('kelas.jawaban.simpan');
+    });
+    Route::group(['prefix' => 'siswa', 'middleware' => ['role:siswa']], function () {
+        Route::get('/submodul/show/{subModul}', [SubModulController::class, 'show_siswa'])->name('siswa.submodul.show');
+        Route::post('/reflection/store', [ReflectionQuestionController::class, 'storeAnswer'])->name('siswa.reflection.store');
+    });
+
+    
 });

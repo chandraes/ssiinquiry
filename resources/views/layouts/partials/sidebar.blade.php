@@ -96,7 +96,7 @@
                                 </a>
                             </li>
                             <li class="sub-category">
-                                <h3>{{ __('admin.sidebar.modules_classes') }}</h3>
+                                <h3 style="padding-left:0px">Kelas</h3>
                             </li>
 
                             {{-- 5. Logika Kelas (PERBAIKAN DI SINI) --}}
@@ -121,6 +121,105 @@
 
                 @endif
                 @endrole
+
+                @role(['siswa'])
+    {{-- Modul & Kelas Dinamis --}}
+    @if(isset($moduls) && $moduls->count() > 0)
+    <li class="sub-category">
+        <h3>{{ __('admin.sidebar.modules_classes') }}</h3>
+    </li>
+
+    @foreach($moduls as $modul)
+
+        @php
+        // --- 1. Ambil ID Aktif Lokal (Harus dilakukan di dalam loop) ---
+        // CATATAN PENTING: Ganti 'submodul' dan 'kelas' di bawah dengan nama parameter RUTE AKTUAL Anda.
+        // Ini adalah langkah kunci untuk mendapatkan ID parameter yang sedang dilihat.
+        $activeSubmodulId = request()->route('siswa.submodul.show') ? request()->route('submodul') : null;
+        $activeKelasId = request()->route('siswa.kelas');
+        
+        // --- 2. Tentukan Status Expanded (Menu Parent) ---
+        $isSubmodulChildActive = false;
+        $submoduls = $modul->submoduls ?? $modul->submodul ?? $modul->submodules ?? collect();
+        
+        if ($activeSubmodulId && request()->routeIs('siswa.submodul.show')) {
+             // Cek apakah Submodul ID yang aktif ada di dalam relasi Modul ini.
+             $isSubmodulChildActive = $submoduls->contains('id', (int) $activeSubmodulId);
+        }
+
+        $isKelasChildActive = false;
+        if ($activeKelasId && request()->routeIs('siswa.kelas')) {
+            // Cek apakah Kelas ID yang aktif ada di dalam relasi Modul ini.
+            $isKelasChildActive = $modul->kelas->contains('id', (int) $activeKelasId);
+        }
+
+        // Modul ini expanded jika salah satu anaknya aktif
+        $isModulExpanded = $isSubmodulChildActive || $isKelasChildActive;
+        @endphp
+
+        {{-- 3. Terapkan Logika ke <li> (untuk 'is-expanded') --}}
+        <li class="slide {{ request()->routeIs('siswa.submodul.show') || 
+                    request()->routeIs('siswa.kelas') 
+                    ? 'is-expanded' : '' }}">
+
+            {{-- 4. Terapkan Logika ke <a> utama (Hanya highlight jika expanded) --}}
+            <a class="side-menu__item {{ request()->routeIs('siswa.submodul.show') || 
+                    request()->routeIs('siswa.kelas') 
+                    ? 'active' : '' }}"
+                data-bs-toggle="slide" href="javascript:void(0);">
+                <i class="side-menu__icon fe fe-book"></i>
+                <span class="side-menu__label">{{ $modul->judul }}</span>
+                <i class="angle fa fa-angle-right"></i>
+            </a>
+
+            <ul class="slide-menu">
+                <li class="side-menu-label1">
+                    <a href="javascript:void(0)">{{ $modul->judul }}</a>
+                </li>
+                
+                {{-- Submodul --}}
+                @forelse($submoduls as $submodul)
+                    <li>
+                        <a href="{{ route('siswa.submodul.show', $submodul->id) }}"
+                           {{-- 5. Logika Active Submodul (Direct Check) --}}
+                           class="slide-item {{ 
+                                request()->routeIs('siswa.submodul.show') && ((int) request()->route('submodul') === (int) $submodul->id) 
+                                ? 'active' : '' 
+                           }}">
+                            <i class="fa fa-file-text me-2"></i> {{ $submodul->judul ?? $submodul->title ?? 'Submodul' }}
+                        </a>
+                    </li>
+                @empty
+                    <li>
+                        <span class="slide-item text-muted">{{ __('admin.sidebar.no_submodule') ?? 'Tidak ada submodul' }}</span>
+                    </li>
+                @endforelse
+
+                <li class="sub-category">
+                    <h3 style="padding-left:0px">Kelas</h3>
+                </li>
+
+                {{-- Logika Kelas --}}
+                @forelse($modul->kelas as $kelas)
+                <li>
+                    <a href="{{ route('siswa.kelas', $kelas->id) }}"
+                        {{-- 6. Logika Active Kelas (Direct Check) --}}
+                        class="slide-item {{ 
+                            request()->routeIs('siswa.kelas') && ((int) request()->route('kelas') === (int) $kelas->id) 
+                            ? 'active' : '' 
+                        }}">{{ $kelas->nama_kelas }}</a>
+                </li>
+                @empty
+                <li>
+                    <span>{{ __('admin.sidebar.no_class') }}</span>
+                </li>
+                @endForelse
+            </ul>
+        </li>
+    @endforeach
+
+    @endif
+@endrole
 
                 @role('admin')
                 <li class="sub-category">
