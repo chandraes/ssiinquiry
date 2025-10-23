@@ -32,10 +32,39 @@
                             <a aria-label="Hide Sidebar" class="app-sidebar__toggle" data-bs-toggle="sidebar" href="javascript:void(0);"></a>
                             @php
                                 use App\Models\Modul;
+                                use App\Models\KelasUser;
+
                                 $logoPath = get_setting('app_logo');
                                 $logoUrl = $logoPath ? asset('storage/' . $logoPath) : asset('assets/images/brand/logo.png');
                                 // [PENTING] Memuat modul untuk sidebar
                                 $moduls = Modul::with('kelas')->get();
+                                
+                                $modul_siswa = collect();
+                                if (auth()->check()) {
+                                    $user = auth()->user();
+
+                                    // cek apakah user berperan 'siswa' (support hasRole() atau atribut role)
+                                    $isSiswa = (method_exists($user, 'hasRole') && $user->hasRole('siswa')) || (($user->role ?? null) === 'siswa');
+
+                                    if ($isSiswa) {
+                                        // coba ambil peserta yang berelasi dengan user; jika tidak ada, cari lewat user_id
+                                        $peserta = $user->peserta ?? KelasUser::where('user_id', $user->id)->first();
+
+                                        if ($peserta) {
+                                            $modul_siswa = Modul::whereHas('kelas.peserta', function ($q) use ($peserta) {
+                                                $q->where('id', $peserta->id);
+                                            })->with('kelas', 'kelas.peserta')->get();
+
+                                            // tampilkan hanya modul yang terkait dengan siswa
+                                            $moduls = $modul_siswa;
+                                        } else {
+                                            // jika tidak ada peserta, kosongkan hasil untuk siswa
+                                            $moduls = collect();
+                                        }
+                                    }
+                                }
+
+                                // dd($modul_siswa)
                             @endphp
                             <div class="responsive-logo">
                                 <a href="index.html" class="header-logo">

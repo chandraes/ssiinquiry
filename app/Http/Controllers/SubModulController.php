@@ -74,6 +74,37 @@ class SubModulController extends Controller
         return view('submodul.show_learning', compact('subModul'));
     }
 
+    public function show_siswa(SubModule $subModul)
+    {
+        // 1. Bagikan ID Modul Induk (untuk sidebar tetap aktif)
+        View::share('activeModulId', $subModul->module_id);
+
+        // 2. Tentukan View berdasarkan Tipe
+        if ($subModul->type == 'reflection') {
+
+            
+            // Tipe: Pertanyaan Refleksi
+            $subModul->load(['modul','reflectionQuestions' => function ($query) {
+                $query->orderBy('order', 'asc');
+            }]);
+
+            // TODO: Muat juga jawaban siswa untuk kelas yang aktif
+
+            // dd($subModul);
+            return view('submodul.siswa.show_reflection', compact('subModul'));
+
+        }
+
+        // Default (atau 'learning')
+        // Tipe: Materi Pembelajaran
+        $subModul->load(['learningMaterials' => function ($query) {
+            $query->orderBy('order', 'asc');
+        }]);
+
+        // [PENTING] GANTI NAMA VIEW LAMA ANDA
+        return view('submodul.siswa.show_learning', compact('subModul'));
+    }
+
     /**
      * Mengambil data satu sub-modul sebagai JSON.
      * Ini digunakan untuk mengisi modal edit secara dinamis.

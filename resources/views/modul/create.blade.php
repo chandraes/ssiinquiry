@@ -9,19 +9,22 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            <form action="{{ route('modul.store') }}" method="post" id="storeForm">
+            <form action="{{ route('modul.store') }}" method="post" id="storeForm" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <div class="col-md-12 mb-3">
                         <div class="form-group">
                             <label for="phyphox_id" class="form-label">Pilih Alat Phyphox</label>
-                            <select name="phyphox_id[]" id="phyphox_id" class="form-control" multiple="multiple"
-                                style="width: 100%; border-color:darkgrey">
+                            {{-- <select name="phyphox_id[]" id="phyphox_id" class="form-control" multiple="multiple"
+                                style="width: 100%; border-color:darkgrey"> --}}
+                            <select name="phyphox_id[]" id="phyphox_id" class="form-control form-select select2" multiple="multiple" 
+                            data-bs-placeholder="Select" style="width: 100%; border-color:darkgrey">
+                                {{-- 💡 TAMBAHKAN OPSI KOSONG INI --}}
                                 @foreach ($phyphox as $p)
-                                <option value="{{ $p->id }}" {{ in_array($p->id, (array) old('phyphox_id', [])) ?
-                                    'selected' : '' }}>
-                                    {{ $p->kategori }} ({{ $p->nama }})
-                                </option>
+                                    <option value="{{ $p->id }}" {{ in_array($p->id, (array) old('phyphox_id', [])) ?
+                                        'selected' : '' }}>
+                                        {{ $p->kategori }} ({{ $p->nama }})
+                                    </option>
                                 @endforeach
                             </select>
                             <small class="text-muted">Kamu bisa memilih lebih dari satu Alat Phyphox</small>

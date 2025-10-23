@@ -57,7 +57,7 @@
                                                         {{-- Pemeriksaan isNotEmpty() dilakukan pada relasi Phyphox yang ada di dalam Modul --}}
                                                         @if ($m->relatedPhyphox->isNotEmpty())
                                                             <img src="{{$m->image
-                                                                ? asset($m->image)
+                                                                ? asset('storage/'.$m->image)
                                                                 : asset('assets/images/users/1.jpg')}}"
                                                                     alt="img" class="mb-5">
                                                             <strong class="text-start">Deskripsi :</strong>
@@ -148,7 +148,7 @@
                                                     <div class="row card-body text-center justify-content-center">
                                                         @if ($m->relatedPhyphox->isNotEmpty())
                                                             <img src="{{$m->image
-                                                                ? asset($m->image)
+                                                                ? asset('storage/'.$m->image)
                                                                 : asset('assets/images/users/1.jpg')}}"
                                                                     alt="img" class="mb-5">
                                                             <strong class="text-start">Deskripsi :</strong>
@@ -199,31 +199,12 @@
 <script>
 // Inisialisasi Select2
     $(document).ready(function() {
-        $('#phyphox_id').select2({
-            dropdownParent: $('#createModal'),
-            placeholder: '{{ __("admin.placeholders.select_phyphox") }}',
-            allowClear: true,
-            minimumInputLength: 2,
-            ajax: {
-                url: '{{ route('search-phyphox') }}', // route pencarian user
-                dataType: 'json',
-                delay: 250,
-                data: function(params) {
-                    return { q: params.term };
-                },
-                processResults: function(data) {
-                    return {
-                        results: $.map(data, function(item) {
-                            return {
-                                id: item.id,
-                                text: item.text
-                            }
-                        })
-                    };
-                },
-                cache: true
-            }
-        });
+        // $('#phyphox_id').select2({
+        //     dropdownParent: $('#createModal'),
+        //     allowClear: true,
+        //     // Hapus minimumInputLength (kecuali Anda ingin membatasi input di Search Box)
+        //     // Hapus SELURUH BLOK 'ajax'
+        // });
 
         $('#owner').select2({
             dropdownParent: $('#createModal'),

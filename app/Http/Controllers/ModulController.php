@@ -20,7 +20,8 @@ class ModulController extends Controller
         $moduls = Modul::latest()->get(); // Ambil semua modul
 
         // Variabel ini dibutuhkan oleh modal 'modul.create'
-        $phyphox = Phyphox::all(); // Sesuaikan jika perlu
+        $phyphox = Phyphox::where('is_active', '1')->get(); // Sesuaikan jika perlu
+        // dd($phyphox);
 
         return view('modul.index', compact('moduls', 'userLogin', 'phyphox'));
     }
@@ -231,6 +232,20 @@ class ModulController extends Controller
 
         // Kirim data modul (yang sekarang berisi sub-modul) ke view
         return view('modul.show', compact('modul'));
+    }
+
+    public function show_siswa(Modul $modul)
+    {
+        // $modul sudah otomatis diambil oleh Laravel (route model binding)
+
+        // Sekarang, kita muat relasi 'subModules'
+        // Kita juga bisa mengurutkannya langsung di sini
+        $modul->load(['subModules' => function ($query) {
+            $query->orderBy('order', 'asc');
+        }]);
+
+        // Kirim data modul (yang sekarang berisi sub-modul) ke view
+        return view('modul.show-siswa', compact('modul'));
     }
 
 
