@@ -152,4 +152,18 @@ return [
         'question_text_en' => 'Question Text (EN)',
         'order_label' => 'Nomor Urut',
     ],
+
+    'practicum' => [
+        'title' => 'Pengaturan Praktikum',
+        'instructions' => 'Petunjuk Praktikum',
+        'instructions_desc' => 'Ini adalah petunjuk yang akan dilihat siswa (Pendahuluan, Tujuan, Bagian A, B, C). Anda hanya dapat memiliki SATU petunjuk per sub-modul.',
+        'add_instruction' => 'Buat Petunjuk',
+        'edit_instruction' => 'Ubah Petunjuk',
+        'upload_slots' => 'Slot Unggahan Data (Bagian D)',
+        'upload_slots_desc' => 'Ini adalah form yang akan diisi siswa. Buat satu slot untuk setiap file CSV yang harus mereka unggah.',
+        'add_slot' => 'Tambah Slot Unggahan',
+        'slot_label' => 'Label Slot',
+        'slot_desc' => 'Deskripsi/Nama File',
+        'slot_group' => 'Grup Eksperimen',
+    ],
 ];

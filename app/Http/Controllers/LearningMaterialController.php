@@ -49,11 +49,17 @@ class LearningMaterialController extends Controller
             // 2. Siapkan payload 'content' untuk Spatie
             if ($type == 'rich_text') {
                 /**
-                 * Jika tipenya rich_text, Spatie mengharapkan data 'content'
-                 * dalam format {"id": "HTML...", "en": "HTML..."}
-                 * Ini sudah dikirim oleh form 'content_rich_text'
+                 * [PERBAIKAN KEAMANAN]
+                 * Bersihkan setiap input HTML sebelum menyimpannya.
+                 * clean() adalah helper dari mews/purifier.
                  */
-                $contentPayload = $request->content_rich_text;
+                $clean_id = clean($request->content_rich_text['id']);
+                $clean_en = clean($request->content_rich_text['en']);
+
+                $contentPayload = [
+                    'id' => $clean_id,
+                    'en' => $clean_en
+                ];
 
             } else {
                 /**
@@ -137,7 +143,14 @@ class LearningMaterialController extends Controller
 
             // 2. Siapkan payload 'content'
             if ($type == 'rich_text') {
-                $contentPayload = $request->content_rich_text;
+                // [PERBAIKAN KEAMANAN]
+                $clean_id = clean($request->content_rich_text['id']);
+                $clean_en = clean($request->content_rich_text['en']);
+
+                $contentPayload = [
+                    'id' => $clean_id,
+                    'en' => $clean_en
+                ];
             } else {
                 $url = $request->content_url;
                 $contentPayload = [

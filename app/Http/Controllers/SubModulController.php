@@ -39,16 +39,11 @@ class SubModulController extends Controller
         }
     }
 
-    /**
-     * Menampilkan halaman detail untuk satu sub-modul (menampilkan daftar materi).
-     *
-     * @param  \App\Models\SubModule  $subModul
-     * @return \Illuminate\View\View
-     */
     public function show(SubModule $subModul)
     {
         // 1. Bagikan ID Modul Induk (untuk sidebar tetap aktif)
         View::share('activeModulId', $subModul->modul_id);
+
         // 2. Tentukan View berdasarkan Tipe
         if ($subModul->type == 'reflection') {
 
@@ -57,10 +52,22 @@ class SubModulController extends Controller
                 $query->orderBy('order', 'asc');
             }]);
 
-            // TODO: Muat juga jawaban siswa untuk kelas yang aktif
-
             return view('submodul.show_reflection', compact('subModul'));
 
+        }
+        elseif ($subModul->type == 'practicum') {
+
+            // [BLOK BARU] Tipe: Praktikum Phyphox
+            // Kita muat KEDUA relasi:
+            // 1. Petunjuk (disimpan di LearningMaterial)
+            // 2. Slot Unggahan (disimpan di PracticumUploadSlot)
+            $subModul->load([
+                'learningMaterials' => fn($q) => $q->orderBy('order', 'asc'),
+                'practicumUploadSlots' => fn($q) => $q->orderBy('order', 'asc')
+            ]);
+
+            // Arahkan ke view baru: show_practicum.blade.php
+            return view('submodul.show_practicum', compact('subModul'));
         }
 
         // Default (atau 'learning')
@@ -69,10 +76,8 @@ class SubModulController extends Controller
             $query->orderBy('order', 'asc');
         }]);
 
-        // [PENTING] GANTI NAMA VIEW LAMA ANDA
         return view('submodul.show_learning', compact('subModul'));
     }
-
     /**
      * Mengambil data satu sub-modul sebagai JSON.
      * Ini digunakan untuk mengisi modal edit secara dinamis.

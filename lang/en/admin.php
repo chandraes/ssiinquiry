@@ -152,4 +152,18 @@ return [
         'question_text_en' => 'Question Text (EN)',
         'order_label' => 'Order Number',
     ],
+
+    'practicum' => [
+        'title' => 'Practicum Setup',
+        'instructions' => 'Practicum Instructions',
+        'instructions_desc' => 'These are the instructions students will see (Intro, Objectives, Part A, B, C). You can only have ONE instruction set per sub-module.',
+        'add_instruction' => 'Create Instructions',
+        'edit_instruction' => 'Edit Instructions',
+        'upload_slots' => 'Data Upload Slots (Part D)',
+        'upload_slots_desc' => 'This is the form students will fill. Create one slot for each CSV file they must upload.',
+        'add_slot' => 'Add Upload Slot',
+        'slot_label' => 'Slot Label',
+        'slot_desc' => 'Description/Filename',
+        'slot_group' => 'Experiment Group',
+    ],
 ];

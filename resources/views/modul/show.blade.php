@@ -60,6 +60,12 @@
                                     Sub Modul Pertanyaan Refleksi
                                 </a>
                             </li>
+                            <li>
+                                <a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                    data-bs-target="#createSubModulModal" data-type="practicum">
+                                    Sub Modul Praktikum Phyphox
+                                </a>
+                            </li>
                             {{-- <li><a class="dropdown-item" href="#" data-type="forum">Sub Modul Forum (Segera)</a>
                             </li> --}}
                         </ul>

@@ -9,6 +9,7 @@ use App\Http\Controllers\ModulController;
 use App\Http\Controllers\SubModulController;
 use App\Http\Controllers\ReflectionQuestionController;
 use App\Http\Controllers\LearningMaterialController;
+use App\Http\Controllers\PracticumUploadSlotController;
 
 
 // Form register (GET)
@@ -82,19 +83,19 @@ Route::group(['middleware' => 'auth'], function () {
         Route::delete('/{question}', [ReflectionQuestionController::class, 'destroy'])->name('reflection_question.destroy');
     });
 
-
     Route::group(['prefix' => 'submodul', 'middleware' => ['role:admin,guru']], function () {
         Route::post('/', [SubModulController::class, 'store'])->name('submodul.store');
-
         Route::get('/show/{subModul}', [SubModulController::class, 'show'])->name('submodul.show');
-        // Mengambil data JSON untuk modal EDIT
         Route::get('/{subModul}/json', [SubModulController::class, 'showJson'])->name('submodul.show.json');
-
-        // Menyimpan PERUBAHAN dari modal EDIT
         Route::put('/{subModul}', [SubModulController::class, 'update'])->name('submodul.update');
-
-        // MENGHAPUS SubModul
         Route::delete('/{subModul}', [SubModulController::class, 'destroy'])->name('submodul.destroy');
+    });
+
+    Route::group(['prefix' => 'practicum-slot', 'middleware' => ['role:admin,guru']], function () {
+        Route::post('/', [PracticumUploadSlotController::class, 'store'])->name('practicum_slot.store');
+        Route::get('/{slot}/edit', [PracticumUploadSlotController::class, 'edit'])->name('practicum_slot.edit.json');
+        Route::put('/{slot}', [PracticumUploadSlotController::class, 'update'])->name('practicum_slot.update');
+        Route::delete('/{slot}', [PracticumUploadSlotController::class, 'destroy'])->name('practicum_slot.destroy');
     });
 
     Route::group(['prefix' => 'kelas', 'middleware' => ['role:admin,guru']], function () {

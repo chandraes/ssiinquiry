@@ -44,4 +44,9 @@ class SubModule extends Model
     {
         return $this->hasMany(ReflectionQuestion::class)->orderBy('order');
     }
+
+    public function practicumUploadSlots()
+    {
+        return $this->hasMany(PracticumUploadSlot::class)->orderBy('order');
+    }
 }
