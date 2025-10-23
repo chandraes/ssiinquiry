@@ -7,7 +7,7 @@ use App\Models\LearningMaterial; // Kita akan butuh ini nanti
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Exception;
-
+use Illuminate\Support\Facades\View;
 class SubModulController extends Controller
 {
     /**
@@ -51,6 +51,8 @@ class SubModulController extends Controller
         $subModul->load(['learningMaterials' => function ($query) {
             $query->orderBy('order', 'asc');
         }]);
+
+        View::share('activeModulId', $subModul->modul_id);
 
         // Kirim data ke view HTML
         return view('submodul.show', compact('subModul'));

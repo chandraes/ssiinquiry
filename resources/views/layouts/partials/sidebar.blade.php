@@ -17,13 +17,11 @@
                 </svg></div>
             <ul class="side-menu">
                 <li class="sub-category">
-                    {{-- [DIUBAH] --}}
                     <h3>{{ __('admin.sidebar.main') }}</h3>
                 </li>
                 <li class="slide">
                     <a class="side-menu__item {{request()->routeIs('home') ? 'active' : ''}}" data-bs-toggle="slide"
                         href="{{route('home')}}"><i class="side-menu__icon fe fe-home"></i>
-                        {{-- [DIUBAH] --}}
                         <span class="side-menu__label">{{ __('admin.sidebar.dashboard') }}</span>
                     </a>
                 </li>
@@ -32,7 +30,6 @@
                     <a class="side-menu__item {{request()->routeIs('user') ? 'active' : ''}}" data-bs-toggle="slide"
                         href="{{route('user')}}"><i class="side-menu__icon fe fe-user">
                         </i>
-                        {{-- [DIUBAH] --}}
                         <span class="side-menu__label">{{ __('admin.sidebar.user') }}</span>
                     </a>
                 </li>
@@ -40,66 +37,89 @@
                 {{-- Modul & Kelas Dinamis --}}
                 @if(isset($moduls) && $moduls->count() > 0)
                 <li class="sub-category">
-                    {{-- [DIUBAH] --}}
                     <h3>{{ __('admin.sidebar.modules_classes') }}</h3>
                 </li>
 
+                {{-- [PERBAIKAN DIMULAI DARI SINI] --}}
                 @foreach($moduls as $modul)
-                <li
-                    class="slide {{ request()->routeIs('modul') || request()->routeIs('modul.*') || request()->routeIs('kelas.*') ? 'is-expanded' : '' }}">
-                    <a class="side-menu__item {{ request()->routeIs('modul') || request()->routeIs('modul.*') || request()->routeIs('kelas.*') ? 'active' : '' }}"
-                        data-bs-toggle="slide" href="javascript:void(0);">
-                        <i class="side-menu__icon fe fe-book"></i>
 
-                        {{-- [PERUBAHAN PALING KRITIS] --}}
-                        {{-- Menggunakan 'judul' (dari Spatie) bukan 'judul_id' (lama) --}}
-                        <span class="side-menu__label">{{ $modul->judul }}</span>
+                {{-- 1. Blok Logika Baru untuk Cek Aktivasi --}}
+                @php
+                // Cek 1: Apakah kita di halaman detail modul & ID-nya cocok?
+                $isModulDetailPage = request()->routeIs('modul.show', $modul->id);
 
-                        <i class="angle fa fa-angle-right"></i>
-                    </a>
-                    <ul class="slide-menu">
-                        <li class="side-menu-label1">
-                            {{-- [PERUBAHAN PALING KRITIS] --}}
-                            <a href="javascript:void(0)">{{ $modul->judul }}</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('modul.show', $modul->id) }}"
-                                class="slide-item {{ request()->routeIs('modul.show', $modul->id) ? 'active' : '' }}">
-                                {{-- Ganti ikon jika perlu --}}
-                                <i class="fa fa-info-circle me-2"></i> Detail Modul
-                            </a>
-                        </li>
-                        <li class="sub-category">
-                            <h3>{{ __('admin.sidebar.modules_classes') }}</h3>
-                        </li>
-                        {{-- Daftar kelas (nama_kelas tidak perlu diubah, diasumsikan bukan multi-bahasa) --}}
-                        @forelse($modul->kelas as $kelas)
-                        <li>
-                            <a href="{{ route('kelas.peserta', $kelas->id) }}"
-                                class="slide-item {{ (request()->routeIs('kelas.*') && ((int)(array_values(request()->route()->parameters())[0] ?? null) === (int) $kelas->id)) ? 'active' : '' }}">{{
-                                $kelas->nama_kelas }}</a>
-                        </li>
-                        @empty
-                        <li>
-                            {{-- [DIUBAH] --}}
-                            <span>{{ __('admin.sidebar.no_class') }}</span>
-                        </li>
-                        @endforelse
-                    </ul>
+                // Cek 2: Apakah kita di halaman sub-modul (via var $activeModulId) & ID-nya cocok?
+                $isSubModulPage = (($activeModulId ?? null) == $modul->id);
+
+                // Cek 3: Apakah kita di halaman kelas & ID kelasnya milik modul ini?
+                $isKelasPage = false;
+                if(request()->routeIs('kelas.*')) {
+                // Menggunakan logika asli Anda untuk mendapatkan ID kelas saat ini
+                $currentKelasId = (int)(array_values(request()->route()->parameters())[0] ?? null);
+                // Cek apakah modul ini memiliki kelas tersebut
+                if ($currentKelasId > 0 && $modul->kelas->contains('id', $currentKelasId)) {
+                $isKelasPage = true;
+                }
+                }
+
+                // Gabungkan: Modul ini "aktif" (terbuka/highlight) jika salah satu dari 3 di atas true
+                $isModulActiveAndExpanded = $isModulDetailPage || $isSubModulPage || $isKelasPage;
+                @endphp
+
+                {{-- 2. Terapkan Logika Baru ke <li> (untuk 'is-expanded') --}}
+                <li class="slide {{ $isModulActiveAndExpanded ? 'is-expanded' : '' }}">
+
+                    {{-- 3. Terapkan Logika Baru ke <a> utama (untuk 'active') --}}
+                        <a class="side-menu__item {{ $isModulActiveAndExpanded ? 'active' : '' }}"
+                            data-bs-toggle="slide" href="javascript:void(0);">
+                            <i class="side-menu__icon fe fe-book"></i>
+                            <span class="side-menu__label">{{ $modul->judul }}</span>
+                            <i class="angle fa fa-angle-right"></i>
+                        </a>
+
+                        <ul class="slide-menu">
+                            <li class="side-menu-label1">
+                                <a href="javascript:void(0)">{{ $modul->judul }}</a>
+                            </li>
+                            <li>
+                                {{-- 4. Terapkan Logika Spesifik ke 'Detail Modul' --}}
+                                {{-- Item ini hanya aktif jika di halaman modul atau sub-modul, BUKAN kelas --}}
+                                <a href="{{ route('modul.show', $modul->id) }}"
+                                    class="slide-item {{ $isModulDetailPage || $isSubModulPage ? 'active' : '' }}">
+                                    <i class="fa fa-info-circle me-2"></i> Detail Modul
+                                </a>
+                            </li>
+                            <li class="sub-category">
+                                <h3>{{ __('admin.sidebar.modules_classes') }}</h3>
+                            </li>
+
+                            {{-- 5. Logika Kelas (Biarkan seperti asli, sudah benar) --}}
+                            @forelse($modul->kelas as $kelas)
+                            <li>
+                                <a href="{{ route('kelas.peserta', $kelas->id) }}"
+                                    class="slide-item {{ (request()->routeIs('kelas.*') && ((int)(array_values(request()->route()->parameters())[0] ?? null) === (int) $kelas->id)) ? 'active' : '' }}">{{
+                                    $kelas->nama_kelas }}</a>
+                            </li>
+                            @empty
+                            <li>
+                                <span>{{ __('admin.sidebar.no_class') }}</span>
+                            </li>
+                            @endForelse
+                        </ul>
                 </li>
                 @endforeach
+                {{-- [PERBAIKAN SELESAI] --}}
+
                 @endif
                 @endrole
 
                 @role('admin')
                 <li class="sub-category">
-                    {{-- [DIUBAH] --}}
                     <h3>{{ __('admin.sidebar.settings') }}</h3>
                 </li>
                 <li>
                     <a class="side-menu__item {{request()->routeIs('admin.settings.*') ? 'active' : ''}}"
                         href="{{route('admin.settings.index')}}"><i class="side-menu__icon fa fa-gears"></i>
-                        {{-- [DIUBAH] --}}
                         <span class="side-menu__label">{{ __('admin.sidebar.application') }}</span>
                     </a>
                 </li>
