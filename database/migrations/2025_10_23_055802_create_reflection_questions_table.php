@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('reflection_answers', function (Blueprint $table) {
+        Schema::create('reflection_questions', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('sub_module_id')->constrained('sub_modules')->onDelete('cascade');
+            $table->json('question_text'); // Multi-bahasa (ID/EN)
+            $table->integer('order')->default(0);
             $table->timestamps();
         });
     }
@@ -22,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('reflection_answers');
+        Schema::dropIfExists('reflection_questions');
     }
 };

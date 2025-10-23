@@ -144,4 +144,12 @@ return [
         'rich_text_content_id' => 'Konten Teks (ID)', // <-- BARU
         'rich_text_content_en' => 'Text Content (EN)',
     ],
+
+    'reflection_modal' => [
+        'add_title' => 'Tambah Pertanyaan Refleksi',
+        'edit_title' => 'Ubah Pertanyaan Refleksi',
+        'question_text_id' => 'Teks Pertanyaan (ID)',
+        'question_text_en' => 'Question Text (EN)',
+        'order_label' => 'Nomor Urut',
+    ],
 ];

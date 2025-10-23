@@ -15,6 +15,7 @@ class SubModule extends Model
     // Tentukan kolom yang boleh diisi
     protected $fillable = [
         'modul_id',
+        'type',
         'title',
         'description',
         'order',

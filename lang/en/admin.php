@@ -144,4 +144,12 @@ return [
         'rich_text_content_id' => 'Text Content (ID)', // <-- NEW
         'rich_text_content_en' => 'Text Content (EN)',
     ],
+
+    'reflection_modal' => [
+        'add_title' => 'Add Reflection Question',
+        'edit_title' => 'Edit Reflection Question',
+        'question_text_id' => 'Question Text (ID)',
+        'question_text_en' => 'Question Text (EN)',
+        'order_label' => 'Order Number',
+    ],
 ];

@@ -47,15 +47,31 @@ class SubModulController extends Controller
      */
     public function show(SubModule $subModul)
     {
-        // Muat semua materi pembelajaran yang terkait dengan sub-modul ini
+        // 1. Bagikan ID Modul Induk (untuk sidebar tetap aktif)
+        View::share('activeModulId', $subModul->module_id);
+
+        // 2. Tentukan View berdasarkan Tipe
+        if ($subModul->type == 'reflection') {
+
+            // Tipe: Pertanyaan Refleksi
+            $subModul->load(['reflectionQuestions' => function ($query) {
+                $query->orderBy('order', 'asc');
+            }]);
+
+            // TODO: Muat juga jawaban siswa untuk kelas yang aktif
+
+            return view('submodul.show_reflection', compact('subModul'));
+
+        }
+
+        // Default (atau 'learning')
+        // Tipe: Materi Pembelajaran
         $subModul->load(['learningMaterials' => function ($query) {
             $query->orderBy('order', 'asc');
         }]);
 
-        View::share('activeModulId', $subModul->modul_id);
-
-        // Kirim data ke view HTML
-        return view('submodul.show', compact('subModul'));
+        // [PENTING] GANTI NAMA VIEW LAMA ANDA
+        return view('submodul.show_learning', compact('subModul'));
     }
 
     /**

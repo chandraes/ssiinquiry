@@ -1,7 +1,4 @@
-{{--
-File: resources/views/submodul/create_modal.blade.php
-Modal ini di-@include oleh 'modul.show.blade.php'
---}}
+
 <div class="modal fade" id="createSubModulModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
     aria-labelledby="createSubModulModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
@@ -23,7 +20,7 @@ Modal ini di-@include oleh 'modul.show.blade.php'
                    yang meng-@include file ini.
                 --}}
                 <input type="hidden" name="modul_id" value="{{ $modul->id }}">
-
+ <input type="hidden" name="type" id="create_submodul_type" value="learning">
                 <div class="modal-body">
                     <ul class="nav nav-tabs mb-3" id="subModulLangTabs" role="tablist">
                         <li class="nav-item" role="presentation">

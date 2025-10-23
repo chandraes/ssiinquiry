@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-    {{ __('admin.modul_detail.title') }}: {{ $modul->judul }}
+{{ __('admin.modul_detail.title') }}: {{ $modul->judul }}
 @endsection
 
 @section('content')
@@ -39,17 +39,40 @@
                     <h5 class="mb-0">{{ __('admin.modul_detail.submodule_list') }}</h5>
 
                     {{-- Tombol memicu modal input sub-modul --}}
-                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#createSubModulModal">
-                        <i class="fa fa-plus me-2"></i>{{ __('admin.modul_detail.add_submodule') }}
-                    </button>
+                    {{-- [DIUBAH] Tombol "Tambah Sub Modul" sekarang menjadi Dropdown --}}
+                    <div class="dropdown">
+                        <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="addSubModulMenu"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-plus me-2"></i>{{ __('admin.modul_detail.add_submodule') }}
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="addSubModulMenu">
+                            {{-- Tombol ini akan membuka modal yang sama, tapi mengirim data-type 'learning' --}}
+                            <li>
+                                <a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                    data-bs-target="#createSubModulModal" data-type="learning">
+                                    Sub Modul Materi (Video, Teks, dll)
+                                </a>
+                            </li>
+                            {{-- Tombol ini akan membuka modal yang sama, tapi mengirim data-type 'reflection' --}}
+                            <li>
+                                <a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                    data-bs-target="#createSubModulModal" data-type="reflection">
+                                    Sub Modul Pertanyaan Refleksi
+                                </a>
+                            </li>
+                            {{-- <li><a class="dropdown-item" href="#" data-type="forum">Sub Modul Forum (Segera)</a>
+                            </li> --}}
+                        </ul>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="list-group">
                         {{-- Loop semua sub-modul yang sudah di-load dari controller --}}
                         @forelse($modul->subModules as $subModul)
 
-                            {{-- [PERUBAHAN] Item sekarang menjadi link <a> --}}
-                            <a href="{{ route('submodul.show', $subModul->id) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        {{-- [PERUBAHAN] Item sekarang menjadi link <a> --}}
+                            <a href="{{ route('submodul.show', $subModul->id) }}"
+                                class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                                 <div>
                                     <h6 class="mb-0">{{ $subModul->order }}. {{ $subModul->title }}</h6>
                                     <small class="text-muted">{{ $subModul->description }}</small>
@@ -57,35 +80,35 @@
 
                                 {{-- [PERUBAHAN] Kumpulan Tombol Aksi (Edit & Delete) --}}
                                 {{-- Hentikan klik agar link <a> tidak terpicu --}}
-                                <div onclick="event.preventDefault();">
-                                    <button class="btn btn-warning btn-sm"
+                                    <div onclick="event.preventDefault();">
+                                        <button class="btn btn-warning btn-sm"
                                             title="{{ __('admin.modul_detail.edit') }}"
                                             data-url="{{ route('submodul.show.json', $subModul->id) }}"
                                             data-update-url="{{ route('submodul.update', $subModul->id) }}"
                                             onclick="editSubModul(this)">
-                                        <i class="fa fa-pencil"></i>
-                                    </button>
+                                            <i class="fa fa-pencil"></i>
+                                        </button>
 
-                                    <button class="btn btn-danger btn-sm"
+                                        <button class="btn btn-danger btn-sm"
                                             title="{{ __('admin.modul_detail.delete') }}"
                                             onclick="deleteSubModul({{ $subModul->id }})">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </a>
+
+                                <form id="delete-form-{{ $subModul->id }}"
+                                    action="{{ route('submodul.destroy', $subModul->id) }}" method="POST"
+                                    class="d-none">
+                                    @csrf
+                                    @method('DELETE')
+                                </form>
+
+                                @empty
+                                <div class="list-group-item text-center">
+                                    {{ __('admin.modul_detail.no_submodule') }}
                                 </div>
-                            </a>
-
-                            <form id="delete-form-{{ $subModul->id }}"
-                                  action="{{ route('submodul.destroy', $subModul->id) }}"
-                                  method="POST" class="d-none">
-                                @csrf
-                                @method('DELETE')
-                            </form>
-
-                        @empty
-                            <div class="list-group-item text-center">
-                                {{ __('admin.modul_detail.no_submodule') }}
-                            </div>
-                        @endforelse
+                                @endforelse
                     </div>
                 </div>
             </div>
@@ -140,6 +163,22 @@
             Swal.fire('Error', 'Gagal mengambil data sub modul.', 'error');
         });
     }
+
+    $('#createSubModulModal').on('show.bs.modal', function (event) {
+        // Ambil tombol yang di-klik
+        console.log('masuk');
+        var button = $(event.relatedTarget);
+
+        // Ambil data-type dari tombol itu (mis: 'learning' or 'reflection')
+        var subModulType = button.data('type');
+        console.log(subModulType);
+        // Temukan hidden input di dalam modal
+        var modal = $(this);
+        var typeInput = modal.find('#create_submodul_type');
+
+        // Set value dari hidden input
+        typeInput.val(subModulType);
+    });
 
     /**
      * 2. FUNGSI UNTUK KONFIRMASI UPDATE (SweetAlert)

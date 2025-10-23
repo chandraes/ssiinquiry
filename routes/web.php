@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\LocalizationController;
 use App\Http\Controllers\ModulController;
 use App\Http\Controllers\SubModulController;
+use App\Http\Controllers\ReflectionQuestionController;
 use App\Http\Controllers\LearningMaterialController;
 
 
@@ -73,6 +74,14 @@ Route::group(['middleware' => 'auth'], function () {
         Route::put('/{material}', [LearningMaterialController::class, 'update'])->name('learning_material.update');
         Route::delete('/{material}', [LearningMaterialController::class, 'destroy'])->name('learning_material.destroy');
     });
+
+    Route::group(['prefix' => 'reflection-question', 'middleware' => ['role:admin,guru']], function () {
+        Route::post('/', [ReflectionQuestionController::class, 'store'])->name('reflection_question.store');
+        Route::get('/{question}/edit', [ReflectionQuestionController::class, 'edit'])->name('reflection_question.edit.json');
+        Route::put('/{question}', [ReflectionQuestionController::class, 'update'])->name('reflection_question.update');
+        Route::delete('/{question}', [ReflectionQuestionController::class, 'destroy'])->name('reflection_question.destroy');
+    });
+
 
     Route::group(['prefix' => 'submodul', 'middleware' => ['role:admin,guru']], function () {
         Route::post('/', [SubModulController::class, 'store'])->name('submodul.store');
