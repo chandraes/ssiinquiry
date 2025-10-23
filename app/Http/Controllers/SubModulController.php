@@ -48,8 +48,7 @@ class SubModulController extends Controller
     public function show(SubModule $subModul)
     {
         // 1. Bagikan ID Modul Induk (untuk sidebar tetap aktif)
-        View::share('activeModulId', $subModul->module_id);
-
+        View::share('activeModulId', $subModul->modul_id);
         // 2. Tentukan View berdasarkan Tipe
         if ($subModul->type == 'reflection') {
 

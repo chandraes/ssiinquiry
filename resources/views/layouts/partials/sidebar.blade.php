@@ -49,8 +49,9 @@
                 $isModulDetailPage = request()->routeIs('modul.show', $modul->id);
 
                 // Cek 2: Apakah kita di halaman sub-modul (via var $activeModulId) & ID-nya cocok?
-                $isSubModulPage = (($activeModulId ?? null) == $modul->id);
 
+                $isSubModulPage = (($activeModulId ?? null) == $modul->id);
+                
                 // Cek 3: Apakah kita di halaman kelas & ID kelasnya milik modul ini?
                 $isKelasPage = false;
                 if(request()->routeIs('kelas.*')) {
