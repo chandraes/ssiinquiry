@@ -10,7 +10,7 @@ class SubModule extends Model
     use HasTranslations; // <--- 2. Gunakan Trait
 
     // 3. Tentukan kolom mana yang bisa diterjemahkan
-    public $translatable = ['title', 'description'];
+    public $translatable = ['title', 'description', 'debate_topic'];
 
     // Tentukan kolom yang boleh diisi
     protected $fillable = [
@@ -19,6 +19,19 @@ class SubModule extends Model
         'title',
         'description',
         'order',
+        'debate_topic',
+        'debate_rules',
+        'debate_start_time',
+        'debate_end_time',
+        'phase1_end_time',
+        'phase2_end_time',
+    ];
+
+    protected $casts = [
+        'debate_start_time' => 'datetime',
+        'debate_end_time' => 'datetime',
+        'phase1_end_time' => 'datetime',
+        'phase2_end_time' => 'datetime',
     ];
 
     /**
@@ -43,5 +56,23 @@ class SubModule extends Model
     public function reflectionQuestions()
     {
         return $this->hasMany(ReflectionQuestion::class)->orderBy('order');
+    }
+
+    public function practicumUploadSlots()
+    {
+        return $this->hasMany(PracticumUploadSlot::class)->orderBy('order');
+    }
+
+    public function forumTeams()
+    {
+        return $this->hasMany(ForumTeam::class);
+    }
+
+    public function forumPosts()
+    {
+        // Ambil hanya postingan utama (bukan balasan) dan urutkan
+        return $this->hasMany(ForumPost::class)
+                    ->whereNull('parent_post_id')
+                    ->latest();
     }
 }

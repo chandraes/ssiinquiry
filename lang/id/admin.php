@@ -132,6 +132,7 @@ return [
         'add_video' => 'Add Video Material',
         'add_article' => 'Add Article Material',
         'add_infographic' => 'Add Infographic (Image)',
+        'edit_title' => 'Ubah Materi',
         'add_regulation' => 'Add Regulation (PDF)',
 
         // New generic key
@@ -151,5 +152,40 @@ return [
         'question_text_id' => 'Teks Pertanyaan (ID)',
         'question_text_en' => 'Question Text (EN)',
         'order_label' => 'Nomor Urut',
+    ],
+
+    'practicum' => [
+        'title' => 'Pengaturan Praktikum',
+        'instructions' => 'Petunjuk Praktikum',
+        'instructions_desc' => 'Ini adalah petunjuk yang akan dilihat siswa (Pendahuluan, Tujuan, Bagian A, B, C). Anda hanya dapat memiliki SATU petunjuk per sub-modul.',
+        'add_instruction' => 'Buat Petunjuk',
+        'edit_instruction' => 'Ubah Petunjuk',
+        'upload_slots' => 'Slot Unggahan Data (Bagian D)',
+        'upload_slots_desc' => 'Ini adalah form yang akan diisi siswa. Buat satu slot untuk setiap file CSV yang harus mereka unggah.',
+        'add_slot' => 'Tambah Slot Unggahan',
+        'slot_label' => 'Label Slot',
+        'slot_desc' => 'Deskripsi/Nama File',
+        'slot_group' => 'Grup Eksperimen',
+    ],
+
+    'forum_settings' => [
+        'title' => 'Pengaturan Forum Debat',
+        'general_settings' => 'Pengaturan Umum Forum',
+        'update_settings' => 'Simpan Pengaturan',
+        'debate_topic' => 'Topik Debat',
+        'debate_rules' => 'Aturan Debat',
+        'start_time' => 'Waktu Mulai',
+        'end_time' => 'Waktu Selesai',
+        'phase1_end' => 'Akhir Fase 1 (Pembukaan)',
+        'phase2_end' => 'Akhir Fase 2 (Sanggahan)',
+        'team_management' => 'Manajemen Tim',
+        'team_pro' => 'Tim Pro',
+        'team_con' => 'Tim Kontra',
+        'unassigned_students' => 'Siswa Belum Ditugaskan',
+        'assign_pro' => 'Jadikan Pro',
+        'assign_con' => 'Jadikan Kontra',
+        'remove_from_team' => 'Keluarkan dari Tim',
+        'no_students_in_class' => 'Tidak ada siswa di kelas terkait.', // Sesuaikan pesan ini
+        'no_members' => 'Belum ada anggota.',
     ],
 ];

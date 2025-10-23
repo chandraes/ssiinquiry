@@ -36,10 +36,10 @@
                         </ul>
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="edit-rt-id-pane" role="tabpanel">
-                                <textarea name="content_rich_text[id]" id="edit_content_rich_text_id" class="form-control" rows="10"></textarea>
+                                <textarea name="content_rich_text[id]" id="edit_content_rich_text_id" class="form-control rich-text-editor" rows="10"></textarea>
                             </div>
                             <div class="tab-pane fade" id="edit-rt-en-pane" role="tabpanel">
-                                <textarea name="content_rich_text[en]" id="edit_content_rich_text_en" class="form-control" rows="10"></textarea>
+                                <textarea name="content_rich_text[en]" id="edit_content_rich_text_en" class="form-control rich-text-editor" rows="10"></textarea>
                             </div>
                         </div>
                     </div>

@@ -18,93 +18,79 @@ class SubModulController extends Controller
      */
     public function store(Request $request)
     {
-        // Validasi dengan format Spatie (dot notation)
+        // [DIUBAH] Tambahkan validasi untuk tipe 'forum'
         $request->validate([
-            'modul_id' => 'required|exists:moduls,id', // Pastikan tabel 'moduls'
+            'modul_id' => 'required|exists:moduls,id',
+            'type' => 'required|in:learning,reflection,practicum,forum', // Tambahkan 'forum'
             'title.id' => 'required|string|max:255',
             'title.en' => 'required|string|max:255',
             'description.id' => 'nullable|string',
             'description.en' => 'nullable|string',
             'order' => 'nullable|integer',
+
+            // Validasi baru (hanya jika type == 'forum')
+            'debate_topic.id' => 'nullable|required_if:type,forum|string',
+            'debate_topic.en' => 'nullable|required_if:type,forum|string',
+            'debate_rules' => 'nullable|required_if:type,forum|string',
+            'debate_start_time' => 'nullable|required_if:type,forum|date',
+            'debate_end_time' => 'nullable|required_if:type,forum|date|after:debate_start_time',
+            'phase1_end_time' => 'nullable|date|after:debate_start_time|before:debate_end_time',
+            'phase2_end_time' => 'nullable|date|after:phase1_end_time|before:debate_end_time',
         ]);
 
         try {
-            // Model SubModule sudah $fillable dan memiliki trait HasTranslations,
-            // jadi $request->all() akan menangani penyimpanan JSON secara otomatis.
-            SubModule::create($request->all());
+            // Ambil semua data request
+            $data = $request->all();
+
+            // [PERBAIKAN KEAMANAN]
+            // Bersihkan input HTML untuk 'debate_rules' jika ada
+            if ($request->type == 'forum' && $request->has('debate_rules')) {
+                // Pastikan Anda sudah menginstal mews/purifier
+                $data['debate_rules'] = clean($request->debate_rules);
+            }
+
+            // Buat sub modul
+            SubModule::create($data);
 
             return redirect()->back()->with('success', 'Sub modul berhasil ditambahkan!');
         } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'Gagal menambahkan sub modul: ' . $e->getMessage());
         }
     }
 
-    /**
-     * Menampilkan halaman detail untuk satu sub-modul (menampilkan daftar materi).
-     *
-     * @param  \App\Models\SubModule  $subModul
-     * @return \Illuminate\View\View
-     */
     public function show(SubModule $subModul)
     {
-        // 1. Bagikan ID Modul Induk (untuk sidebar tetap aktif)
-        View::share('activeModulId', $subModul->module_id);
+        View::share('activeModulId', $subModul->modul_id);
 
-        // 2. Tentukan View berdasarkan Tipe
         if ($subModul->type == 'reflection') {
-
-            // Tipe: Pertanyaan Refleksi
-            $subModul->load(['reflectionQuestions' => function ($query) {
-                $query->orderBy('order', 'asc');
-            }]);
-
-            // TODO: Muat juga jawaban siswa untuk kelas yang aktif
-
+            $subModul->load(['reflectionQuestions' => fn($q) => $q->orderBy('order', 'asc')]);
             return view('submodul.show_reflection', compact('subModul'));
 
+        } elseif ($subModul->type == 'practicum') {
+            $subModul->load([
+                'learningMaterials' => fn($q) => $q->orderBy('order', 'asc'),
+                'practicumUploadSlots' => fn($q) => $q->orderBy('order', 'asc')
+            ]);
+            return view('submodul.show_practicum', compact('subModul'));
+
+        } elseif ($subModul->type == 'forum') {
+            // [BLOK BARU] Tipe: Forum Debat
+            // Kita muat relasi anggota tim
+            // $subModul->load(['teamMembers']);
+
+            // (Opsional) Ambil daftar siswa di kelas yang terkait dengan modul ini
+            // Ini akan dibutuhkan untuk manajemen tim
+            // $students = $subModul->module->kelas->flatMap->peserta->unique('id');
+            // Ganti ini dengan logika yang sesuai untuk mendapatkan siswa yang relevan
+
+            // Arahkan ke view baru: show_forum.blade.php
+            return view('submodul.show_forum', compact('subModul')); // Tambahkan 'students' jika perlu
         }
 
-        // Default (atau 'learning')
-        // Tipe: Materi Pembelajaran
-        $subModul->load(['learningMaterials' => function ($query) {
-            $query->orderBy('order', 'asc');
-        }]);
-
-        // [PENTING] GANTI NAMA VIEW LAMA ANDA
+        // Default (learning)
+        $subModul->load(['learningMaterials' => fn($q) => $q->orderBy('order', 'asc')]);
         return view('submodul.show_learning', compact('subModul'));
     }
-
-    public function show_siswa(SubModule $subModul)
-    {
-        // 1. Bagikan ID Modul Induk (untuk sidebar tetap aktif)
-        View::share('activeModulId', $subModul->module_id);
-
-        // 2. Tentukan View berdasarkan Tipe
-        if ($subModul->type == 'reflection') {
-
-            
-            // Tipe: Pertanyaan Refleksi
-            $subModul->load(['modul','reflectionQuestions' => function ($query) {
-                $query->orderBy('order', 'asc');
-            }]);
-
-            // TODO: Muat juga jawaban siswa untuk kelas yang aktif
-
-            // dd($subModul);
-            return view('submodul.siswa.show_reflection', compact('subModul'));
-
-        }
-
-        // Default (atau 'learning')
-        // Tipe: Materi Pembelajaran
-        $subModul->load(['learningMaterials' => function ($query) {
-            $query->orderBy('order', 'asc');
-        }]);
-
-        // [PENTING] GANTI NAMA VIEW LAMA ANDA
-        return view('submodul.siswa.show_learning', compact('subModul'));
-    }
-
     /**
      * Mengambil data satu sub-modul sebagai JSON.
      * Ini digunakan untuk mengisi modal edit secara dinamis.

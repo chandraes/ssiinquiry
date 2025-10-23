@@ -9,7 +9,9 @@ use App\Http\Controllers\ModulController;
 use App\Http\Controllers\SubModulController;
 use App\Http\Controllers\ReflectionQuestionController;
 use App\Http\Controllers\LearningMaterialController;
-
+use App\Http\Controllers\PracticumUploadSlotController;
+use App\Http\Controllers\KelasController;
+use App\Http\Controllers\ForumTeamController;
 
 // Form register (GET)
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
@@ -82,19 +84,19 @@ Route::group(['middleware' => 'auth'], function () {
         Route::delete('/{question}', [ReflectionQuestionController::class, 'destroy'])->name('reflection_question.destroy');
     });
 
-
     Route::group(['prefix' => 'submodul', 'middleware' => ['role:admin,guru']], function () {
         Route::post('/', [SubModulController::class, 'store'])->name('submodul.store');
-
         Route::get('/show/{subModul}', [SubModulController::class, 'show'])->name('submodul.show');
-        // Mengambil data JSON untuk modal EDIT
         Route::get('/{subModul}/json', [SubModulController::class, 'showJson'])->name('submodul.show.json');
-
-        // Menyimpan PERUBAHAN dari modal EDIT
         Route::put('/{subModul}', [SubModulController::class, 'update'])->name('submodul.update');
-
-        // MENGHAPUS SubModul
         Route::delete('/{subModul}', [SubModulController::class, 'destroy'])->name('submodul.destroy');
+    });
+
+    Route::group(['prefix' => 'practicum-slot', 'middleware' => ['role:admin,guru']], function () {
+        Route::post('/', [PracticumUploadSlotController::class, 'store'])->name('practicum_slot.store');
+        Route::get('/{slot}/edit', [PracticumUploadSlotController::class, 'edit'])->name('practicum_slot.edit.json');
+        Route::put('/{slot}', [PracticumUploadSlotController::class, 'update'])->name('practicum_slot.update');
+        Route::delete('/{slot}', [PracticumUploadSlotController::class, 'destroy'])->name('practicum_slot.destroy');
     });
 
     Route::group(['prefix' => 'kelas', 'middleware' => ['role:admin,guru']], function () {
@@ -106,6 +108,12 @@ Route::group(['middleware' => 'auth'], function () {
         Route::delete('/delete/{id}', [App\Http\Controllers\KelasController::class, 'destroy'])->name('kelas.delete');
         Route::get('/guru/search', [App\Http\Controllers\KelasController::class, 'search_guru_pengajar'])->name('search-pengajar');
 
+        Route::get('/{kelas}/forums', [KelasController::class, 'showForums'])->name('kelas.forums');
+        Route::get('/{kelas}', [KelasController::class, 'show'])->name('kelas.show');
+
+        // [BARU] Halaman "manajemen tim" untuk 1 forum spesifik di 1 kelas spesifik
+        Route::get('/{kelas}/forum/{subModule}/teams', [ForumTeamController::class, 'index'])->name('kelas.forum.teams');
+
         Route::group(['prefix' => 'peserta', 'middleware' => ['role:admin,guru']], function () {
             Route::get('/{id}', [App\Http\Controllers\KelasUserController::class, 'index'])->name('kelas.peserta');
             Route::get('/tambah', [App\Http\Controllers\KelasUserController::class, 'create'])->name('kelas.peserta.create');
@@ -116,6 +124,11 @@ Route::group(['middleware' => 'auth'], function () {
             Route::delete('/delete/{id}', [App\Http\Controllers\KelasUserController::class, 'destroy'])->name('kelas.peserta.delete');
         });
     });
+
+      Route::group(['prefix' => 'forum-teams', 'middleware' => ['role:admin,guru']], function () {
+        Route::post('/assign', [ForumTeamController::class, 'assignTeam'])->name('forum.teams.assign');
+        Route::post('/remove', [ForumTeamController::class, 'removeTeam'])->name('forum.teams.remove');
+      });
 
     Route::get('/download-template', [App\Http\Controllers\KelasUserController::class, 'downloadTemplate'])->name('kelas.peserta.download-template');
 

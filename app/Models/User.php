@@ -68,5 +68,10 @@ class User extends Authenticatable
         return $this->belongsToMany(Modul::class, 'modul_user', 'user_id', 'modul_id');
     }
 
+    public function forumTeams()
+    {
+        return $this->hasMany(ForumTeam::class, 'user_id');
+    }
+
 
 }

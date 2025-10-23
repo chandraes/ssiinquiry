@@ -132,6 +132,7 @@ return [
         'add_video' => 'Tambah Materi Video',
         'add_article' => 'Tambah Materi Artikel',
         'add_infographic' => 'Tambah Infografis (Gambar)',
+        'edit_title' => 'Change Material',
         'add_regulation' => 'Tambah Regulasi (PDF)',
 
         // Key generik baru
@@ -151,5 +152,40 @@ return [
         'question_text_id' => 'Question Text (ID)',
         'question_text_en' => 'Question Text (EN)',
         'order_label' => 'Order Number',
+    ],
+
+    'practicum' => [
+        'title' => 'Practicum Setup',
+        'instructions' => 'Practicum Instructions',
+        'instructions_desc' => 'These are the instructions students will see (Intro, Objectives, Part A, B, C). You can only have ONE instruction set per sub-module.',
+        'add_instruction' => 'Create Instructions',
+        'edit_instruction' => 'Edit Instructions',
+        'upload_slots' => 'Data Upload Slots (Part D)',
+        'upload_slots_desc' => 'This is the form students will fill. Create one slot for each CSV file they must upload.',
+        'add_slot' => 'Add Upload Slot',
+        'slot_label' => 'Slot Label',
+        'slot_desc' => 'Description/Filename',
+        'slot_group' => 'Experiment Group',
+    ],
+
+    'forum_settings' => [
+        'title' => 'Debate Forum Settings',
+        'general_settings' => 'General Forum Settings',
+        'update_settings' => 'Save Settings',
+        'debate_topic' => 'Debate Topic',
+        'debate_rules' => 'Debate Rules',
+        'start_time' => 'Start Time',
+        'end_time' => 'End Time',
+        'phase1_end' => 'End of Phase 1 (Opening)',
+        'phase2_end' => 'End of Phase 2 (Rebuttals)',
+        'team_management' => 'Team Management',
+        'team_pro' => 'Pro Team',
+        'team_con' => 'Con Team',
+        'unassigned_students' => 'Unassigned Students',
+        'assign_pro' => 'Assign to Pro',
+        'assign_con' => 'Assign to Con',
+        'remove_from_team' => 'Remove from Team',
+        'no_students_in_class' => 'No students in related classes.', // Adjust message
+        'no_members' => 'No members yet.',
     ],
 ];
