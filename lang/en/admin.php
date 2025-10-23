@@ -132,6 +132,7 @@ return [
         'add_video' => 'Tambah Materi Video',
         'add_article' => 'Tambah Materi Artikel',
         'add_infographic' => 'Tambah Infografis (Gambar)',
+        'edit_title' => 'Change Material',
         'add_regulation' => 'Tambah Regulasi (PDF)',
 
         // Key generik baru

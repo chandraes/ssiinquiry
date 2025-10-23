@@ -132,6 +132,7 @@ return [
         'add_video' => 'Add Video Material',
         'add_article' => 'Add Article Material',
         'add_infographic' => 'Add Infographic (Image)',
+        'edit_title' => 'Ubah Materi',
         'add_regulation' => 'Add Regulation (PDF)',
 
         // New generic key
