@@ -126,6 +126,9 @@
 @include('practicum.slot_edit_modal')
 
 @endsection
+@push('css')
+    <script src="{{asset('assets/plugins/tinymce/tinymce.min.js')}}" referrerpolicy="origin" crossorigin="anonymous"></script>
+@endpush
 
 @push('js')
 {{-- Memuat SEMUA JavaScript yang Dibutuhkan Halaman Ini --}}
@@ -244,5 +247,13 @@
             }).then((result) => { if (result.isConfirmed) { form.submit(); } });
         });
     });
+</script>
+<script>
+ tinymce.init({
+    selector: 'textarea.rich-text-editor',
+    plugins: 'lists link', // Mengaktifkan plugin bullet/list
+    toolbar: 'undo redo | bold italic | bullist numlist | link',
+    license_key: 'gpl'
+});
 </script>
 @endpush

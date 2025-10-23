@@ -37,14 +37,14 @@
                                     (misal: class="wysiwyg-editor")
                                     untuk di-target oleh JavaScript TinyMCE/CKEditor Anda.
                                 --}}
-                                <textarea name="content_rich_text[id]" class="form-control" rows="10"></textarea>
+                                <textarea name="content_rich_text[id]" class="form-control rich-text-editor" rows="10"></textarea>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="content-en-pane-rt" role="tabpanel">
                              <div class="col-md-12 mb-3">
                                 <label class="form-label">{{ __('admin.material_modal.rich_text_content_en') }}</label>
                                 {{-- Nama input: content_rich_text[en] --}}
-                                <textarea name="content_rich_text[en]" class="form-control" rows="10"></textarea>
+                                <textarea name="content_rich_text[en]" class="form-control rich-text-editor" rows="10"></textarea>
                             </div>
                         </div>
                     </div>
