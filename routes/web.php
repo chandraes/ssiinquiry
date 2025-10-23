@@ -69,6 +69,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => 'learning-material', 'middleware' => ['role:admin,guru']], function () {
 
         Route::post('/', [LearningMaterialController::class, 'store'])->name('learning_material.store');
+        Route::get('/{material}/edit', [LearningMaterialController::class, 'edit'])->name('learning_material.edit.json');
+        Route::put('/{material}', [LearningMaterialController::class, 'update'])->name('learning_material.update');
+        Route::delete('/{material}', [LearningMaterialController::class, 'destroy'])->name('learning_material.destroy');
     });
 
     Route::group(['prefix' => 'submodul', 'middleware' => ['role:admin,guru']], function () {

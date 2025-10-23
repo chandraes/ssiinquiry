@@ -46,27 +46,17 @@
                             @else bg-warning @endif
                         ">{{ $material->type }}</small>
 
-                        {{-- [PERBAIKAN LOGIKA TAMPILAN] --}}
+                        {{-- Logika Tampilan (dari jawaban sebelumnya) --}}
                         @if($material->type == 'rich_text')
-                            {{--
-                                Kasus 1: Tipe Rich Text.
-                                $material->content adalah string HTML (karena Spatie).
-                            --}}
                             <div class="rich-text-content border p-2 rounded-2 mt-2" style="max-height: 200px; overflow-y: auto;">
                                 {!! $material->content !!}
                             </div>
                         @else
-                            {{--
-                                Kasus 2: Semua tipe URL (video, article, dll.)
-                                Kita harus mengecek format BARU dan LAMA.
-                            --}}
                             @php
                                 $url = null;
                                 if (is_array($material->content) && isset($material->content['url'])) {
-                                    // Format BARU: Spatie mengembalikan ['url' => '...']
                                     $url = $material->content['url'];
                                 } else {
-                                    // Format LAMA: Spatie mengembalikan null. Kita ambil data mentah.
                                     $rawContent = json_decode($material->getRawOriginal('content'), true);
                                     if (is_array($rawContent) && isset($rawContent['url'])) {
                                         $url = $rawContent['url'];
@@ -82,14 +72,33 @@
                                 </p>
                             @endif
                         @endif
-                        {{-- [AKHIR PERBAIKAN] --}}
-
                     </div>
+
+                    {{-- [PERUBAHAN DI SINI] Tombol Edit & Delete --}}
                     <div>
-                        <button class="btn btn-warning btn-sm"><i class="fa fa-pencil"></i></button>
-                        <button class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
+                        <button class="btn btn-warning btn-sm"
+                                title="{{ __('admin.material_modal.edit_title') }}"
+                                data-url="{{ route('learning_material.edit.json', $material->id) }}"
+                                data-update-url="{{ route('learning_material.update', $material->id) }}"
+                                onclick="editMaterial(this)">
+                            <i class="fa fa-pencil"></i>
+                        </button>
+
+                        <button class="btn btn-danger btn-sm"
+                                title="{{ __('admin.kelas.delete_title') }}"
+                                onclick="deleteMaterial({{ $material->id }})">
+                            <i class="fa fa-trash"></i>
+                        </button>
                     </div>
                 </div>
+
+                <form id="delete-material-form-{{ $material->id }}"
+                      action="{{ route('learning_material.destroy', $material->id) }}"
+                      method="POST" class="d-none">
+                    @csrf
+                    @method('DELETE')
+                </form>
+
             @empty
                 <div class="alert alert-info text-center">
                     Belum ada materi pembelajaran untuk sub modul ini.
@@ -104,6 +113,112 @@
 @include('learning_material.modals.article_modal')
 @include('learning_material.modals.infographic_modal')
 @include('learning_material.modals.regulation_modal')
-@include('learning_material.modals.rich_text_modal') {{-- Pastikan ini ada --}}
+@include('learning_material.modals.rich_text_modal')
+@include('learning_material.modals.edit_modal') {{-- <-- [BARU] Sertakan Modal Edit --}}
 
 @endsection
+
+@push('js')
+{{-- [BARU] JavaScript untuk Edit dan Delete Material --}}
+<script>
+    /**
+     * 1. FUNGSI UNTUK MENGISI MODAL EDIT
+     */
+    function editMaterial(button) {
+        var modal = $('#editMaterialModal');
+        var form = $('#editMaterialForm');
+
+        var dataUrl = $(button).data('url');
+        var updateUrl = $(button).data('update-url');
+
+        // Set action form
+        form.attr('action', updateUrl);
+
+        // Ambil data JSON dari controller
+        $.get(dataUrl, function(data) {
+
+            // Isi input Judul
+            modal.find('[name="title[id]"]').val(data.title.id);
+            modal.find('[name="title[en]"]').val(data.title.en);
+
+            // Cek Tipe Konten
+            if (data.type == 'rich_text') {
+                // Tampilkan field Rich Text, sembunyikan URL
+                $('#edit-richtext-field').show();
+                $('#edit-url-field').hide();
+
+                // Isi textarea
+                modal.find('#edit_content_rich_text_id').val(data.content.id);
+                modal.find('#edit_content_rich_text_en').val(data.content.en);
+
+                // Hapus value dari input URL (untuk keamanan)
+                modal.find('#edit_content_url').val('');
+
+            } else {
+                // Tampilkan field URL, sembunyikan Rich Text
+                $('#edit-richtext-field').hide();
+                $('#edit-url-field').show();
+
+                // Isi input URL
+                modal.find('#edit_content_url').val(data.content_url);
+
+                // Hapus value dari textarea (untuk keamanan)
+                modal.find('#edit_content_rich_text_id').val('');
+                modal.find('#edit_content_rich_text_en').val('');
+            }
+
+            // Tampilkan modal
+            modal.modal('show');
+
+        }).fail(function() {
+            Swal.fire('Error', 'Gagal mengambil data materi.', 'error');
+        });
+    }
+
+    /**
+     * 2. FUNGSI KONFIRMASI DELETE
+     */
+    function deleteMaterial(id) {
+        Swal.fire({
+            title: '{{ __("admin.swal.delete_title") }}',
+            text: "{{ __("admin.swal.delete_text") }}",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: '{{ __("admin.swal.delete_confirm") }}',
+            cancelButtonText: '{{ __("admin.swal.cancel") }}'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Submit form delete yang sesuai
+                document.getElementById('delete-material-form-' + id).submit();
+            }
+        })
+    }
+
+    /**
+* 3. FUNGSI KONFIRMASI UPDATE (SweetAlert)
+     */
+    $(document).ready(function() {
+        $('#editMaterialForm').on('submit', function(e) {
+            e.preventDefault();
+            var form = this;
+            Swal.fire({
+                title: '{{ __("admin.swal.update_title") }}',
+                text: "{{ __("admin.swal.update_text") }}",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: '{{ __("admin.swal.update_confirm") }}',
+                cancelButtonText: '{{ __("admin.swal.cancel") }}',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+
+        // (Anda bisa tambahkan konfirmasi untuk form 'create' di sini jika mau)
+    });
+</script>
+@endpush
