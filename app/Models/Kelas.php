@@ -4,12 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Translatable\HasTranslations;
 
 class Kelas extends Model
 {
     use HasFactory;
+    use HasTranslations; // <--- 2. GUNAKAN TRAIT
 
     protected $table = 'kelas';
+
+    // 3. TENTUKAN KOLOM YANG BISA DITERJEMAHKAN
+    public $translatable = ['nama_kelas'];
 
     protected $fillable = [
         'modul_id',
@@ -33,6 +38,6 @@ class Kelas extends Model
     // Relasi ke KelasUser (Peserta)
     public function peserta()
     {
-        return $this->hasMany(KelasUser::class, 'kelas_id');    
-    }        
+        return $this->hasMany(KelasUser::class, 'kelas_id');
+    }
 }

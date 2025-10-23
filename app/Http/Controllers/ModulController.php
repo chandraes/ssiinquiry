@@ -12,33 +12,51 @@ use App\Http\Controllers\Controller;
 class ModulController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * [DIUBAH] Menampilkan halaman daftar modul (Card View)
      */
     public function index()
     {
         $userLogin = auth()->user();
-        $roles = Role::all();
+        $moduls = Modul::latest()->get(); // Ambil semua modul
 
-        // Query dasar
-        $query = Modul::with('users.roles');
+        // Variabel ini dibutuhkan oleh modal 'modul.create'
+        $phyphox = Phyphox::all(); // Sesuaikan jika perlu
 
-        // Jika user login adalah Guru
-        if ($userLogin->roles->contains('name', 'Guru')) {
-            // Tampilkan semua modul, tapi nanti di Blade dicek apakah dia owner atau bukan
-            // Jika kamu hanya ingin tampilkan modul milik dia saja, pakai whereHas di bawah ini:
-            // $query->whereHas('users', fn($q) => $q->where('user_id', $userLogin->id));
+        return view('modul.index', compact('moduls', 'userLogin', 'phyphox'));
+    }
+
+    /**
+     * [DIUBAH] Menyimpan modul baru, sekarang dengan upload gambar
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'judul.id' => 'required|string|max:255',
+            'judul.en' => 'required|string|max:255',
+            'deskripsi.id' => 'nullable|string',
+            'deskripsi.en' => 'nullable|string',
+            'phyphox_id' => 'required|array',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048', // <-- TAMBAHKAN VALIDASI GAMBAR
+        ]);
+
+        try {
+            $path = null;
+            if ($request->hasFile('image')) {
+                // Simpan gambar ke 'storage/app/public/modul_images'
+                $path = $request->file('image')->store('modul_images', 'public');
+            }
+
+            Modul::create([
+                'judul' => $request->judul,
+                'deskripsi' => $request->deskripsi,
+                'phyphox_id' => $request->phyphox_id,
+                'image' => $path, // <-- SIMPAN PATH GAMBAR
+            ]);
+
+            return redirect()->back()->with('success', 'Data modul berhasil dibuat!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
-
-        // Admin melihat semua modul
-        elseif ($userLogin->roles->contains('name', 'Administrator')) {
-            // Tidak perlu filter
-        }
-
-        // dd($userLogin);
-
-        $data = $query->get();
-
-        return view('modul.index', compact('data', 'roles', 'userLogin'));
     }
 
 
@@ -101,40 +119,35 @@ class ModulController extends Controller
     }
 
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'judul_id' => 'required|string|max:255',
-            'judul_en' => 'required|string|max:255',
-            'deskripsi_id' => 'nullable|string',
-            'deskripsi_en' => 'nullable|string',
-            // 'owner' => 'required|array', // multiple owner
-            'phyphox_id' => 'required|array', // multiple phyphox
-        ]);
+    // /**
+    //  * Store a newly created resource in storage.
+    //  */
+    // public function store(Request $request)
+    // {
+    //     $request->validate([
+    //         'judul.id' => 'required|string|max:255',
+    //         'judul.en' => 'required|string|max:255',
+    //         'deskripsi.id' => 'nullable|string',
+    //         'deskripsi.en' => 'nullable|string',
+    //         'phyphox_id' => 'required|array',
+    //     ]);
 
-        // dd($request->all());
+    //     try {
+    //         $modul = Modul::create([
+    //             // [DIUBAH] Kita sekarang mengirim array 'judul' dan 'deskripsi'
+    //             // Model akan otomatis menanganinya berkat trait HasTranslations
+    //             'judul' => $request->judul,
+    //             'deskripsi' => $request->deskripsi,
+    //             'phyphox_id' => $request->phyphox_id,
+    //         ]);
 
-        try {
-            $modul = Modul::create([
-                'judul_id' => $request->judul_id,
-                'judul_en' => $request->judul_en,
-                'deskripsi_id' => $request->deskripsi_id,
-                'deskripsi_en' => $request->deskripsi_en,
-                'phyphox_id' => $request->phyphox_id, // Simpan array sebagai JSON
-            ]);
+    //         // ... (logika attach owner/user Anda) ...
 
-            // Simpan relasi ke tabel pivot modul_user
-            // $modul->owners()->attach($request->owner);
-
-            // dd($modul);
-            return redirect()->back()->with('success', 'Data modul berhasil dibuat!');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
-        }
-    }
+    //         return redirect()->back()->with('success', 'Data modul berhasil dibuat!');
+    //     } catch (\Exception $e) {
+    //         return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+    //     }
+    // }
 
     /**
      * Update the specified resource in storage.
@@ -204,6 +217,20 @@ class ModulController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
+    }
+
+    public function show(Modul $modul)
+    {
+        // $modul sudah otomatis diambil oleh Laravel (route model binding)
+
+        // Sekarang, kita muat relasi 'subModules'
+        // Kita juga bisa mengurutkannya langsung di sini
+        $modul->load(['subModules' => function ($query) {
+            $query->orderBy('order', 'asc');
+        }]);
+
+        // Kirim data modul (yang sekarang berisi sub-modul) ke view
+        return view('modul.show', compact('modul'));
     }
 
 

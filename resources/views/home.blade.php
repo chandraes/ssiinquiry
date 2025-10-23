@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @section('title')
-    Dashboard
+    {{-- [DIUBAH] --}}
+    {{ __('admin.dashboard.title') }}
 @endsection
 @section('content')
 @include('swal')
@@ -8,7 +9,8 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">{{ __('Dashboard') }}</div>
+                {{-- [DIUBAH] --}}
+                <div class="card-header">{{ __('admin.dashboard.header') }}</div>
                 @php
                     // Cek apakah user login termasuk owner atau admin
                     $isGuru = $userLogin->roles->contains('name', 'Guru');
@@ -16,38 +18,39 @@
                 @endphp
                 @if ($isAdmin)
                     <div class="card-body">
-                        <div class="card-header">Modul</div>
+                        {{-- [DIUBAH] --}}
+                        <div class="card-header">{{ __('admin.dashboard.module_title') }}</div>
                         <div class="row">
                             @include('modul.create')
-                            <!-- Card Tambah Modul -->
                             <div class="col-md-4 col-sm-6 mb-4">
                                 <div class="card text-center shadow-sm border-0 hover-card"
                                     style="cursor:pointer; transition: transform 0.2s ease;"
                                     data-bs-toggle="modal" data-bs-target="#createModal">
                                     <div class="card-body py-5">
                                         <i class="fa fa-plus fa-3x text-primary mb-3"></i>
-                                        <h5 class="card-title text-primary mb-0">Buat Modul Baru</h5>
+                                        {{-- [DIUBAH] --}}
+                                        <h5 class="card-title text-primary mb-0">{{ __('admin.dashboard.create_module') }}</h5>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Card Statistik atau Info lain -->
                             <div class="col-md-4 col-sm-6 mb-4">
                                 <div class="card text-center shadow-sm border-0">
                                     <div class="card-body py-5">
                                         <i class="fa fa-book fa-3x text-success mb-3"></i>
-                                        <h5 class="card-title mb-1">Total Modul</h5>
+                                        {{-- [DIUBAH] --}}
+                                        <h5 class="card-title mb-1">{{ __('admin.dashboard.total_modules') }}</h5>
                                         <h3 class="fw-bold text-success">{{ $modul->count() }}</h3>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Card lainnya -->
                             <div class="col-md-4 col-sm-6 mb-4">
                                 <div class="card text-center shadow-sm border-0">
                                     <div class="card-body py-5">
                                         <i class="fa fa-users fa-3x text-info mb-3"></i>
-                                        <h5 class="card-title mb-1">Total Owner</h5>
+                                        {{-- [DIUBAH] --}}
+                                        <h5 class="card-title mb-1">{{ __('admin.dashboard.total_owners') }}</h5>
                                         <h3 class="fw-bold text-info">
                                             {{ $modul->pluck('owners')->flatten()->unique('id')->count() }}
                                         </h3>
@@ -57,41 +60,42 @@
                         </div>
                     </div>
                 @endif
-                
+
                 @if ($isGuru || $isAdmin)
                     <div class="card-body">
-                        <div class="card-header">Kelas</div>
+                        {{-- [DIUBAH] --}}
+                        <div class="card-header">{{ __('admin.dashboard.class_title') }}</div>
                         <div class="row">
                             @include('kelas.create')
-                            <!-- Card Tambah Modul -->
                             <div class="col-md-4 col-sm-6 mb-4">
                                 <div class="card text-center shadow-sm border-0 hover-card"
                                     style="cursor:pointer; transition: transform 0.2s ease;"
                                     data-bs-toggle="modal" data-bs-target="#createModalKelas">
                                     <div class="card-body py-5">
                                         <i class="fa fa-plus fa-3x text-primary mb-3"></i>
-                                        <h5 class="card-title text-primary mb-0">Buat Kelas Baru</h5>
+                                        {{-- [DIUBAH] --}}
+                                        <h5 class="card-title text-primary mb-0">{{ __('admin.dashboard.create_class') }}</h5>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Card Statistik atau Info lain -->
                             <div class="col-md-4 col-sm-6 mb-4">
                                 <div class="card text-center shadow-sm border-0">
                                     <div class="card-body py-5">
                                         <i class="fa fa-book fa-3x text-success mb-3"></i>
-                                        <h5 class="card-title mb-1">Total Kelas</h5>
+                                        {{-- [DIUBAH] --}}
+                                        <h5 class="card-title mb-1">{{ __('admin.dashboard.total_classes') }}</h5>
                                         <h3 class="fw-bold text-success">{{ $data->count() }}</h3>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Card lainnya -->
                             <div class="col-md-4 col-sm-6 mb-4">
                                 <div class="card text-center shadow-sm border-0">
                                     <div class="card-body py-5">
                                         <i class="fa fa-users fa-3x text-info mb-3"></i>
-                                        <h5 class="card-title mb-1">Total Peserta</h5>
+                                        {{-- [DIUBAH] --}}
+                                        <h5 class="card-title mb-1">{{ __('admin.dashboard.total_participants') }}</h5>
                                         <h3 class="fw-bold text-info">
                                             {{ $data->pluck('peserta')->flatten()->unique('id')->count() }}
                                         </h3>
@@ -112,7 +116,7 @@
     $(document).ready(function() {
         $('#phyphox_id').select2({
             dropdownParent: $('#createModal'),
-            placeholder: 'Pilih Alat Ukur...',
+            placeholder: '{{ __("admin.placeholders.select_phyphox") }}',
             allowClear: true,
             minimumInputLength: 2,
             ajax: {
@@ -138,7 +142,8 @@
 
         $('#owner').select2({
             dropdownParent: $('#createModal'),
-            placeholder: 'Pilih owner...',
+            {{-- [DIUBAH] --}}
+            placeholder: '{{ __("admin.placeholders.select_owner") }}',
             allowClear: true,
             minimumInputLength: 2,
             ajax: {
@@ -165,12 +170,13 @@
         // SweetAlert konfirmasi sebelum submit
         $('#btnCreate').on('click', function() {
             Swal.fire({
-                title: 'Simpan Data?',
-                text: "Pastikan semua data sudah benar!",
+                {{-- [DIUBAH] --}}
+                title: '{{ __("admin.swal.save_title") }}',
+                text: "{{ __("admin.swal.save_text") }}",
                 icon: 'question',
                 showCancelButton: true,
-                confirmButtonText: 'Ya, Simpan!',
-                cancelButtonText: 'Batal',
+                confirmButtonText: '{{ __("admin.swal.save_confirm") }}',
+                cancelButtonText: '{{ __("admin.swal.cancel") }}',
             }).then((result) => {
                 if (result.isConfirmed) {
                     $('#storeForm').submit();
@@ -183,7 +189,8 @@
     $(document).ready(function() {
         $('#guru_id').select2({
             dropdownParent: $('#createModalKelas'),
-            placeholder: 'Pilih Guru Pengajar...',
+            {{-- [DIUBAH] --}}
+            placeholder: '{{ __("admin.placeholders.select_teacher") }}',
             allowClear: true,
             minimumInputLength: 2,
             ajax: {
@@ -210,12 +217,13 @@
         // SweetAlert konfirmasi sebelum submit
         $('#btnCreateKelas').on('click', function() {
             Swal.fire({
-                title: 'Simpan Data?',
-                text: "Pastikan semua data sudah benar!",
+                {{-- [DIUBAH] --}}
+                title: '{{ __("admin.swal.save_title") }}',
+                text: "{{ __("admin.swal.save_text") }}",
                 icon: 'question',
                 showCancelButton: true,
-                confirmButtonText: 'Ya, Simpan!',
-                cancelButtonText: 'Batal',
+                confirmButtonText: '{{ __("admin.swal.save_confirm") }}',
+                cancelButtonText: '{{ __("admin.swal.cancel") }}',
             }).then((result) => {
                 if (result.isConfirmed) {
                     $('#storeFormKelas').submit();

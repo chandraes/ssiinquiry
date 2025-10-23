@@ -50,20 +50,21 @@ class KelasController extends Controller
         return response()->json($users);
     }
 
+
     /**
      * Menyimpan data kelas baru
      */
     public function store(Request $request)
     {
-        // dd(Auth::user()->roles);
+        // [DIUBAH] Validasi menggunakan dot notation
         $request->validate([
             'modul_id' => 'required|exists:moduls,id',
-            'nama_kelas' => 'required|string|max:255',
+            'nama_kelas.id' => 'required|string|max:255',
+            'nama_kelas.en' => 'required|string|max:255',
         ]);
 
         try {
-            // Jika user login adalah guru → gunakan id-nya sendiri
-            // Jika Administrator → gunakan guru_id dari inputan form
+            // ... (Logika guruId Anda tidak berubah, sudah bagus) ...
             $guruId = Auth::user()->roles->contains('name', 'Guru')
                 ? Auth::id()
                 : $request->guru_id;
@@ -74,18 +75,22 @@ class KelasController extends Controller
                 ]);
             }
 
+            // ... (Logika kodeJoin Anda tidak berubah, sudah bagus) ...
             $kodeJoin = (function() {
                 do {
                     $k = strtoupper(Str::random(5));
                 } while (Kelas::where('kode_join', $k)->exists());
                 return $k;
             })();
-            
-            // dd($guruId, $kodeJoin);
+
+            // [DIUBAH] Terapkan mb_strtoupper ke setiap bahasa
+            $namaKelas = $request->nama_kelas;
+            $namaKelas['id'] = mb_strtoupper($namaKelas['id'], 'UTF-8');
+            $namaKelas['en'] = mb_strtoupper($namaKelas['en'], 'UTF-8');
 
             Kelas::create([
                 'modul_id' => $request->modul_id,
-                'nama_kelas' => mb_strtoupper($request->nama_kelas, 'UTF-8'),
+                'nama_kelas' => $namaKelas, // <-- Kirim array yang sudah di-uppercase
                 'owner'   => $guruId,
                 'kode_join' => $kodeJoin,
             ]);
@@ -102,14 +107,17 @@ class KelasController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // [DIUBAH] Validasi menggunakan dot notation
         $request->validate([
             'modul_id' => 'required|exists:moduls,id',
-            'nama_kelas' => 'required|string|max:255',
+            'nama_kelas.id' => 'required|string|max:255',
+            'nama_kelas.en' => 'required|string|max:255',
         ]);
 
         try {
             $kelas = Kelas::findOrFail($id);
 
+            // ... (Logika guruId Anda tidak berubah, sudah bagus) ...
             $guruId = $guruId = Auth::user()->roles->contains('name', 'Guru')
                 ? Auth::id()
                 : $request->guru_id;
@@ -120,11 +128,16 @@ class KelasController extends Controller
                 ]);
             }
 
+            // [DIUBAH] Terapkan mb_strtoupper ke setiap bahasa
+            $namaKelas = $request->nama_kelas;
+            $namaKelas['id'] = mb_strtoupper($namaKelas['id'], 'UTF-8');
+            $namaKelas['en'] = mb_strtoupper($namaKelas['en'], 'UTF-8');
+
             $kelas->update([
                 'modul_id' => $request->modul_id,
-                'nama_kelas' => $request->nama_kelas,
+                'nama_kelas' => $namaKelas, // <-- Kirim array yang sudah di-uppercase
                 'owner'   => $guruId,
-                'kode_join' => $kelas->kode_join, // kode_join tidak berubah
+                // 'kode_join' tidak perlu di-update (sudah benar)
             ]);
 
             return redirect()->back()->with('success', 'Kelas berhasil diperbarui!');

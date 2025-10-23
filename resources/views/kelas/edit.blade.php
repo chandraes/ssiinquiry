@@ -3,7 +3,8 @@
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel">Ubah Data Modul</h5>
+                {{-- [DIUBAH] --}}
+                <h5 class="modal-title" id="editModalLabel">{{ __('admin.kelas_modal.edit_title') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -13,29 +14,65 @@
                 <div class="modal-body">
                     <div class="col-md-12 mb-3">
                         <div class="form-group">
-                            <label for="edit_modul_id" class="form-label">Pilih Modul</label>
+                            {{-- [DIUBAH] --}}
+                            <label for="edit_modul_id" class="form-label">{{ __('admin.kelas_modal.select_module') }}</label>
                             <select name="modul_id" id="edit_modul_id" class="form-control"
-                                style="width: 100%; border-color:darkgrey" placeHolder="Select Modul">
-                                <option value="" disabled {{ old('modul_id') ? '' : 'selected' }}>-- Pilih Modul --</option>
+                                style="width: 100%; border-color:darkgrey">
+                                {{-- [DIUBAH] --}}
+                                <option value="" disabled>{{ __('admin.kelas_modal.module_placeholder') }}</option>
                                 @foreach ($modul as $m)
-                                    <option value="{{ $m->id }}" {{ (string) old('modul_id') === (string) $m->id ? 'selected' : '' }}>
-                                        {{ $m->judul_id }} / {{ $m->judul_en }}
+                                    <option value="{{ $m->id }}">
+                                        {{-- [PERBAIKAN KRITIS] --}}
+                                        {{ $m->judul }}
                                     </option>
                                 @endforeach
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-12 mb-3">
-                        <div class="form-group">
-                            <label for="edit_nama_kelas" class="form-label">Nama Kelas</label>
-                            <input name="nama_kelas" id="edit_nama_kelas" required class="form-control" style="border-color:darkgrey">
+
+                    <ul class="nav nav-tabs mb-3" id="editKelasLangTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="edit-kelas-id-tab" data-bs-toggle="tab" data-bs-target="#edit-kelas-id-pane" type="button" role="tab">
+                                Indonesia (ID)
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="edit-kelas-en-tab" data-bs-toggle="tab" data-bs-target="#edit-kelas-en-pane" type="button" role="tab">
+                                English (EN)
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content" id="editKelasLangTabsContent">
+                        <div class="tab-pane fade show active" id="edit-kelas-id-pane" role="tabpanel">
+                            <div class="col-md-12 mb-3">
+                                <div class="form-group">
+                                    {{-- [DIUBAH] --}}
+                                    <label for="edit_nama_kelas_id" class="form-label">{{ __('admin.kelas_modal.class_name_id') }}</label>
+                                    {{-- Perhatikan ID baru: edit_nama_kelas_id --}}
+                                    <input type="text" name="nama_kelas[id]" id="edit_nama_kelas_id" required class="form-control" style="border-color:darkgrey">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="edit-kelas-en-pane" role="tabpanel">
+                            <div class="col-md-12 mb-3">
+                                <div class="form-group">
+                                    {{-- [DIUBAH] --}}
+                                    <label for="edit_nama_kelas_en" class_label="form-label">{{ __('admin.kelas_modal.class_name_en') }}</label>
+                                    {{-- Perhatikan ID baru: edit_nama_kelas_en --}}
+                                    <input type="text" name="nama_kelas[en]" id="edit_nama_kelas_en" required class="form-control" style="border-color:darkgrey">
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    {{-- Anda mungkin perlu menambahkan input 'guru_id' di sini untuk Admin --}}
+
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    <button type="button" id="btnUpdate" class="btn btn-primary">Simpan Perubahan</button>
+                    {{-- [DIUBAH] --}}
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('admin.kelas_modal.close') }}</button>
+                    <button type="button" id="btnUpdate" class="btn btn-primary">{{ __('admin.kelas_modal.save_changes') }}</button>
                 </div>
             </form>
 

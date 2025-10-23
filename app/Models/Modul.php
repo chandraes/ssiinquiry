@@ -3,18 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Translatable\HasTranslations;
 
 class Modul extends Model
 {
+    use HasTranslations;
     protected $table = 'moduls';
 
-    protected $fillable = [
-        'judul_id',
-        'judul_en',
-        'deskripsi_id',
-        'deskripsi_en',
-        'phyphox_id',
-    ];
+    protected $translatable = ['judul', 'deskripsi'];
+    protected $guarded = [];
 
     /**
      * The attributes that should be cast.
@@ -36,10 +33,12 @@ class Modul extends Model
     }
 
     public function kelas()
-{
-    return $this->hasMany(Kelas::class, 'modul_id');
-}
+    {
+        return $this->hasMany(Kelas::class, 'modul_id');
+    }
 
-
-    
+    public function subModules()
+    {
+        return $this->hasMany(SubModule::class, 'modul_id');
+    }
 }

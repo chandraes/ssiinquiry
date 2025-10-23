@@ -8,22 +8,20 @@
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+
             <form action="{{ route('modul.store') }}" method="post" id="storeForm">
                 @csrf
                 <div class="modal-body">
                     <div class="col-md-12 mb-3">
                         <div class="form-group">
                             <label for="phyphox_id" class="form-label">Pilih Alat Phyphox</label>
-                            <select name="phyphox_id[]" id="phyphox_id" class="form-control"
-                                multiple="multiple" style="width: 100%; border-color:darkgrey">
-                                
-                                {{-- Hapus option 'Pilih Modul' yang disabled/selected karena tidak relevan untuk multiple select --}}
-                                
+                            <select name="phyphox_id[]" id="phyphox_id" class="form-control" multiple="multiple"
+                                style="width: 100%; border-color:darkgrey">
                                 @foreach ($phyphox as $p)
-                                    <option value="{{ $p->id }}" 
-                                        {{ in_array($p->id, (array) old('phyphox_id', [])) ? 'selected' : '' }}>
-                                        {{ $p->kategori }} ({{ $p->nama }})
-                                    </option>
+                                <option value="{{ $p->id }}" {{ in_array($p->id, (array) old('phyphox_id', [])) ?
+                                    'selected' : '' }}>
+                                    {{ $p->kategori }} ({{ $p->nama }})
+                                </option>
                                 @endforeach
                             </select>
                             <small class="text-muted">Kamu bisa memilih lebih dari satu Alat Phyphox</small>
@@ -31,46 +29,70 @@
                     </div>
                     <div class="col-md-12 mb-3">
                         <div class="form-group">
-                            <label for="judul_id" class="form-label">Judul Modul ID</label>
-                            <input name="judul_id" id="judul_id" required class="form-control"
-                                style="border-color:darkgrey">
+                            <label for="image" class="form-label">Gambar Modul (Opsional)</label>
+                            <input type="file" name="image" id="image" class="form-control"
+                                style="border-color:darkgrey" accept="image/png, image/jpeg">
+                            <small class="text-muted">Max 2MB. Format: JPG, PNG.</small>
                         </div>
                     </div>
+                    <hr>
+                    <ul class="nav nav-tabs mb-3" id="modulLangTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="modul-id-tab" data-bs-toggle="tab"
+                                data-bs-target="#modul-id-pane" type="button" role="tab">
+                                Indonesia (ID)
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="modul-en-tab" data-bs-toggle="tab"
+                                data-bs-target="#modul-en-pane" type="button" role="tab">
+                                English (EN)
+                            </button>
+                        </li>
+                    </ul>
 
-                    <div class="col-md-12 mb-3">
-                        <div class="form-group">
-                            <label for="judul_en" class="form-label">Judul Modul EN</label>
-                            <input type="text" name="judul_en" id="judul_en" required class="form-control"
-                                style="border-color:darkgrey">
+                    <div class="tab-content" id="modulLangTabsContent">
+
+                        {{-- Tab Bahasa Indonesia --}}
+                        <div class="tab-pane fade show active" id="modul-id-pane" role="tabpanel">
+                            <div class="col-md-12 mb-3">
+                                <div class="form-group">
+                                    <label for="judul_id" class="form-label">Judul Modul (ID)</label>
+                                    {{-- Perhatikan name="judul[id]" --}}
+                                    <input name="judul[id]" id="judul_id" required class="form-control"
+                                        style="border-color:darkgrey">
+                                </div>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <div class="form-group">
+                                    <label for="deskripsi_id" class="form-label">Deskripsi (ID)</label>
+                                    {{-- Perhatikan name="deskripsi[id]" --}}
+                                    <textarea name="deskripsi[id]" id="deskripsi_id" class="form-control"
+                                        style="border-color:darkgrey"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Tab Bahasa Inggris --}}
+                        <div class="tab-pane fade" id="modul-en-pane" role="tabpanel">
+                            <div class="col-md-12 mb-3">
+                                <div class="form-group">
+                                    <label for="judul_en" class="form-label">Module Title (EN)</label>
+                                    {{-- Perhatikan name="judul[en]" --}}
+                                    <input type="text" name="judul[en]" id="judul_en" required class="form-control"
+                                        style="border-color:darkgrey">
+                                </div>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <div class="form-group">
+                                    <label for="deskripsi_en" class="form-label">Description (EN)</label>
+                                    {{-- Perhatikan name="deskripsi[en]" --}}
+                                    <textarea name="deskripsi[en]" id="deskripsi_en" class="form-control"
+                                        style="border-color:darkgrey"></textarea>
+                                </div>
+                            </div>
                         </div>
                     </div>
-
-                    <div class="col-md-12 mb-3">
-                        <div class="form-group">
-                            <label for="deskripsi_id" class="form-label">Deskripsi ID</label>
-                            <textarea name="deskripsi_id" id="deskripsi_id" class="form-control"
-                                style="border-color:darkgrey"></textarea>
-                        </div>
-                    </div>
-
-                    <div class="col-md-12 mb-3">
-                        <div class="form-group">
-                            <label for="deskripsi_en" class="form-label">Deskripsi EN</label>
-                            <textarea name="deskripsi_en" id="deskripsi_en" class="form-control"
-                                style="border-color:darkgrey"></textarea>
-                        </div>
-                    </div>
-
-                    {{-- <div class="col-md-12 mb-3">
-                        <div class="form-group">
-                            <label for="owner" class="form-label">Pilih Owner</label>
-                            <select name="owner[]" id="owner" class="form-control" multiple="multiple"
-                                style="width: 100%; border-color:darkgrey">
-                                
-                            </select>
-                            <small class="text-muted">Kamu bisa memilih lebih dari satu owner</small>
-                        </div>
-                    </div> --}}
                 </div>
 
                 <div class="modal-footer">

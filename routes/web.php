@@ -5,6 +5,9 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\LocalizationController;
+use App\Http\Controllers\ModulController;
+use App\Http\Controllers\SubModulController;
+use App\Http\Controllers\LearningMaterialController;
 
 
 // Form register (GET)
@@ -58,6 +61,28 @@ Route::group(['middleware' => 'auth'], function () {
         Route::delete('/delete/{id}', [App\Http\Controllers\ModulController::class, 'destroy'])->name('modul.delete');
         Route::get('/search', [App\Http\Controllers\ModulController::class, 'search'])->name('search-guru');
         Route::get('/search-phyphox', [App\Http\Controllers\ModulController::class, 'search_phyphox'])->name('search-phyphox');
+
+        Route::get('/{modul}', [ModulController::class, 'show'])->name('modul.show');
+
+    });
+
+    Route::group(['prefix' => 'learning-material', 'middleware' => ['role:admin,guru']], function () {
+
+        Route::post('/', [LearningMaterialController::class, 'store'])->name('learning_material.store');
+    });
+
+    Route::group(['prefix' => 'submodul', 'middleware' => ['role:admin,guru']], function () {
+        Route::post('/', [SubModulController::class, 'store'])->name('submodul.store');
+
+        Route::get('/show/{subModul}', [SubModulController::class, 'show'])->name('submodul.show');
+        // Mengambil data JSON untuk modal EDIT
+        Route::get('/{subModul}/json', [SubModulController::class, 'showJson'])->name('submodul.show.json');
+
+        // Menyimpan PERUBAHAN dari modal EDIT
+        Route::put('/{subModul}', [SubModulController::class, 'update'])->name('submodul.update');
+
+        // MENGHAPUS SubModul
+        Route::delete('/{subModul}', [SubModulController::class, 'destroy'])->name('submodul.destroy');
     });
 
     Route::group(['prefix' => 'kelas', 'middleware' => ['role:admin,guru']], function () {
