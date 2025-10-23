@@ -5,35 +5,39 @@ Peserta Kelas
 @section('content')
 @include('swal')
 <section class="content">
+    @php
+        // Cek apakah user login termasuk owner atau admin
+        $isGuru = $userLogin->roles->contains('name', 'Guru');
+        $isAdmin = $userLogin->roles->contains('name', 'Administrator');
+        $isSiswa = $userLogin->roles->contains('name', 'Siswa');
+    @endphp
     <div class="row">
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
-                <div class="box-body" style="height: 1200px">
+                {{-- <div class="box-body" style="height: 1200px"> --}}
                     <div class="row row-sm">
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-header justify-content-between">
                                     <div>
-                                        <h2 class="card-title mb-10">Daftar Peserta Kelas</h2>
-                                        {{-- <p>
-                                            Nama Kelas : <span class="text-primary">{{ $kelas->nama_kelas }}</span>
-                                        </p>
-                                        <p>Modul : {{ $kelas->modul->judul_id }}</p>
-                                        <p>Guru Pengajar : {{ $kelas->guru->name }}</p> --}}
+                                        <h2 class="card-title mb-10">Daftar Peserta Kelas {{$kelas->nama_kelas}}</h2>
                                     </div>
                                     <div class="justified-content-end">
-                                        {{-- <button type="button"
-                                            class="btn btn-info waves-effect waves-light"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#uploadModal">
-                                            <i class="fa fa-upload me-2"></i>Upload Peserta
-                                        </button> --}}
-                                        <button type="button"
-                                            class="btn btn-primary waves-effect waves-light"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#createModal">
-                                            <i class="fa fa-plus me-2"></i>Tambah Peserta
-                                        </button>
+                                        @if($isGuru || $isAdmin)
+                                            <button type="button"
+                                                class="btn btn-primary waves-effect waves-light"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#createModal">
+                                                <i class="fa fa-plus me-2"></i>Tambah Peserta
+                                            </button>
+                                        @elseif($isSiswa && !$isJoined)
+                                            <button type="button"
+                                                class="btn btn-success waves-effect waves-light"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#joinModal">
+                                                <i class="fa fa-sign-in-alt me-2"></i>Gabung Kelas
+                                            </button>
+                                        @endif
                                     </div>                                    
                                 </div>
 
@@ -54,25 +58,51 @@ Peserta Kelas
                                                         <td class="text-center align-middle">{{ $loop->iteration }}</td>
                                                         <td class="text-start align-middle">{{ $p->user->name }}</td>
                                                         <td class="text-center align-middle">
-                                                            @if ($p->pro_kontra_id == 1)
+                                                            @if ($p->pro_kontra_id == '1')
                                                                 <span class="badge bg-success">Pro</span>
-                                                            @elseif ($p->pro_kontra_id == 2)
-                                                                <span class="badge bg-danger">Kontra</span>
+                                                            @elseif ($p->pro_kontra_id == '0')
+                                                                <span class="badge bg-warning">Kontra</span>
                                                             @else
-                                                                <span class="badge bg-secondary">Belum ditentukan</span>
+                                                                <span class="badge bg-danger">Belum ditentukan</span>
                                                             @endif
                                                         </td>
                                                         <td class="text-center align-middle">
+                                                        @if($isAdmin || $isGuru)
+                                                            @if($p->pro_kontra_id != 1)
+                                                                <button type="button" class="btn btn-success btn-sm me-1"
+                                                                        {{-- onclick="if(confirm('Tandai peserta ini sebagai Pro?')) { document.getElementById('pro-form-{{ $p->id }}').submit(); }" --}}
+                                                                        onclick="proButton({{$p->id}})"
+                                                                        title="Set Pro">
+                                                                    <i class="fa fa-thumbs-up"></i>
+                                                                </button>
+                                                            @endif
+                                                            <form action="{{ route('kelas.peserta.pro', $p->id) }}" method="POST" id="pro-form-{{ $p->id }}" style="display: none;">
+                                                                @csrf
+                                                            </form>
+
+                                                            @if($p->pro_kontra_id != 0)
+                                                                <button type="button" class="btn btn-warning btn-sm me-1"
+                                                                        {{-- onclick="if(confirm('Tandai peserta ini sebagai Kontra?')) { document.getElementById('kontra-form-{{ $p->id }}').submit(); }" --}}
+                                                                        onclick="kontraButton({{$p->id}})"
+                                                                        title="Set Kontra">
+                                                                    <i class="fa fa-thumbs-down"></i>
+                                                                </button>
+                                                            @endif
+                                                            <form action="{{ route('kelas.peserta.kontra', $p->id) }}" method="POST" id="kontra-form-{{ $p->id }}" style="display: none;">
+                                                                @csrf
+                                                            </form>
+
                                                             <button type="button"
                                                                     class="btn btn-danger btn-sm"
-                                                                    onclick="deleteButton({{ $p->id }})">
-                                                                <i class="fe fe-trash"></i>
+                                                                    onclick="deleteButton({{ $p->id }})"
+                                                                    title="Delete">
+                                                                <i class="fe fe-x"></i>
                                                             </button>
-
                                                             <form action="{{ route('kelas.peserta.delete', $p->id) }}" method="POST" id="delete-form-{{ $p->id }}">
                                                                 @csrf
                                                                 @method('delete')
                                                             </form>
+                                                        @endif
                                                         </td>
                                                     </tr>
                                                 @empty
@@ -85,15 +115,25 @@ Peserta Kelas
                                     </div>
                                 </div>
                                 {{-- Modal--}}
-                                @include('kelas.peserta.create')
+
+                                @if($isAdmin || $isGuru)
+                                    @include('kelas.peserta.create')
+                                @else
+                                    @include('kelas.peserta.join')
+                                @endif
                                 {{-- @include('kelas.peserta.upload') --}}
                             </div>
                         </div>
                     </div>
+
+                    {{-- @include('kelas.sub-modul.pengantar-konteks') --}}
                 </div>
             </div>
         </div>
     </div>
+    
+
+    
 </section>
 @endsection
 
@@ -140,6 +180,36 @@ Peserta Kelas
     //         });
     //     });
     // });
+
+    function proButton(id) {
+        Swal.fire({
+            title: 'Ubah Status Peserta?',
+            text: "Peserta akan ditandai sebagai Tim Pro!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Lanjutkan!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('pro-form-' + id).submit();
+            }
+        });
+    }
+
+    function kontraButton(id) {
+        Swal.fire({
+            title: 'Ubah Status Peserta?',
+            text: "Peserta akan ditandai sebagai Tim Kontra!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Lanjutkan!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('kontra-form-' + id).submit();
+            }
+        });
+    }
 
     function deleteButton(id) {
         Swal.fire({

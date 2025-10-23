@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\KelasUser;
-use App\Models\Kelas;
+use Exception;
 use App\Models\User;
+use App\Models\Kelas;
+use App\Models\KelasUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Exception;
 
 class KelasUserController extends Controller
 {
@@ -17,6 +18,7 @@ class KelasUserController extends Controller
      */
     public function index($id)
     {
+        $userLogin = auth()->user();
         $kelas = Kelas::with(['guru', 'modul'])->findOrFail($id);
 
         $siswa = User::whereHas('roles', function ($q) {
@@ -28,7 +30,7 @@ class KelasUserController extends Controller
             ->where('kelas_id', $id)
             ->get();
 
-        return view('kelas.peserta.index', compact('kelas', 'peserta', 'siswa'));
+        return view('kelas.peserta.index', compact('userLogin','kelas', 'peserta', 'siswa'));
     }
 
 
@@ -40,7 +42,7 @@ class KelasUserController extends Controller
         $request->validate([
             'kelas_id' => 'required|exists:kelas,id',
             'user_id' => 'required|exists:users,id',
-            'pro_kontra_id' => 'nullable|in:1,2',
+            'pro_kontra_id' => 'nullable|in:1,0',
         ]);
 
         try {
@@ -65,96 +67,6 @@ class KelasUserController extends Controller
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
-
-//     public function upload(Request $request)
-// {
-//     $request->validate([
-//         'file' => 'required|file|mimetypes:text/csv,text/plain,application/vnd.ms-excel|max:2048',
-//     ]);
-
-
-//     // dd($request->file('file'));
-
-
-//     try {
-//         $file = $request->file('file');
-//         $path = $file->getRealPath();
-
-//         // Baca file CSV
-//         $data = array_map('str_getcsv', file($path));
-//         $inserted = 0;
-//         $skipped = 0;
-//         $errors = [];
-
-//         DB::beginTransaction();
-
-//         foreach ($data as $index => $row) {
-//             if ($index == 0) continue; // Lewati header
-
-//             $namaKelas = trim($row[0] ?? '');
-//             $namaSiswa = trim($row[1] ?? '');
-
-//             if (!$namaKelas || !$namaSiswa) {
-//                 $skipped++;
-//                 continue;
-//             }
-
-//             // Cari kelas berdasarkan nama_kelas
-//             $kelas = Kelas::whereRaw('LOWER(nama_kelas) = ?', [strtolower($namaKelas)])->first();
-//             if (!$kelas) {
-//                 $errors[] = "Kelas '{$namaKelas}' tidak ditemukan.";
-//                 $skipped++;
-//                 continue;
-//             }
-
-//             // Cari user berdasarkan nama lengkap (nama_siswa)
-//             $user = User::whereRaw('LOWER(name) = ?', [strtolower($namaSiswa)])->first();
-//             if (!$user) {
-//                 $errors[] = "Siswa '{$namaSiswa}' belum membuat akun.";
-//                 $skipped++;
-//                 continue;
-//             }
-
-//             // Cek duplikat data
-//             $exists = KelasUser::where('kelas_id', $kelas->id)
-//                 ->where('user_id', $user->id)
-//                 ->exists();
-
-//             if ($exists) {
-//                 $skipped++;
-//                 continue;
-//             }
-
-//             // Simpan data peserta
-//             KelasUser::create([
-//                 'kelas_id' => $kelas->id,
-//                 'user_id' => $user->id,
-//                 'pro_kontra_id' => null,
-//             ]);
-
-//             $inserted++;
-//         }
-
-//         DB::commit();
-
-//         // Buat pesan sukses + error detail
-//         $message = "Upload selesai! {$inserted} peserta ditambahkan, {$skipped} dilewati.";
-//         if (count($errors) > 0) {
-//             $message .= "Detail Kesalahan:";
-//             foreach ($errors as $err) {
-//                 $message .= "$err";
-//             }
-//             $message .= "";
-//         }
-
-//         return redirect()->back()->with('success', $message);
-
-//     } catch (\Exception $e) {
-//         DB::rollBack();
-//         return redirect()->back()->with('error', 'Gagal upload peserta: ' . $e->getMessage());
-//     }
-// }
-
 
     public function downloadTemplate(): StreamedResponse
     {
@@ -195,6 +107,32 @@ class KelasUserController extends Controller
             return redirect()->back()->with('success', 'Data berhasil dihapus!');
         } catch (Exception $e) {
             return redirect()->back()->with('error', 'Gagal menghapus data: ' . $e->getMessage());
+        }
+    }
+
+
+    public function markPro(Request $request, $id)
+    {
+
+        try {
+            $peserta = KelasUser::findOrFail($id);
+            $peserta->update(['pro_kontra_id' => '1']);
+
+            return redirect()->back()->with('success', 'Status pro berhasil diubah.');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Gagal mengubah status: ' . $e->getMessage());
+        }
+    }
+
+    public function markKontra(Request $request, $id)
+    {
+        try {
+            $peserta = KelasUser::findOrFail($id);
+            $peserta->update(['pro_kontra_id' => '0']);
+
+            return redirect()->back()->with('success', 'Status kontra berhasil diubah.');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Gagal mengubah status: ' . $e->getMessage());
         }
     }
 }
