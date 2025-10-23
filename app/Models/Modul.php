@@ -41,4 +41,17 @@ class Modul extends Model
     {
         return $this->hasMany(SubModule::class, 'modul_id');
     }
+    
+    public function getRelatedPhyphoxAttribute()
+    {
+        // Pastikan kolom phyphox_id memiliki nilai dan berbentuk array
+        $phyphoxIds = $this->phyphox_id ?? [];
+
+        if (empty($phyphoxIds)) {
+            return collect(); // Mengembalikan koleksi kosong jika tidak ada ID
+        }
+
+        // Menggunakan whereIn untuk mencari semua model Phyphox berdasarkan ID
+        return Phyphox::whereIn('id', $phyphoxIds)->get();
+    }
 }

@@ -111,9 +111,17 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/tambah', [App\Http\Controllers\KelasUserController::class, 'create'])->name('kelas.peserta.create');
             Route::post('/store', [App\Http\Controllers\KelasUserController::class, 'store'])->name('kelas.peserta.store');
             Route::post('/upload', [App\Http\Controllers\KelasUserController::class, 'upload'])->name('kelas.peserta.upload');
+            Route::post('/pro/{id}', [App\Http\Controllers\KelasUserController::class, 'markPro'])->name('kelas.peserta.pro');
+            Route::post('/kontra/{id}', [App\Http\Controllers\KelasUserController::class, 'markKontra'])->name('kelas.peserta.kontra');
             Route::delete('/delete/{id}', [App\Http\Controllers\KelasUserController::class, 'destroy'])->name('kelas.peserta.delete');
         });
     });
 
     Route::get('/download-template', [App\Http\Controllers\KelasUserController::class, 'downloadTemplate'])->name('kelas.peserta.download-template');
+
+    Route::group(['prefix' => 'kelas', 'middleware' => ['role:siswa']], function () {
+        Route::get('/{id}', [App\Http\Controllers\KelasController::class, 'siswa_kelas'])->name('siswa.kelas');
+        Route::post('/{kelas_id}/join', [App\Http\Controllers\KelasController::class, 'siswa_join'])->name('siswa.kelas.join');
+        Route::post('/jawaban/{id}/simpan', [App\Http\Controllers\KelasController::class, 'simpan_jawaban'])->name('kelas.jawaban.simpan');
+    });
 });

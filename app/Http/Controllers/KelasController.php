@@ -9,6 +9,7 @@ use App\Models\Modul;
 use App\Models\KelasUser;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class KelasController extends Controller
@@ -158,6 +159,78 @@ class KelasController extends Controller
             return redirect()->back()->with('success', 'Kelas berhasil dihapus!');
         } catch (Exception $e) {
             return redirect()->back()->with('error', 'Gagal menghapus kelas: ' . $e->getMessage());
+        }
+    }
+
+    
+    public function siswa_kelas($id)
+    {
+        $userLogin = auth()->user();
+        // dd($id);
+        // Ambil data kelas, sekaligus eager loading peserta (users)
+        $kelas = Kelas::with('peserta', 'peserta.user', 'modul')->findOrFail($id);
+        
+        $user = Auth::user();
+        
+        // Periksa apakah user yang login sudah tergabung dalam kelas ini
+        $isJoined = $kelas->peserta->pluck('user_id')->contains($user->id);
+
+        // Ambil daftar peserta untuk ditampilkan
+        $peserta = $kelas->peserta;
+        // dd($isJoined, $kelas);
+
+        // $pengantar = DB::table('pengantar')
+        //     ->where('modul_id', $kelas->modul_id)
+        //     ->first();
+
+        // $tujuan = DB::table('tujuan_modul')
+        //     ->where('modul_id', $kelas->modul_id)
+        //     ->get();
+
+        // $materi_awal = DB::table('materi_awal')
+        //     ->where('modul_id', $kelas->modul_id)
+        //     ->get();
+        //     // dd($kelas->modul_id);
+
+        // $refleksi_awal = DB::table('refleksi_awal')
+        //     ->where('modul_id', $kelas->modul_id)
+        //     ->get();
+
+        return view('kelas.peserta.index', 
+        compact('kelas', 'peserta', 'isJoined',
+        'userLogin', 
+        // 'pengantar', 'tujuan',
+        // 'materi_awal', 'refleksi_awal'
+        ));
+    }
+
+    public function siswa_join(Request $request, $kelas_id)
+    {
+        $request->validate([
+            'kode_join' => 'required|string|exists:kelas,kode_join',
+        ]);
+
+        try {
+            $kelas = Kelas::findOrFail($kelas_id);
+            $user = Auth::user();
+
+            // Periksa apakah user sudah tergabung
+            $isJoined = KelasUser::where('kelas_id', $kelas->id)
+                                      ->where('user_id', $user->id)
+                                      ->exists();
+            if ($isJoined) {
+                return redirect()->back()->with('info', 'Anda sudah tergabung dalam kelas ini.');
+            }
+
+            // Tambahkan user ke kelas
+            KelasUser::create([
+                'kelas_id' => $kelas->id,
+                'user_id' => $user->id,
+            ]);
+
+            return redirect()->back()->with('success', 'Berhasil bergabung ke kelas!');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Gagal bergabung ke kelas: ' . $e->getMessage());
         }
     }
 }
