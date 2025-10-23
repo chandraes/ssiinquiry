@@ -5,7 +5,7 @@
 @endsection
 @section('content')
 @include('swal')
-<div class="container">
+<div class="main-container container-fluid">
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
@@ -33,7 +33,7 @@
                                     </div>
                                 @else
                                     <div class="card-body">
-                                        <div class="row">
+                                        <div class="row row-sm">
                                         @foreach( $modul as $m )
                                             @include('kelas.create')
                                             <div class="col-md-4 col-xl-4">
@@ -56,21 +56,17 @@
                                                         {{-- Pastikan $m->modul tidak null sebelum mengakses relasi --}}
                                                         {{-- Pemeriksaan isNotEmpty() dilakukan pada relasi Phyphox yang ada di dalam Modul --}}
                                                         @if ($m->relatedPhyphox->isNotEmpty())
-                                                            {{-- Loop melalui relasi kustom relatedPhyphox --}}
+                                                            <img src="{{$m->image
+                                                                ? asset($m->image)
+                                                                : asset('assets/images/users/1.jpg')}}"
+                                                                    alt="img" class="mb-5">
+                                                            <strong class="text-start">Deskripsi :</strong>
+                                                            <p>{{Str::limit(strip_tags($m->deskripsi ?? ''), 100, '...') }}</p>
 
-                                                            <div class="col-md-12">
-                                                                <span class="avatar avatar-xxl cover-image" style="margin-bottom: 20px"
-                                                                    data-bs-image-src="{{ $m->image
-                                                                        ? asset($m->image)
-                                                                        : asset('assets/images/users/20.jpg') }}">
-                                                                </span>
-                                                            </div>
+                                                            <strong class="text-start">Alat :</strong>
                                                             @foreach ($m->relatedPhyphox as $phyphox)
-                                                                <div class="col-md-12">
-                                                                    {{-- TAMBAHKAN KELAS BACKGROUND DI SINI --}}
-                                                                    {{-- Atau jika Anda punya bg-blue kustom: --}}
-                                                                    {{-- <span class="avatar avatar-xxl brround cover-image bg-blue" data-bs-image-src="{{asset('storage/phyphox_icons/'. $phyphox->icon)}}"></span> --}}
-                                                                    <p>{{ $phyphox->nama }} ({{ $phyphox->kategori }})</p>
+                                                                <div class="col-md-12 ">
+                                                                    <p class="mb-1">{{ $phyphox->nama }} ({{ $phyphox->kategori }})</p>
                                                                 </div>
                                                             @endforeach
                                                         @else
@@ -155,11 +151,6 @@
                                                                 ? asset($m->image)
                                                                 : asset('assets/images/users/1.jpg')}}"
                                                                     alt="img" class="mb-5">
-                                                            {{-- <span class="avatar avatar-xxl cover-image" style="margin-bottom: 20px"
-                                                                data-bs-image-src="{{ $m->image
-                                                                    ? asset($m->image)
-                                                                    : asset('assets/images/users/20.jpg') }}">
-                                                            </span> --}}
                                                             <strong class="text-start">Deskripsi :</strong>
                                                             <p>{{Str::limit(strip_tags($m->deskripsi ?? ''), 100, '...') }}</p>
 
