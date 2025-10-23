@@ -126,9 +126,6 @@
 @include('practicum.slot_edit_modal')
 
 @endsection
-@push('css')
-    <script src="{{asset('assets/plugins/tinymce/tinymce.min.js')}}" referrerpolicy="origin" crossorigin="anonymous"></script>
-@endpush
 
 @push('js')
 {{-- Memuat SEMUA JavaScript yang Dibutuhkan Halaman Ini --}}

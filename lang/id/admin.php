@@ -167,4 +167,25 @@ return [
         'slot_desc' => 'Deskripsi/Nama File',
         'slot_group' => 'Grup Eksperimen',
     ],
+
+    'forum_settings' => [
+        'title' => 'Pengaturan Forum Debat',
+        'general_settings' => 'Pengaturan Umum Forum',
+        'update_settings' => 'Simpan Pengaturan',
+        'debate_topic' => 'Topik Debat',
+        'debate_rules' => 'Aturan Debat',
+        'start_time' => 'Waktu Mulai',
+        'end_time' => 'Waktu Selesai',
+        'phase1_end' => 'Akhir Fase 1 (Pembukaan)',
+        'phase2_end' => 'Akhir Fase 2 (Sanggahan)',
+        'team_management' => 'Manajemen Tim',
+        'team_pro' => 'Tim Pro',
+        'team_con' => 'Tim Kontra',
+        'unassigned_students' => 'Siswa Belum Ditugaskan',
+        'assign_pro' => 'Jadikan Pro',
+        'assign_con' => 'Jadikan Kontra',
+        'remove_from_team' => 'Keluarkan dari Tim',
+        'no_students_in_class' => 'Tidak ada siswa di kelas terkait.', // Sesuaikan pesan ini
+        'no_members' => 'Belum ada anggota.',
+    ],
 ];

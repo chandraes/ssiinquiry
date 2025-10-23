@@ -40,4 +40,24 @@ class Kelas extends Model
     {
         return $this->hasMany(KelasUser::class, 'kelas_id');
     }
+
+    public function students()
+    {
+        return $this->hasManyThrough(
+            User::class,      // Model tujuan akhir yang ingin kita dapatkan
+            KelasUser::class, // Model perantara (tabel 'kelas_users')
+            'kelas_id',     // Foreign key di tabel 'kelas_users' (menghubungkan ke Kelas)
+            'id',           // Foreign key di tabel 'users' (menghubungkan ke KelasUser)
+            'id',           // Local key di tabel 'kelas' (menghubungkan ke KelasUser)
+            'user_id'       // Local key di tabel 'kelas_users' (menghubungkan ke User)
+        );
+    }
+
+    public function forumTeams()
+    {
+        return $this->hasMany(ForumTeam::class, 'kelas_id');
+    }
+
+
+
 }

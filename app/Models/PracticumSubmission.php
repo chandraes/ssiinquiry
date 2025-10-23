@@ -34,4 +34,9 @@ class PracticumSubmission extends Model
     {
         return $this->belongsTo(Kelas::class, 'course_class_id');
     }
+
+    public function linkedForumPosts()
+    {
+        return $this->belongsToMany(ForumPost::class, 'forum_post_evidence');
+    }
 }

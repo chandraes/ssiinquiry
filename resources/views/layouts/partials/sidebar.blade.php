@@ -3,7 +3,6 @@
     <aside class="app-sidebar">
         <div class="side-header">
             <a class="header-brand1" href="{{route('home')}}">
-                {{-- [DIUBAH] alt text --}}
                 <img src="{{ $logoUrl }}" class="header-brand-img desktop-logo" alt="{{ __('admin.logo_alt') }}">
                 <img src="{{ $logoUrl }}" class="header-brand-img toggle-logo" alt="{{ __('admin.logo_alt') }}">
                 <img src="{{ $logoUrl }}" class="header-brand-img light-logo" alt="{{ __('admin.logo_alt') }}">
@@ -45,25 +44,32 @@
 
                 {{-- 1. Blok Logika Baru untuk Cek Aktivasi --}}
                 @php
-                // Cek 1: Apakah kita di halaman detail modul & ID-nya cocok?
                 $isModulDetailPage = request()->routeIs('modul.show', $modul->id);
-
-                // Cek 2: Apakah kita di halaman sub-modul (via var $activeModulId) & ID-nya cocok?
-
                 $isSubModulPage = (($activeModulId ?? null) == $modul->id);
-                
-                // Cek 3: Apakah kita di halaman kelas & ID kelasnya milik modul ini?
+
+                // Inisialisasi ID Kelas saat ini
+                $currentKelasId = 0;
                 $isKelasPage = false;
-                if(request()->routeIs('kelas.*')) {
-                // Menggunakan logika asli Anda untuk mendapatkan ID kelas saat ini
-                $currentKelasId = (int)(array_values(request()->route()->parameters())[0] ?? null);
-                // Cek apakah modul ini memiliki kelas tersebut
-                if ($currentKelasId > 0 && $modul->kelas->contains('id', $currentKelasId)) {
-                $isKelasPage = true;
-                }
+
+                // Cek apakah route saat ini terkait dengan kelas
+                if(request()->routeIs('kelas.*') || request()->routeIs('kelas.forums') || request()->routeIs('kelas.forum.teams')) {
+
+                    // Ambil parameter 'kelas' dari route
+                    $currentKelasParam = request()->route()->parameter('kelas');
+
+                    if ($currentKelasParam instanceof \App\Models\Kelas) { // Jika parameter adalah OBJEK Kelas
+                        $currentKelasId = $currentKelasParam->id;
+                    } elseif (is_numeric($currentKelasParam)) { // Jika parameter adalah ID (dari route lama)
+                        $currentKelasId = (int) $currentKelasParam;
+                    }
+
+                    // Cek apakah modul ini adalah induk dari kelas yang sedang aktif
+                    if ($currentKelasId > 0 && $modul->kelas->contains('id', $currentKelasId)) {
+                        $isKelasPage = true;
+                    }
                 }
 
-                // Gabungkan: Modul ini "aktif" (terbuka/highlight) jika salah satu dari 3 di atas true
+                // Gabungkan: Modul ini "aktif" (terbuka) jika salah satu dari 3 di atas true
                 $isModulActiveAndExpanded = $isModulDetailPage || $isSubModulPage || $isKelasPage;
                 @endphp
 
@@ -84,7 +90,6 @@
                             </li>
                             <li>
                                 {{-- 4. Terapkan Logika Spesifik ke 'Detail Modul' --}}
-                                {{-- Item ini hanya aktif jika di halaman modul atau sub-modul, BUKAN kelas --}}
                                 <a href="{{ route('modul.show', $modul->id) }}"
                                     class="slide-item {{ $isModulDetailPage || $isSubModulPage ? 'active' : '' }}">
                                     <i class="fa fa-info-circle me-2"></i> Detail Modul
@@ -94,12 +99,15 @@
                                 <h3>{{ __('admin.sidebar.modules_classes') }}</h3>
                             </li>
 
-                            {{-- 5. Logika Kelas (Biarkan seperti asli, sudah benar) --}}
+                            {{-- 5. Logika Kelas (PERBAIKAN DI SINI) --}}
                             @forelse($modul->kelas as $kelas)
                             <li>
-                                <a href="{{ route('kelas.peserta', $kelas->id) }}"
-                                    class="slide-item {{ (request()->routeIs('kelas.*') && ((int)(array_values(request()->route()->parameters())[0] ?? null) === (int) $kelas->id)) ? 'active' : '' }}">{{
-                                    $kelas->nama_kelas }}</a>
+                                {{-- Arahkan ke route 'kelas.show' yang baru --}}
+                                <a href="{{ route('kelas.show', $kelas->id) }}"
+                                    {{-- Cek apakah ID kelas saat ini sama dengan ID kelas di loop --}}
+                                    class="slide-item {{ $currentKelasId == $kelas->id ? 'active' : '' }}">
+                                    {{ $kelas->nama_kelas }}
+                                </a>
                             </li>
                             @empty
                             <li>
@@ -125,7 +133,7 @@
                     </a>
                 </li>
                 @endrole
-            </ul> {{-- Penutup <ul> side-menu --}}
+            </ul>
 
                 <div class="slide-right" id="slide-right"><svg xmlns="http://www.w3.org/2000/svg" fill="#7b8191"
                         width="24" height="24" viewBox="0 0 24 24">

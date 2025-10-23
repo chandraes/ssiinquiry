@@ -17,5 +17,6 @@ class DatabaseSeeder extends Seeder
 
         $this->call(RoleAndAdminSeeder::class);
         $this->call(PhyphoxSeeder::class);
+        $this->call(UserMuridSeeder::class);
     }
 }

@@ -14,6 +14,7 @@
         <link href="{{asset('assets/css/plugins.css')}}" rel="stylesheet" />
         <script src="{{asset('assets/js/sweetalert.js')}}"></script>
         <link href="{{asset('assets/css/icons.css')}}" rel="stylesheet" />
+         <script src="{{asset('assets/plugins/tinymce/tinymce.min.js')}}" referrerpolicy="origin" crossorigin="anonymous"></script>
         @stack('css')
     </head>
 

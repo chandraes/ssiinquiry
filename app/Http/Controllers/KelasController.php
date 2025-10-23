@@ -162,16 +162,16 @@ class KelasController extends Controller
         }
     }
 
-    
+
     public function siswa_kelas($id)
     {
         $userLogin = auth()->user();
         // dd($id);
         // Ambil data kelas, sekaligus eager loading peserta (users)
         $kelas = Kelas::with('peserta', 'peserta.user', 'modul')->findOrFail($id);
-        
+
         $user = Auth::user();
-        
+
         // Periksa apakah user yang login sudah tergabung dalam kelas ini
         $isJoined = $kelas->peserta->pluck('user_id')->contains($user->id);
 
@@ -196,9 +196,9 @@ class KelasController extends Controller
         //     ->where('modul_id', $kelas->modul_id)
         //     ->get();
 
-        return view('kelas.peserta.index', 
+        return view('kelas.peserta.index',
         compact('kelas', 'peserta', 'isJoined',
-        'userLogin', 
+        'userLogin',
         // 'pengantar', 'tujuan',
         // 'materi_awal', 'refleksi_awal'
         ));
@@ -232,5 +232,28 @@ class KelasController extends Controller
         } catch (Exception $e) {
             return redirect()->back()->with('error', 'Gagal bergabung ke kelas: ' . $e->getMessage());
         }
+    }
+
+    public function show(Kelas $kelas)
+    {
+        // Muat relasi yang diperlukan untuk ditampilkan di halaman detail
+        $kelas->load('modul', 'guru', 'peserta');
+
+        return view('kelas.show', compact('kelas'));
+    }
+
+    public function showForums(Kelas $kelas)
+    {
+        // 1. Muat modul yang terkait dengan kelas ini
+        $kelas->load('modul');
+
+        // 2. Ambil semua sub-modul dari modul tersebut HANYA yang tipenya 'forum'
+        $forumSubModules = $kelas->modul->subModules()
+                                ->where('type', 'forum')
+                                ->orderBy('order')
+                                ->get();
+
+        // 3. Kirim data ke view hub
+        return view('kelas.show_forums', compact('kelas', 'forumSubModules'));
     }
 }

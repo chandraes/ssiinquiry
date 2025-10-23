@@ -167,4 +167,25 @@ return [
         'slot_desc' => 'Description/Filename',
         'slot_group' => 'Experiment Group',
     ],
+
+    'forum_settings' => [
+        'title' => 'Debate Forum Settings',
+        'general_settings' => 'General Forum Settings',
+        'update_settings' => 'Save Settings',
+        'debate_topic' => 'Debate Topic',
+        'debate_rules' => 'Debate Rules',
+        'start_time' => 'Start Time',
+        'end_time' => 'End Time',
+        'phase1_end' => 'End of Phase 1 (Opening)',
+        'phase2_end' => 'End of Phase 2 (Rebuttals)',
+        'team_management' => 'Team Management',
+        'team_pro' => 'Pro Team',
+        'team_con' => 'Con Team',
+        'unassigned_students' => 'Unassigned Students',
+        'assign_pro' => 'Assign to Pro',
+        'assign_con' => 'Assign to Con',
+        'remove_from_team' => 'Remove from Team',
+        'no_students_in_class' => 'No students in related classes.', // Adjust message
+        'no_members' => 'No members yet.',
+    ],
 ];

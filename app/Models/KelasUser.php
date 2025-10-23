@@ -44,4 +44,6 @@ class KelasUser extends Model
             default => '-',
         };
     }
+
+    
 }

@@ -66,6 +66,9 @@
                                     Sub Modul Praktikum Phyphox
                                 </a>
                             </li>
+                            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#createSubModulModal" data-type="forum">
+                                Sub Modul Forum Debat
+                            </a></li>
                             {{-- <li><a class="dropdown-item" href="#" data-type="forum">Sub Modul Forum (Segera)</a>
                             </li> --}}
                         </ul>
@@ -171,19 +174,31 @@
     }
 
     $('#createSubModulModal').on('show.bs.modal', function (event) {
-        // Ambil tombol yang di-klik
-        console.log('masuk');
         var button = $(event.relatedTarget);
-
-        // Ambil data-type dari tombol itu (mis: 'learning' or 'reflection')
         var subModulType = button.data('type');
-        console.log(subModulType);
-        // Temukan hidden input di dalam modal
         var modal = $(this);
-        var typeInput = modal.find('#create_submodul_type');
 
-        // Set value dari hidden input
+        // 1. Set hidden input 'type'
+        var typeInput = modal.find('#create_submodul_type');
         typeInput.val(subModulType);
+
+        // 2. Temukan field-field opsional
+        var forumFields = modal.find('#forum_settings_fields');
+        // (Jika Anda punya field lain untuk 'practicum' atau 'reflection', definisikan di sini)
+
+        // 3. Logika Show/Hide
+        if (subModulType === 'forum') {
+            forumFields.show();
+            // Inisialisasi ulang TinyMCE jika perlu, atau pastikan ia mentarget
+            // textarea.rich-text-editor di dalam #forum_settings_fields
+            tinymce.init({ selector: '#forum_settings_fields textarea.rich-text-editor',license_key: 'gpl'});
+        } else {
+            forumFields.hide();
+            // Hancurkan (destroy) TinyMCE agar tidak menumpuk
+            if (tinymce.get('debate_rules_id')) { // Beri ID pada textarea 'debate_rules'
+                 tinymce.get('debate_rules_id').destroy();
+            }
+        }
     });
 
     /**
