@@ -41,16 +41,6 @@
                                                     <div class="card-status bg-blue br-tr-7 br-tl-7"></div>
                                                     <div class="card-header">
                                                         <h3 class="card-title">{{$m->judul}}</h3>
-                                                        @if($isAdmin || $isGuru)
-                                                            <div class="card-options">
-                                                                <a type="button" data-bs-toggle="modal" data-bs-target="#createModalKelas"
-                                                                    class="btn btn-success btn-icon text-white">
-                                                                    <span>
-                                                                        <i class="fe fe-plus"></i>
-                                                                    </span> Tambah Kelas
-                                                                </a>
-                                                            </div>
-                                                        @endif
                                                     </div>
                                                     <div class="row card-body text-center justify-content-center">
                                                         {{-- Pastikan $m->modul tidak null sebelum mengakses relasi --}}

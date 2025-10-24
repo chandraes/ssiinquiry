@@ -132,20 +132,41 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/download-template', [App\Http\Controllers\KelasUserController::class, 'downloadTemplate'])->name('kelas.peserta.download-template');
 
-    Route::group(['prefix' => 'kelas', 'middleware' => ['role:siswa']], function () {
-        Route::get('/{id}', [App\Http\Controllers\KelasController::class, 'siswa_kelas'])->name('siswa.kelas');
-        Route::post('/{kelas_id}/join', [App\Http\Controllers\KelasController::class, 'siswa_join'])->name('siswa.kelas.join');
-        Route::post('/jawaban/{id}/simpan', [App\Http\Controllers\KelasController::class, 'simpan_jawaban'])->name('kelas.jawaban.simpan');
+    Route::prefix('siswa')->middleware(['role:siswa'])->group(function () {
+        // =====================
+        // Route KELAS
+        // =====================
+        Route::prefix('kelas')->group(function () {
+            Route::get('/{id}', [App\Http\Controllers\KelasController::class, 'siswa_kelas'])
+                ->name('siswa.kelas');
+            Route::post('/{kelas_id}/join', [App\Http\Controllers\KelasController::class, 'siswa_join'])
+                ->name('siswa.kelas.join');
+            Route::post('/jawaban/{id}/simpan', [App\Http\Controllers\KelasController::class, 'simpan_jawaban'])
+                ->name('kelas.jawaban.simpan');
+        });
+
+        // =====================
+        // Route MODUL
+        // =====================
+        Route::prefix('modul')->group(function () {
+            Route::get('/{modul}', [App\Http\Controllers\ModulController::class, 'show_siswa'])
+                ->name('siswa.modul.show');
+        });
+
+        // =====================
+        // Route SUBMODUL & REFLEKSI
+        // =====================
+        Route::prefix('submodul')->group(function () {
+            Route::get('/show/{subModul}', [App\Http\Controllers\SubModulController::class, 'show_siswa'])
+                ->name('siswa.submodul.show');
+            Route::post('/reflection/store', [App\Http\Controllers\ReflectionQuestionController::class, 'storeAnswer'])
+                ->name('siswa.reflection.store');
+            Route::post('/practicum-slot/{id}/upload-csv', [App\Http\Controllers\PracticumSlotController::class, 'uploadCsv'])
+                ->name('practicum_slot.upload_csv');
+
+        });
     });
-    Route::group(['prefix' => 'siswa/modul', 'middleware' => ['role:siswa']], function () {
-        Route::get('/{modul}', [ModulController::class, 'show_siswa'])->name('siswa.modul.show');
-        // Route::post('/{kelas_id}/join', [App\Http\Controllers\KelasController::class, 'siswa_join'])->name('siswa.kelas.join');
-        // Route::post('/jawaban/{id}/simpan', [App\Http\Controllers\KelasController::class, 'simpan_jawaban'])->name('kelas.jawaban.simpan');
-    });
-    Route::group(['prefix' => 'siswa', 'middleware' => ['role:siswa']], function () {
-        Route::get('/submodul/show/{subModul}', [SubModulController::class, 'show_siswa'])->name('siswa.submodul.show');
-        Route::post('/reflection/store', [ReflectionQuestionController::class, 'storeAnswer'])->name('siswa.reflection.store');
-    });
+
 
     
 });

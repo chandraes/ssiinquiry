@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PracticumUploadSlot;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Exception;
+use App\Models\Kelas;
+use Illuminate\Http\Request;
+use App\Models\PracticumSubmission;
+use App\Models\PracticumUploadSlot;
+use App\Http\Controllers\Controller;
 
 class PracticumUploadSlotController extends Controller
 {
@@ -79,5 +81,44 @@ class PracticumUploadSlotController extends Controller
         } catch (Exception $e) {
             return redirect()->back()->with('error', 'Gagal menghapus slot: ' . $e->getMessage());
         }
+    }
+
+    public function uploadCsv(Request $request, $id)
+    {
+        $request->validate([
+            'csv_file' => 'required|mimes:csv,txt|max:2048',
+        ]);
+
+        $userId = auth()->user()->id;
+
+        // Prefer provided class_id, otherwise try to find a class the user is enrolled in
+        
+        $class = Kelas::whereHas('peserta', function ($q) use ($userId) {
+                $q->where('user_id', $userId);
+                })->first();
+
+        $class_id = $class ? $class->id : null;
+
+        $slot = PracticumUploadSlot::findOrFail($id);
+        $file = $request->file('csv_file');
+
+        // Simpan file ke storage
+        $path = $file->store('uploads/practicum_csv', 'public');
+
+        // Misal: update kolom file_path di tabel slot
+        PracticumSubmission::updateOrCreate(
+            [
+            'practicum_upload_slot_id' => $slot->id,
+            'student_id' => $userId,
+            ],
+            [
+                'course_class_id' => $class_id,
+                'file_path' => $path,
+                'original_filename' => $file->getClientOriginalName(),
+            ]
+
+        );
+
+        return back()->with('success', 'File CSV berhasil diunggah!');
     }
 }

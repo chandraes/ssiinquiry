@@ -158,31 +158,42 @@ class SubModulController extends Controller
     public function show_siswa(SubModule $subModul)
     {
         // 1. Bagikan ID Modul Induk (untuk sidebar tetap aktif)
-        View::share('activeModulId', $subModul->module_id);
+        View::share('activeModulId', $subModul->modul_id);
 
         // 2. Tentukan View berdasarkan Tipe
-        if ($subModul->type == 'reflection') {
-
-            
-            // Tipe: Pertanyaan Refleksi
-            $subModul->load(['modul','reflectionQuestions' => function ($query) {
-                $query->orderBy('order', 'asc');
-            }]);
+       if ($subModul->type == 'reflection') {
+            $subModul->load(['reflectionQuestions' => fn($q) => $q->orderBy('order', 'asc'),
+             'reflectionQuestions.answers']);
 
             // TODO: Muat juga jawaban siswa untuk kelas yang aktif
 
             // dd($subModul);
             return view('submodul.siswa.show_reflection', compact('subModul'));
 
+        } elseif ($subModul->type == 'practicum') {
+            $subModul->load([
+                'learningMaterials' => fn($q) => $q->orderBy('order', 'asc'),
+                'practicumUploadSlots' => fn($q) => $q->orderBy('order', 'asc'),
+                'practicumUploadSlots.submissions'
+            ]);
+            return view('submodul.siswa.show_practicum', compact('subModul'));
+
+        } elseif ($subModul->type == 'forum') {
+            // [BLOK BARU] Tipe: Forum Debat
+            // Kita muat relasi anggota tim
+            // $subModul->load(['teamMembers']);
+
+            // (Opsional) Ambil daftar siswa di kelas yang terkait dengan modul ini
+            // Ini akan dibutuhkan untuk manajemen tim
+            // $students = $subModul->module->kelas->flatMap->peserta->unique('id');
+            // Ganti ini dengan logika yang sesuai untuk mendapatkan siswa yang relevan
+
+            // Arahkan ke view baru: show_forum.blade.php
+            return view('submodul.siswa.show_forum', compact('subModul')); // Tambahkan 'students' jika perlu
         }
 
-        // Default (atau 'learning')
-        // Tipe: Materi Pembelajaran
-        $subModul->load(['learningMaterials' => function ($query) {
-            $query->orderBy('order', 'asc');
-        }]);
-
-        // [PENTING] GANTI NAMA VIEW LAMA ANDA
+        // Default (learning)
+        $subModul->load(['learningMaterials' => fn($q) => $q->orderBy('order', 'asc')]);
         return view('submodul.siswa.show_learning', compact('subModul'));
     }
 }
