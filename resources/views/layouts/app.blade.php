@@ -15,6 +15,8 @@
         <script src="{{asset('assets/js/sweetalert.js')}}"></script>
         <link href="{{asset('assets/css/icons.css')}}" rel="stylesheet" />
          <script src="{{asset('assets/plugins/tinymce/tinymce.min.js')}}" referrerpolicy="origin" crossorigin="anonymous"></script>
+         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
         @stack('css')
     </head>
 
@@ -39,7 +41,7 @@
                                 $logoUrl = $logoPath ? asset('storage/' . $logoPath) : asset('assets/images/brand/logo.png');
                                 // [PENTING] Memuat modul untuk sidebar
                                 $moduls = Modul::with('kelas')->get();
-                                
+
                                 $modul_siswa = collect();
                                 if (auth()->check()) {
                                     $user = auth()->user();
