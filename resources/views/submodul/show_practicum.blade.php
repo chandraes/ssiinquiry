@@ -74,7 +74,7 @@
          <div class="card-body">
              <div class="list-group">
                 @forelse($subModul->practicumUploadSlots as $slot)
-                    <div class="list-group-item d-flex justify-content-between align-items-center mb-2 p-3 border rounded">
+                    <div class="list-group-item d-flex justify-content-between align-items-center mb-2 p-3 border">
                         <div>
                             <strong>{{ $slot->label }}</strong><br>
                             <small class="text-muted">

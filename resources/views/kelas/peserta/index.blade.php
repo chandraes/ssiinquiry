@@ -68,35 +68,11 @@ Peserta Kelas
                                                         </td>
                                                         <td class="text-center align-middle">
                                                         @if($isAdmin || $isGuru)
-                                                            @if($p->pro_kontra_id != 1)
-                                                                <button type="button" class="btn btn-success btn-sm me-1"
-                                                                        {{-- onclick="if(confirm('Tandai peserta ini sebagai Pro?')) { document.getElementById('pro-form-{{ $p->id }}').submit(); }" --}}
-                                                                        onclick="proButton({{$p->id}})"
-                                                                        title="Set Pro">
-                                                                    <i class="fa fa-thumbs-up"></i>
-                                                                </button>
-                                                            @endif
-                                                            <form action="{{ route('kelas.peserta.pro', $p->id) }}" method="POST" id="pro-form-{{ $p->id }}" style="display: none;">
-                                                                @csrf
-                                                            </form>
-
-                                                            @if($p->pro_kontra_id != 0)
-                                                                <button type="button" class="btn btn-warning btn-sm me-1"
-                                                                        {{-- onclick="if(confirm('Tandai peserta ini sebagai Kontra?')) { document.getElementById('kontra-form-{{ $p->id }}').submit(); }" --}}
-                                                                        onclick="kontraButton({{$p->id}})"
-                                                                        title="Set Kontra">
-                                                                    <i class="fa fa-thumbs-down"></i>
-                                                                </button>
-                                                            @endif
-                                                            <form action="{{ route('kelas.peserta.kontra', $p->id) }}" method="POST" id="kontra-form-{{ $p->id }}" style="display: none;">
-                                                                @csrf
-                                                            </form>
-
                                                             <button type="button"
                                                                     class="btn btn-danger btn-sm"
                                                                     onclick="deleteButton({{ $p->id }})"
                                                                     title="Delete">
-                                                                <i class="fe fe-x"></i>
+                                                                <i class="fe fe-trash"></i>
                                                             </button>
                                                             <form action="{{ route('kelas.peserta.delete', $p->id) }}" method="POST" id="delete-form-{{ $p->id }}">
                                                                 @csrf

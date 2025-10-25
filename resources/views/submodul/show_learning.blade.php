@@ -35,7 +35,7 @@
 
         <div class="card-body">
             @forelse($subModul->learningMaterials as $material)
-                <div class="list-group-item d-flex justify-content-between align-items-center mb-2 p-3 border rounded">
+                <div class="list-group-item d-flex justify-content-between align-items-center mb-2 p-3 border">
                     <div>
                         <strong>{{ $material->title }}</strong>
                         <small class="badge

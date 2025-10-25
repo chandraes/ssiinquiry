@@ -26,7 +26,7 @@
 
         <div class="card-body">
             @forelse($subModul->reflectionQuestions as $question)
-                <div class="list-group-item d-flex justify-content-between align-items-center mb-2 p-3 border rounded">
+                <div class="list-group-item d-flex justify-content-between align-items-center mb-2 p-3 border">
                     <div>
                         {{-- Spatie otomatis menerjemahkan question_text --}}
                         <strong>{{ $question->order }}. {{ $question->question_text }}</strong>

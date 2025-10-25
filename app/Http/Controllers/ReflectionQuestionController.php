@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use App\Models\Kelas;
 use Illuminate\Http\Request;
 use App\Models\ReflectionAnswer;
 use App\Models\ReflectionQuestion;
@@ -87,10 +88,18 @@ class ReflectionQuestionController extends Controller
             
             // [PENTING] Validasi course_class_id
             // Nilai ini harus dikirimkan dari Blade (misalnya dari SubModul atau Kelas yang sedang aktif)
-            'class_id' => 'nullable|exists:kelas_users,kelas_id', 
+            // 'class_id' => 'nullable|exists:kelas_users,kelas_id', 
         ]);
 
         $userId = auth()->user()->id;
+
+        // Prefer provided class_id, otherwise try to find a class the user is enrolled in
+        
+        $class = Kelas::whereHas('peserta', function ($q) use ($userId) {
+                $q->where('user_id', $userId);
+                })->first();
+
+        $class_id = $class ? $class->id : null;
 
         // 2. Simpan atau Update Jawaban (berdasarkan 3 kunci unik)
         $answer = ReflectionAnswer::updateOrCreate(
@@ -98,7 +107,7 @@ class ReflectionQuestionController extends Controller
             [
                 'student_id' => $userId, // User ID yang sedang login
                 'reflection_question_id' => $request->question_id,
-                'course_class_id' => $request->class_id, // Kunci baru dari request
+                'course_class_id' => $class_id, // Kunci baru dari request
             ],
             // Data yang akan disimpan/diperbarui
             [

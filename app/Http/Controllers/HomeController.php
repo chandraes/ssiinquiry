@@ -30,6 +30,12 @@ class HomeController extends Controller
      */
     public function index()
     {
+        // $class_id = Kelas::with('peserta')
+        //         ->whereHas('peserta', function ($q) {
+        //             $q->where('user_id', auth()->id());
+        //         })
+        //         ->get();
+        // dd($class_id);
         $phyphox = Phyphox::where('is_active', '1')->get();
         $userLogin = auth()->user();
         $data = Kelas::with(['modul', 'guru'])->latest()->get();
