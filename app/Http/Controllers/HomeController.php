@@ -6,7 +6,6 @@ use App\Models\User;
 use App\Models\Kelas;
 use App\Models\Modul;
 use App\Models\Phyphox;
-use App\Models\KelasUser;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +14,6 @@ class HomeController extends Controller
 {
     /**
      * Create a new controller instance.
-     *
      * @return void
      */
     public function __construct()
@@ -24,71 +22,57 @@ class HomeController extends Controller
     }
 
     /**
-     * Show the application dashboard.
-     *
+     * Show the application dashboard based on user role.
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
     {
-        // $class_id = Kelas::with('peserta')
-        //         ->whereHas('peserta', function ($q) {
-        //             $q->where('user_id', auth()->id());
-        //         })
-        //         ->get();
-        // dd($class_id);
-        $phyphox = Phyphox::where('is_active', '1')->get();
-        $userLogin = auth()->user();
-        $data = Kelas::with(['modul', 'guru'])->latest()->get();
-        $modul = Modul::with(['kelas', 'kelas.peserta'])->get();
+        $userLogin = Auth::user()->load('roles'); // Muat relasi roles
+        $viewData = ['userLogin' => $userLogin]; // Data dasar untuk semua view
 
-        // Hanya tampilkan guru jika role user login adalah Administrator
-        $guru = [];
-        if (Auth::user()->role == 'Administrator') {
-            $guru = User::where('role', 'guru')->get();
+        // Cek Role (Asumsi Anda punya relasi 'roles' di model User)
+        // Sesuaikan 'Siswa', 'Administrator', 'Guru' dengan nama role Anda
+        if ($userLogin->roles->contains('name', 'Siswa')) {
+
+            // ======================================
+            // LOGIKA UNTUK SISWA
+            // ======================================
+
+            // 1. Ambil "Kelas Saya" (Gunakan relasi 'kelas' dari model User)
+            // Kita juga eager load 'modul' agar efisien
+            $myClasses = $userLogin->kelas()->with('modul')->latest()->get();
+            $viewData['myClasses'] = $myClasses;
+
+            // 2. Ambil "Modul Lain"
+            $myEnrolledModulIds = $myClasses->pluck('modul.id')->unique();
+            $allOtherModules = Modul::whereNotIn('id', $myEnrolledModulIds)->latest()->get();
+            $viewData['allOtherModules'] = $allOtherModules;
+
+        } elseif ($userLogin->roles->contains('name', 'Administrator') || $userLogin->roles->contains('name', 'Guru')) {
+
+            // ======================================
+            // LOGIKA UNTUK ADMIN & GURU
+            // ======================================
+
+            // Data yang sudah Anda load sebelumnya
+            $viewData['phyphox'] = Phyphox::where('is_active', '1')->get();
+            $viewData['data'] = Kelas::with(['modul', 'guru'])->latest()->get(); // Ini semua kelas
+            $viewData['modul'] = Modul::with(['kelas', 'kelas.peserta'])->get(); // Ini semua modul
+
+            // $viewData['guru'] = []; // Guru hanya untuk Admin (jika perlu)
+            // if ($userLogin->roles->contains('name', 'Administrator')) {
+            //     $viewData['guru'] = User::whereHas('roles', fn($q) => $q->where('name', 'Guru'))->get();
+            // }
+
+            // Variabel $kelas_siswa sepertinya tidak diperlukan lagi dengan logika baru
+            // $viewData['kelas_siswa'] = ... ;
+
+        } else {
+            // Role lain (jika ada), mungkin tampilkan halaman kosong atau pesan error
+            // Atau redirect ke halaman lain
         }
 
-        $kelas_siswa = Modul::with('kelas.peserta', 'kelas')
-                ->get();
-
-        $modul_siswa = collect();
-        if (auth()->check()) {
-            $user = auth()->user();
-
-            // cek apakah user berperan 'siswa' (support hasRole() atau atribut role)
-            $isSiswa = (method_exists($user, 'hasRole') && $user->hasRole('siswa')) || (($user->role ?? null) === 'siswa');
-
-            if ($isSiswa) {
-                // coba ambil peserta yang berelasi dengan user; jika tidak ada, cari lewat user_id
-                $peserta = $user->peserta ?? KelasUser::where('user_id', $user->id)->first();
-
-                if ($peserta) {
-                    $modul_siswa = Modul::whereHas('kelas.peserta', function ($q) use ($peserta) {
-                        $q->where('id', $peserta->id);
-                    })->with('kelas', 'kelas.peserta')->get();
-
-                    // tampilkan hanya modul yang terkait dengan siswa
-                    $moduls = $modul_siswa;
-                } else {
-                    // jika tidak ada peserta, kosongkan hasil untuk siswa
-                    $moduls = collect();
-                }
-            }
-        }
-        
-        // dd($modul, $modul_siswa);
-                // dd($phyphox);
-        return view('home', compact('phyphox','data', 'modul', 'guru', 'userLogin', 'kelas_siswa'));
-    }
-
-    public function landing_page()
-    {
-        return view('index');
-    }
-
-    public function admin()
-    {
-        $user=Auth::user();
-        dd($user);
-        return view('layout.admin', compact('user'));
+        // Kirim semua data yang relevan ke view 'home'
+        return view('home', $viewData);
     }
 }

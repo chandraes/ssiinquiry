@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Translatable\HasTranslations;
 
 class SubModule extends Model
@@ -58,9 +59,9 @@ class SubModule extends Model
         return $this->hasMany(ReflectionQuestion::class)->orderBy('order');
     }
 
-    public function practicumUploadSlots()
+   public function practicumUploadSlots()
     {
-        return $this->hasMany(PracticumUploadSlot::class)->orderBy('order');
+        return $this->hasMany(PracticumUploadSlot::class, 'sub_module_id')->orderBy('order');
     }
 
     public function forumTeams()
@@ -74,5 +75,10 @@ class SubModule extends Model
         return $this->hasMany(ForumPost::class)
                     ->whereNull('parent_post_id')
                     ->latest();
+    }
+
+    public function studentProgress(): HasMany
+    {
+        return $this->hasMany(SubModuleProgress::class, 'sub_module_id');
     }
 }

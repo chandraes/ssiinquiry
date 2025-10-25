@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Translatable\HasTranslations;
 
 class Kelas extends Model
@@ -51,6 +52,11 @@ class Kelas extends Model
             'id',           // Local key di tabel 'kelas' (menghubungkan ke KelasUser)
             'user_id'       // Local key di tabel 'kelas_users' (menghubungkan ke User)
         );
+    }
+
+    public function subModuleProgress(): HasMany
+    {
+        return $this->hasMany(SubModuleProgress::class, 'kelas_id');
     }
 
     public function forumTeams()
