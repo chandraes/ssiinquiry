@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Traits\HasRoles;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -68,9 +70,24 @@ class User extends Authenticatable
         return $this->belongsToMany(Modul::class, 'modul_user', 'user_id', 'modul_id');
     }
 
+    public function kelas(): BelongsToMany
+    {
+        return $this->belongsToMany(Kelas::class, 'kelas_users', 'user_id', 'kelas_id');
+    }
+
+    public function subModuleProgress(): HasMany
+    {
+        return $this->hasMany(SubModuleProgress::class, 'user_id');
+    }
+
     public function forumTeams()
     {
         return $this->hasMany(ForumTeam::class, 'user_id');
+    }
+
+    public function forumPosts()
+    {
+        return $this->hasMany(ForumPost::class, 'user_id');
     }
 
 

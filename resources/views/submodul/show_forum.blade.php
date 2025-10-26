@@ -71,8 +71,6 @@
 @endsection
 
 @push('js')
-{{-- Muat skrip editor WYSIWYG Anda --}}
-<script src="{{ asset('assets/path/ke/editor.js') }}"></script> {{-- <-- Ganti path ini --}}
 <script>
     // Inisialisasi TinyMCE untuk Aturan Debat
     tinymce.init({

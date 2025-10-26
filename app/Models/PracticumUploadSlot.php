@@ -19,6 +19,7 @@ class PracticumUploadSlot extends Model
         'description',
         'experiment_group',
         'order',
+        'phyphox_experiment_type',
     ];
 
     // Relasi: Slot ini milik SubModul mana

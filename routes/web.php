@@ -12,6 +12,7 @@ use App\Http\Controllers\LearningMaterialController;
 use App\Http\Controllers\PracticumUploadSlotController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\ForumTeamController;
+use App\Http\Controllers\StudentController;
 
 // Form register (GET)
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
@@ -33,6 +34,15 @@ Auth::routes();
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+    Route::middleware(['role:siswa'])->group(function () {
+        Route::get('/my-class/{kelas}', [StudentController::class, 'showClass'])->name('student.class.show');
+        Route::get('/my-class/{kelas}/sub-module/{subModule}', [StudentController::class, 'showSubModule'])->name('student.submodule.show');
+        Route::post('/my-class/{kelas}/sub-module/{subModule}/complete', [StudentController::class, 'markAsComplete'])->name('student.submodule.complete');
+        Route::post('/my-class/{kelas}/sub-module/{subModule}/reflection', [StudentController::class, 'storeReflection'])->name('student.reflection.store');
+        Route::post('/my-class/{kelas}/sub-module/{subModule}/practicum/{slot}', [StudentController::class, 'storePracticum'])->name('student.practicum.store');
+        Route::post('/my-class/{kelas}/sub-module/{subModule}/forum', [StudentController::class, 'storeForumPost'])->name('student.forum.store');
+    });
 
     Route::group(['prefix' => 'admin', 'middleware' => ['role:admin']], function () {
         Route::get('/settings', [SettingController::class, 'index'])->name('admin.settings.index');
@@ -168,5 +178,5 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
 
-    
+
 });

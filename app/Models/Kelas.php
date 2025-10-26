@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Translatable\HasTranslations;
 
 class Kelas extends Model
@@ -53,9 +54,19 @@ class Kelas extends Model
         );
     }
 
+    public function subModuleProgress(): HasMany
+    {
+        return $this->hasMany(SubModuleProgress::class, 'kelas_id');
+    }
+
     public function forumTeams()
     {
         return $this->hasMany(ForumTeam::class, 'kelas_id');
+    }
+
+    public function forumPosts()
+    {
+        return $this->hasMany(ForumPost::class, 'kelas_id');
     }
 
 
