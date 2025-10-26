@@ -176,10 +176,10 @@ class StudentController extends Controller
                 ->whereNull('parent_post_id') // Hanya ambil postingan utama
                 ->with([
                     'user', // User pembuat postingan
-                    'evidence.submission', // Bukti & file submission-nya
+                    'evidence.slot', // Bukti & file submission-nya
                     'replies' => function ($query) {
                         // Muat juga balasan, user, dan bukti dari balasan
-                        $query->with(['user', 'evidence.submission'])->orderBy('created_at', 'asc');
+                        $query->with(['user', 'evidence.slot'])->orderBy('created_at', 'asc');
                     }
                 ])
                 ->orderBy('created_at', 'desc') // Postingan utama terbaru di atas
@@ -402,12 +402,16 @@ class StudentController extends Controller
     {
         $student = Auth::user();
 
+        // Tentukan 'error bag' berdasarkan apakah ini balasan atau bukan
+        $isReply = $request->has('parent_post_id') && $request->parent_post_id != null;
+        $errorBag = $isReply ? 'replyPost' : 'mainPost';
+
         // 1. Validasi
         $request->validate([
             'content' => 'required|string|min:10',
             'parent_post_id' => 'nullable|exists:forum_posts,id',
-            'evidence_ids' => 'nullable|array', // Validasi array bukti
-            'evidence_ids.*' => 'exists:practicum_submissions,id', // Pastikan ID-nya ada
+            'evidence_ids' => 'nullable|array',
+            'evidence_ids.*' => 'exists:practicum_submissions,id',
         ], [
             'content.required' => 'Postingan tidak boleh kosong.',
             'content.min' => 'Postingan Anda terlalu pendek (minimal 10 karakter).',
@@ -443,8 +447,12 @@ class StudentController extends Controller
             }
 
             // 5. Kembalikan ke halaman forum
-            return redirect()->route('student.submodule.show', [$kelas->id, $subModule->id])
-                             ->with('success', 'Postingan Anda berhasil dikirim!');
+            return redirect(route('student.submodule.show', [$kelas->id, $subModule->id]) . '#post-' . $newPost->id)
+                         ->with('success', 'Postingan Anda berhasil dikirim!');
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // [BARU] Tangkap error validasi dan kirim ke 'error bag' yang benar
+            return redirect()->back()->withInput()->withErrors($e->errors(), $errorBag);
 
         } catch (Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
