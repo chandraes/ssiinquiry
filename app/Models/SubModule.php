@@ -26,6 +26,7 @@ class SubModule extends Model
         'debate_end_time',
         'phase1_end_time',
         'phase2_end_time',
+        'max_points',
     ];
 
     protected $casts = [

@@ -128,42 +128,48 @@
 
 {{-- Memuat Modal Create (Anda sudah punya file ini) --}}
 @include('submodul.create_modal')
-
 {{-- Memuat Modal Edit (dari jawaban saya sebelumnya) --}}
 @include('submodul.edit_modal')
-
 @endsection
-
 @push('js')
-{{-- JavaScript untuk mengaktifkan modal Edit dan Delete --}}
 <script>
+
     /**
-     * 1. FUNGSI UNTUK MENGISI MODAL EDIT
-     * Dipanggil oleh tombol "Edit"
+     * 1. FUNGSI UNTUK MENGISI MODAL EDIT (DIBERSIHKAN)
+     * Hanya mengisi field dasar + max_points.
      */
     function editSubModul(button) {
         var modal = $('#editSubModulModal');
         var form = $('#editSubModulForm');
-
-        // Ambil URL dari data- attribute
         var dataUrl = $(button).data('url');
         var updateUrl = $(button).data('update-url');
 
-        // Set action form modal edit
         form.attr('action', updateUrl);
 
-        // Ambil data JSON dari controller
+        // Ambil data JSON (sekarang hanya berisi data dasar)
         $.get(dataUrl, function(data) {
-            // 'data' adalah JSON dari SubModulController@showJson
-
-            // Isi semua input di modal
+            // === Mengisi Data Umum ===
+            modal.find('#edit_submodul_type').val(data.type); // Penting!
             modal.find('#edit_sub_title_id').val(data.title.id);
             modal.find('#edit_sub_title_en').val(data.title.en);
-
             modal.find('#edit_sub_description_id').val(data.description.id);
             modal.find('#edit_sub_description_en').val(data.description.en);
-
             modal.find('#edit_sub_order').val(data.order);
+            modal.find('#edit-max-points').val(data.max_points);
+
+            // === FIELD FORUM DIHAPUS DARI SINI ===
+
+            // === Logika Tampilkan/Sembunyikan untuk Poin Maksimal ===
+            var maxPointsField = modal.find('#edit_max_points_wrapper');
+            var maxPointsInput = modal.find('#edit-max-points');
+
+            if (data.type === 'learning') {
+                maxPointsField.addClass('d-none');
+                maxPointsInput.prop('required', false);
+            } else {
+                maxPointsField.removeClass('d-none');
+                maxPointsInput.prop('required', true);
+            }
 
             // Tampilkan modal
             modal.modal('show');
@@ -173,95 +179,92 @@
         });
     }
 
+    /**
+     * 2. EVENT LISTENER UNTUK MODAL CREATE (DIBERSIHKAN)
+     * Hanya mengurus Poin Maksimal.
+     */
     $('#createSubModulModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
         var subModulType = button.data('type');
         var modal = $(this);
 
-        // 1. Set hidden input 'type'
-        var typeInput = modal.find('#create_submodul_type');
-        typeInput.val(subModulType);
+        modal.find('#create_submodul_type').val(subModulType);
 
-        // 2. Temukan field-field opsional
-        var forumFields = modal.find('#forum_settings_fields');
-        // (Jika Anda punya field lain untuk 'practicum' atau 'reflection', definisikan di sini)
+        // Temukan field poin
+        var maxPointsField = modal.find('#create_max_points_wrapper');
+        var maxPointsInput = modal.find('#create-max-points');
 
-        // 3. Logika Show/Hide
-        if (subModulType === 'forum') {
-            forumFields.show();
-            // Inisialisasi ulang TinyMCE jika perlu, atau pastikan ia mentarget
-            // textarea.rich-text-editor di dalam #forum_settings_fields
-            tinymce.init({ selector: '#forum_settings_fields textarea.rich-text-editor',license_key: 'gpl'});
+        // === LOGIKA FORUM DIHAPUS DARI SINI ===
+
+        // Logika Poin Maksimal
+        if (subModulType === 'learning') {
+            maxPointsField.addClass('d-none');
+            maxPointsInput.prop('required', false);
+            maxPointsInput.val(0);
         } else {
-            forumFields.hide();
-            // Hancurkan (destroy) TinyMCE agar tidak menumpuk
-            if (tinymce.get('debate_rules_id')) { // Beri ID pada textarea 'debate_rules'
-                 tinymce.get('debate_rules_id').destroy();
-            }
+            maxPointsField.removeClass('d-none');
+            maxPointsInput.prop('required', true);
+            maxPointsInput.val(10);
         }
     });
 
     /**
-     * 2. FUNGSI UNTUK KONFIRMASI UPDATE (SweetAlert)
-     * Dijalankan saat form edit di-submit
+     * 3. Hancurkan TinyMCE saat modal ditutup
+     * (SEMUA LOGIKA TINYMCE DIHAPUS DARI SINI)
+     */
+    // ... Tidak ada lagi yang perlu dilakukan di sini ...
+
+
+    /**
+     * 4. FUNGSI UNTUK KONFIRMASI SUBMIT FORM (SweetAlert)
+     * (Disederhanakan, 'tinymce.triggerSave()' dihapus)
      */
     $(document).ready(function() {
-        $('#editSubModulForm').on('submit', function(e) {
-            e.preventDefault(); // Hentikan submit form standar
-            var form = this;
 
-            Swal.fire({
-                title: '{{ __("admin.swal.update_title") }}',
-                text: "{{ __("admin.swal.update_text") }}",
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonText: '{{ __("admin.swal.update_confirm") }}',
-                cancelButtonText: '{{ __("admin.swal.cancel") }}',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    form.submit(); // Lanjutkan submit form
-                }
-            });
-        });
-
-        // Anda juga bisa tambahkan konfirmasi untuk form 'create'
+        // Konfirmasi untuk form 'create'
         $('#storeSubModulForm').on('submit', function(e) {
-            e.preventDefault(); // Hentikan submit form standar
+            e.preventDefault();
             var form = this;
-
+            // tinymce.triggerSave() DIHAPUS
             Swal.fire({
                 title: '{{ __("admin.swal.save_title") }}',
                 text: "{{ __("admin.swal.save_text") }}",
-                icon: 'question',
-                showCancelButton: true,
+                icon: 'question', showCancelButton: true,
                 confirmButtonText: '{{ __("admin.swal.save_confirm") }}',
                 cancelButtonText: '{{ __("admin.swal.cancel") }}',
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    form.submit(); // Lanjutkan submit form
-                }
-            });
+            }).then((result) => { if (result.isConfirmed) { form.submit(); } });
+        });
+
+        // Konfirmasi untuk form 'edit'
+        $('#editSubModulForm').on('submit', function(e) {
+            e.preventDefault();
+            var form = this;
+            // tinymce.triggerSave() DIHAPUS
+            Swal.fire({
+                title: '{{ __("admin.swal.update_title") }}',
+                text: "{{ __("admin.swal.update_text") }}",
+                icon: 'question', showCancelButton: true,
+                confirmButtonText: '{{ __("admin.swal.update_confirm") }}',
+                cancelButtonText: '{{ __("admin.swal.cancel") }}',
+                reverseButtons: true
+            }).then((result) => { if (result.isConfirmed) { form.submit(); } });
         });
     });
 
     /**
-     * 3. FUNGSI UNTUK KONFIRMASI DELETE (SweetAlert)
-     * Dipanggil oleh tombol "Delete"
+     * 5. FUNGSI UNTUK KONFIRMASI DELETE (SweetAlert)
+     * (Tidak berubah)
      */
     function deleteSubModul(id) {
         Swal.fire({
             title: '{{ __("admin.swal.delete_title") }}',
             text: "{{ __("admin.swal.delete_text") }}",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
+            icon: 'warning', showCancelButton: true,
+            confirmButtonColor: '#d33', cancelButtonColor: '#3085d6',
             confirmButtonText: '{{ __("admin.swal.delete_confirm") }}',
             cancelButtonText: '{{ __("admin.swal.cancel") }}'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Cari form tersembunyi dan submit
                 document.getElementById('delete-form-' + id).submit();
             }
         })

@@ -100,6 +100,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/{subModul}/json', [SubModulController::class, 'showJson'])->name('submodul.show.json');
         Route::put('/{subModul}', [SubModulController::class, 'update'])->name('submodul.update');
         Route::delete('/{subModul}', [SubModulController::class, 'destroy'])->name('submodul.destroy');
+
+        Route::put('/{subModul}/forum-settings', [SubModulController::class, 'updateForumSettings'])
+         ->name('submodul.forum.update_settings');
     });
 
     Route::group(['prefix' => 'practicum-slot', 'middleware' => ['role:admin,guru']], function () {

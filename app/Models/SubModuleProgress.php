@@ -23,6 +23,8 @@ class SubModuleProgress extends Model
         'sub_module_id',
         'kelas_id',
         'completed_at',
+        'score',      // <-- TAMBAHKAN INI
+        'feedback',
     ];
 
     /**

@@ -8,6 +8,7 @@
 <div class="container-fluid">
 
     <div class="card shadow-sm mb-4">
+        {{-- ... (Info Header - tidak berubah) ... --}}
         <div class="card-body">
             <h2 class="card-title">{{ $subModul->title }}</h2>
             <p class="text-muted">{{ $subModul->description }}</p>
@@ -18,11 +19,30 @@
         <div class="card-header">
             <h5 class="mb-0">{{ __('admin.forum_settings.general_settings') }}</h5>
         </div>
-        {{-- TODO: Buat route dan controller untuk update ini --}}
-        <form action="{{-- route('submodul.forum.update_settings', $subModul->id) --}}" method="POST">
+
+        <form action="{{ route('submodul.forum.update_settings', $subModul->id) }}" method="POST" id="updateForumSettingsForm">
             @csrf
             @method('PUT')
             <div class="card-body">
+
+                @if (session('success'))
+                    <div class="alert alert-success">{{ session('success') }}</div>
+                @endif
+                @if (session('error'))
+                    <div class="alert alert-danger">{{ session('error') }}</div>
+                @endif
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <strong>Error Validasi:</strong>
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                {{-- Topik Debat (Sudah Benar) --}}
                 <label class="form-label fw-bold">{{ __('admin.forum_settings.debate_topic') }}</label>
                 <ul class="nav nav-tabs mb-3" role="tablist">
                     <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#topic-id-pane-e" type="button" role="tab">ID</button></li>
@@ -37,12 +57,26 @@
                     </div>
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label fw-bold">{{ __('admin.forum_settings.debate_rules') }}</label>
-                    {{-- Beri ID unik dan kelas untuk TinyMCE --}}
-                    <textarea name="debate_rules" id="debate_rules_editor" class="form-control rich-text-editor" rows="8">{{ $subModul->debate_rules }}</textarea>
+                {{-- [PERUBAHAN DI SINI] Aturan Debat sekarang Translatable --}}
+                <label class="form-label fw-bold">{{ __('admin.forum_settings.debate_rules') }}</label>
+                <ul class="nav nav-tabs mb-3" role="tablist">
+                    <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#rules-id-pane-e" type="button" role="tab">ID</button></li>
+                    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#rules-en-pane-e" type="button" role="tab">EN</button></li>
+                </ul>
+                <div class="tab-content mb-3">
+                    <div class="tab-pane fade show active" id="rules-id-pane-e" role="tabpanel">
+                        <textarea name="debate_rules[id]" id="debate_rules_editor_id" class="form-control rich-text-editor" rows="8">
+                            {{ $subModul->getTranslation('debate_rules', 'id') }}
+                        </textarea>
+                    </div>
+                    <div class="tab-pane fade" id="rules-en-pane-e" role="tabpanel">
+                        <textarea name="debate_rules[en]" id="debate_rules_editor_en" class="form-control rich-text-editor" rows="8">
+                            {{ $subModul->getTranslation('debate_rules', 'en') }}
+                        </textarea>
+                    </div>
                 </div>
 
+                {{-- Pengaturan Waktu (Tidak berubah) --}}
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label">{{ __('admin.forum_settings.start_time') }}</label>
@@ -72,21 +106,22 @@
 
 @push('js')
 <script>
-    // Inisialisasi TinyMCE untuk Aturan Debat
+    // [PERUBAHAN DI SINI] Inisialisasi TinyMCE
     tinymce.init({
-        selector: '#debate_rules_editor', // Targetkan ID unik
-        plugins: 'lists link code fullscreen', // Sesuaikan
-        toolbar: 'undo redo | blocks | bold italic | bullist numlist | link code | fullscreen', // Sesuaikan
+        // Gunakan selector class untuk menargetkan SEMUA editor
+        selector: 'textarea.rich-text-editor',
+        plugins: 'lists link code fullscreen',
+        toolbar: 'undo redo | blocks | bold italic | bullist numlist | link code | fullscreen',
         menubar: false,
         height: 250,
         license_key: 'gpl',
     });
 
+    // Skrip submit form (sudah benar, 'triggerSave' akan menyimpan SEMUA editor)
     $('#updateForumSettingsForm').on('submit', function(e) {
         e.preventDefault();
         var form = this;
 
-        // Simpan data dari editor WYSIWYG
         tinymce.triggerSave();
 
         Swal.fire({
@@ -102,10 +137,5 @@
             }
         });
     });
-
-    // TODO: Tambahkan JavaScript untuk:
-    // 1. Mengisi daftar 'Siswa Belum Ditugaskan' (mungkin via AJAX).
-    // 2. Menangani klik tombol +/-/x untuk memindahkan siswa antar list (via AJAX).
-    // 3. Menangani submit form 'Pengaturan Umum Forum' (pastikan memanggil tinymce.triggerSave()).
 </script>
 @endpush
