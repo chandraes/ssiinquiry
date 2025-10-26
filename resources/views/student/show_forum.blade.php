@@ -93,6 +93,7 @@
 @endpush
 
 @section('content')
+@include('student.partials.grade_feedback_box')
 <div class="container-fluid">
 
     <div class="card shadow-sm mb-4">

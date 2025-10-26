@@ -92,6 +92,15 @@
                         Kurikulum untuk modul ini belum ditambahkan oleh guru.
                     </div>
                 @endforelse
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Rangkuman Nilai Anda</h5>
+                        <p class="card-text text-muted">Lihat semua nilai dan umpan balik dari guru Anda di satu tempat.</p>
+                        <a href="{{ route('student.class.grades', $kelas->id) }}" class="btn btn-primary">
+                            <i class="fa fa-star me-2"></i> Lihat Transkrip Nilai
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

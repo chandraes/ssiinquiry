@@ -13,7 +13,6 @@ use App\Models\SubModuleProgress; // <-- Tambahkan ini
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Exception;
-use Illuminate\Support\Facades\Storage;
 use Mews\Purifier\Facades\Purifier;
 
 class StudentController extends Controller
@@ -59,6 +58,12 @@ class StudentController extends Controller
     {
         $student = Auth::user();
 
+
+        // Ambil data progress (yang berisi nilai dan feedback)
+        $progress = SubModuleProgress::where('user_id', $student->id)
+                        ->where('sub_module_id', $subModule->id)
+                        ->where('kelas_id', $kelas->id)
+                        ->first();
         // ==========================================================
         // 1. [KEAMANAN] Pastikan siswa terdaftar di kelas ini
         // ==========================================================
@@ -457,5 +462,61 @@ class StudentController extends Controller
         } catch (Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * [BARU] Menampilkan halaman Rangkuman Nilai (Transkrip) untuk siswa.
+     */
+    public function showMyGrades(Kelas $kelas)
+    {
+        $student = Auth::user();
+
+        // 1. [KEAMANAN] Pastikan siswa terdaftar di kelas ini
+        if (!$student->kelas->contains($kelas->id)) {
+            return redirect()->route('home')
+                             ->with('error', 'Anda tidak terdaftar di kelas tersebut.');
+        }
+
+        // 2. Muat modul terkait
+        $kelas->load('modul');
+
+        // 3. Dapatkan semua sub-modul yang BISA DINILAI (bukan 'learning')
+        $gradableSubModules = SubModule::where('modul_id', $kelas->modul->id)
+            ->where('type', '!=', 'learning')
+            ->orderBy('order', 'asc')
+            ->get();
+
+        // 4. Dapatkan SEMUA progress siswa untuk sub-modul yang bisa dinilai
+        $allProgress = SubModuleProgress::where('user_id', $student->id)
+            ->where('kelas_id', $kelas->id)
+            ->whereIn('sub_module_id', $gradableSubModules->pluck('id'))
+            ->get()
+            ->keyBy('sub_module_id'); // Jadikan ID sub-modul sebagai key
+
+        // 5. Hitung total
+        // Kita hanya menghitung poin maks dari sub-modul yang SUDAH DINILAI
+        // Ini lebih adil jika guru belum menilai semua tugas
+
+        $totalScore = 0;
+        $totalMaxPoints = 0;
+
+        foreach($gradableSubModules as $subModule) {
+            $progress = $allProgress->get($subModule->id);
+
+            // Hanya hitung jika sudah dinilai (score tidak null)
+            if ($progress && $progress->score !== null) {
+                $totalScore += $progress->score;
+                $totalMaxPoints += $subModule->max_points;
+            }
+        }
+
+        // 6. Kirim data ke view baru
+        return view('student.my_grades', [
+            'kelas' => $kelas,
+            'subModules' => $gradableSubModules, // Daftar semua tugas
+            'allProgress' => $allProgress,    // Data nilai siswa
+            'totalScore' => $totalScore,
+            'totalMaxPoints' => $totalMaxPoints,
+        ]);
     }
 }

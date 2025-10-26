@@ -2,6 +2,7 @@
 @section('title'){{ $subModule->title }}@endsection
 @section('content')
 <div class="container-fluid">
+    @include('student.partials.grade_feedback_box')
     @php
         $instruction = $subModule->learningMaterials->first();
     @endphp
