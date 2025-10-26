@@ -11,6 +11,8 @@ return [
         'dashboard' => 'Dasbor',
         'user' => 'Pengguna',
         'modules_classes' => 'Modul dan Kelas',
+        'module_details' => 'Detail Modul',
+        'classes' => 'Kelas',
         'no_class' => 'Belum Ada Kelas',
         'settings' => 'Pengaturan',
         'application' => 'Aplikasi',
@@ -92,6 +94,71 @@ return [
         'delete_title' => 'Hapus Data',
     ],
 
+    'class_show'=> [
+        'title' => 'Detail Kelas',
+        'module' => 'Modul',
+        'teacher' => 'Guru Pengajar',
+        'num_of_students:' => 'Jumlah Peserta',
+        'students' => 'Siswa',
+        'students_management' => 'Manajemen Peserta',
+        'add_delete_students' => 'Tambah atau hapus siswa dari kelas ini.',
+        'set_students' => 'Atur Peserta',
+        'forum_management' => 'Manajemen Forum',
+        'set_pro_contra' => 'Atur tim Pro dan Kontra untuk sub-modul debat di kelas ini',
+        'set_forum' => 'Atur Forum',
+        'report_grades' => 'Laporan & Nilai',
+        'coming_soon' => 'Segera Hadir',
+        'no_students' => 'Belum ada peserta di kelas ini.',
+    ],
+
+    'class_participants' => [
+        'title' => 'Peserta Kelas',
+        'list_title' => 'Daftar Peserta Kelas',
+        'add_participants' => 'Tambah Peserta Kelas',
+        'join_class' =>'Gabung Kelas',
+
+        'select_students' => 'Pilih Siswa',
+        'table_no' => 'No',
+        'table_name' => 'Nama Peserta',
+        'table_status' => 'Status (Pro / Kontra)',
+        'table_action' => 'Aksi',
+        'status_pro' => 'Pro',
+        'status_contra' => 'Kontra',
+        'no_status' => 'Belum Ditentukan',
+        'no_participants' => 'Belum ada peserta di kelas ini.',
+        'create'=>[
+            'title' => 'Tambah Peserta Kelas',
+            'instruction' => 'Pilih Peserta',
+            'close' => 'Tutup',
+            'save' => 'Simpan',
+            'cancel' => 'Batal',
+        ],
+        'join'=>[
+            'title'=>'Gabung Kelas',
+            'text' => 'Anda akan bergabung ke Kelas: ',
+            'an' => 'atas nama',
+            'user' => 'Pengguna',
+            'instruction'=>'Masukkan Kode Kelas (Kode Join)',
+            'placeholder'=>'Contoh: KLS123',
+            'cancel'=>'Batal',
+            'join_class'=>'Gabung Kelas',
+        ],
+        'swal'=>[
+            'create'=>[
+                'title'=>'Simpan Data?',
+                'text'=>'Pastikan data peserta sudah benar!',
+                'confirm'=>'Ya, Simpan!',
+                'cancel'=>'Batal',
+            ],
+            'delete'=>[
+                'title'=>'Hapus Peserta?',
+                'text'=>'Peserta akan dihapus dari kelas ini!',
+                'confirm'=>'Ya, Hapus!',
+                'cancel'=>'Batal',
+            ]
+        ]
+    ],
+
     'modul_detail' => [
         'title' => 'Detail Modul',
         'module_info' => 'Informasi Modul',
@@ -168,8 +235,28 @@ return [
         'slot_group' => 'Grup Eksperimen',
     ],
 
+    'forum' => [ 
+        'title' => 'Manajemen Forum',
+        'sub_title' => 'Manajemen Tim Forum',
+        'class' => 'Kelas',
+        'instruction' => 'Pilih salah satu sub-modul forum di bawah ini untuk memulai pengaturan tim Pro dan Kontra untuk kelas ini.',
+        'forum_available' => 'Forum Tersedia dari Modul:',
+        'set_team' => 'Atur Tim',
+        'no_submodul' => 'Tidak ada sub-modul forum yang ditemukan untuk modul ini.',
+        // 'create'=>[
+        //     'title' => 'Buat Pengaturan Forum Baru',
+        //     'select_forum' => 'Pilih Sub-Modul Forum',
+        //     'forum_placeholder' => '-- Pilih Sub-Modul Forum --',
+        //     'close' => 'Tutup',
+        //     'save' => 'Simpan',
+        // ]
+    ],
+
     'forum_settings' => [
-        'title' => 'Pengaturan Forum Debat',
+        // 'title' => 'Pengaturan Forum Debat',
+        'title' => 'Atur Tim : ',
+        'setting_team_for_class' => 'Anda sedang mengatur tim untuk Kelas: ',
+        'back_text' => 'Kembali ke Daftar Forum',
         'general_settings' => 'Pengaturan Umum Forum',
         'update_settings' => 'Simpan Pengaturan',
         'debate_topic' => 'Topik Debat',
@@ -187,5 +274,24 @@ return [
         'remove_from_team' => 'Keluarkan dari Tim',
         'no_students_in_class' => 'Tidak ada siswa di kelas terkait.', // Sesuaikan pesan ini
         'no_members' => 'Belum ada anggota.',
+    ],
+
+    'settings' => [
+        'title' => 'Pengaturan',
+        'application' => 'Pengaturan Aplikasi',
+        'update_settings' => 'Perbarui Pengaturan',
+        'app_name' => 'Nama Aplikasi',
+        'app_email' => 'Email Aplikasi',
+        'app_logo' => 'Logo Aplikasi',
+        'app_logo_help' => 'Ukuran yang disarankan: 200x50 piksel. Ukuran maksimal: 2MB.',
+        'app_icon_help' => 'Ukuran maksimal: 50KB.',
+        'save_settings' => 'Simpan Pengaturan',
+        'swal' => [
+            'text' => 'Yakin ingin menyimpan pengaturan?',
+            'default' => 'Seret dan lepas file di sini atau klik',
+            'replace' => 'Seret dan lepas atau klik untuk mengganti',
+            'remove' =>  'Hapus',
+            'error' =>   'Terjadi kesalahan.',
+        ],
     ],
 ];

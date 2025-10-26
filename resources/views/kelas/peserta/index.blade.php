@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('title')
-Peserta Kelas
+{{__('admin.class_participants.title')}} {{ $kelas->nama_kelas }}
 @endsection
 @section('content')
 @include('swal')
@@ -20,7 +20,7 @@ Peserta Kelas
                             <div class="card">
                                 <div class="card-header justify-content-between">
                                     <div>
-                                        <h2 class="card-title mb-10">Daftar Peserta Kelas {{$kelas->nama_kelas}}</h2>
+                                        <h2 class="card-title mb-10">{{__('admin.class_participants.list_title')}} {{$kelas->nama_kelas}}</h2>
                                     </div>
                                     <div class="justified-content-end">
                                         @if($isGuru || $isAdmin)
@@ -28,14 +28,14 @@ Peserta Kelas
                                                 class="btn btn-primary waves-effect waves-light"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#createModal">
-                                                <i class="fa fa-plus me-2"></i>Tambah Peserta
+                                                <i class="fa fa-plus me-2"></i>{{__('admin.class_participants.add_participants')}}
                                             </button>
                                         @elseif($isSiswa && !$isJoined)
                                             <button type="button"
                                                 class="btn btn-success waves-effect waves-light"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#joinModal">
-                                                <i class="fa fa-sign-in-alt me-2"></i>Gabung Kelas
+                                                <i class="fa fa-sign-in-alt me-2"></i>{{__('admin.class_participants.join_class')}}
                                             </button>
                                         @endif
                                     </div>                                    
@@ -46,10 +46,10 @@ Peserta Kelas
                                         <table class="table table-bordered text-nowrap border-bottom w-100" id="data">
                                             <thead>
                                                 <tr>
-                                                    <th class="text-center align-middle" width="5%">No</th>
-                                                    <th class="text-start align-middle">Nama Peserta</th>
-                                                    <th class="text-center align-middle">Status (Pro/Kontra)</th>
-                                                    <th class="text-center align-middle" width="15%">Aksi</th>
+                                                    <th class="text-center align-middle" width="5%">{{__('admin.class_participants.table_no')}}</th>
+                                                    <th class="text-start align-middle">{{__('admin.class_participants.table_name')}}</th>
+                                                    <th class="text-center align-middle">{{__('admin.class_participants.table_status')}}</th>
+                                                    <th class="text-center align-middle" width="15%">{{__('admin.class_participants.table_action')}}</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -59,11 +59,11 @@ Peserta Kelas
                                                         <td class="text-start align-middle">{{ $p->user->name }}</td>
                                                         <td class="text-center align-middle">
                                                             @if ($p->pro_kontra_id == '1')
-                                                                <span class="badge bg-success">Pro</span>
+                                                                <span class="badge bg-success">{{__('admin.class_participants.status_pro')}}</span>
                                                             @elseif ($p->pro_kontra_id == '0')
-                                                                <span class="badge bg-warning">Kontra</span>
+                                                                <span class="badge bg-warning">{{__('admin.class_participants.status_contra')}}</span>
                                                             @else
-                                                                <span class="badge bg-danger">Belum ditentukan</span>
+                                                                <span class="badge bg-danger">{{__('admin.class_participants.no_status')}}</span>
                                                             @endif
                                                         </td>
                                                         <td class="text-center align-middle">
@@ -83,7 +83,7 @@ Peserta Kelas
                                                     </tr>
                                                 @empty
                                                     <tr>
-                                                        <td colspan="4" class="text-center">Belum ada peserta di kelas ini.</td>
+                                                        <td colspan="4" class="text-center">{{__('admin.class_participants.no_participant')}}</td>
                                                     </tr>
                                                 @endforelse
                                             </tbody>
@@ -91,25 +91,18 @@ Peserta Kelas
                                     </div>
                                 </div>
                                 {{-- Modal--}}
-
                                 @if($isAdmin || $isGuru)
                                     @include('kelas.peserta.create')
                                 @else
                                     @include('kelas.peserta.join')
                                 @endif
-                                {{-- @include('kelas.peserta.upload') --}}
                             </div>
                         </div>
                     </div>
-
-                    {{-- @include('kelas.sub-modul.pengantar-konteks') --}}
                 </div>
             </div>
         </div>
-    </div>
-    
-
-    
+    </div>  
 </section>
 @endsection
 
@@ -125,12 +118,12 @@ Peserta Kelas
         $('#btnCreate').on('click', function(e) {
             e.preventDefault();
             Swal.fire({
-                title: 'Simpan Data?',
-                text: "Pastikan data peserta sudah benar!",
+                title: '{{__('admin.class_participants.swal.create.title')}}',
+                text: '{{__('admin.class_participants.swal.create.text')}}',
                 icon: 'question',
                 showCancelButton: true,
-                confirmButtonText: 'Ya, Simpan!',
-                cancelButtonText: 'Batal',
+                confirmButtonText: '{{__('admin.class_participants.swal.create.confirm')}}',
+                cancelButtonText: '{{__('admin.class_participants.swal.create.cancel')}}',
             }).then((result) => {
                 if (result.isConfirmed) {
                     $('#storeForm').submit();
@@ -139,62 +132,14 @@ Peserta Kelas
         });
     });
 
-    // $(document).ready(function() {
-    //     $('#btnUpload').on('click', function(e) {
-    //         e.preventDefault();
-    //         Swal.fire({
-    //             title: 'Upload Peserta?',
-    //             text: "Pastikan file sudah sesuai template!",
-    //             icon: 'question',
-    //             showCancelButton: true,
-    //             confirmButtonText: 'Ya, Upload!',
-    //             cancelButtonText: 'Batal',
-    //         }).then((result) => {
-    //             if (result.isConfirmed) {
-    //                 $('#uploadForm').submit();
-    //             }
-    //         });
-    //     });
-    // });
-
-    function proButton(id) {
-        Swal.fire({
-            title: 'Ubah Status Peserta?',
-            text: "Peserta akan ditandai sebagai Tim Pro!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Lanjutkan!',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                document.getElementById('pro-form-' + id).submit();
-            }
-        });
-    }
-
-    function kontraButton(id) {
-        Swal.fire({
-            title: 'Ubah Status Peserta?',
-            text: "Peserta akan ditandai sebagai Tim Kontra!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Lanjutkan!',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                document.getElementById('kontra-form-' + id).submit();
-            }
-        });
-    }
-
     function deleteButton(id) {
         Swal.fire({
-            title: 'Hapus Peserta?',
-            text: "Peserta akan dihapus dari kelas ini!",
+            title: '{{__('admin.class_participants.swal.delete.title')}}',
+            text: '{{__('admin.class_participants.swal.delete.text')}}',
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: 'Ya, hapus!',
-            cancelButtonText: 'Batal'
+            confirmButtonText: '{{__('admin.class_participants.swal.delete.confirm')}}',
+            cancelButtonText: '{{__('admin.class_participants.swal.delete.cancel')}}',
         }).then((result) => {
             if (result.isConfirmed) {
                 document.getElementById('delete-form-' + id).submit();

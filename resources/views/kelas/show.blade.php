@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-    Detail Kelas: {{ $kelas->nama_kelas }}
+    {{__('admin.class_show.title')}} {{ $kelas->nama_kelas }}
 @endsection
 
 @section('content')
@@ -10,9 +10,9 @@
     <div class="card shadow-sm mb-4">
         <div class="card-body">
             <h2 class="card-title">{{ $kelas->nama_kelas }}</h2>
-            <p class="text-muted mb-1">Modul: <strong>{{ $kelas->modul->judul }}</strong></p>
-            <p class="text-muted mb-1">Guru Pengajar: <strong>{{ $kelas->guru?->name }}</strong></p>
-            <p class="text-muted mb-0">Jumlah Peserta: <strong>{{ $kelas->peserta?->count() }} Siswa</strong></p>
+            <p class="text-muted mb-1">{{__('admin.class_show.module')}} :<strong>{{ $kelas->modul->judul }}</strong></p>
+            <p class="text-muted mb-1">{{__('admin.class_show.teacher')}} : <strong>{{ $kelas->guru?->name }}</strong></p>
+            <p class="text-muted mb-0">{{__('admin.class_show.num_of_students')}} : <strong>{{ $kelas->peserta?->count() }} {{__('admin.class_show.students')}} </strong></p>
         </div>
     </div>
 
@@ -23,11 +23,11 @@
                 <div class="card-body text-center d-flex flex-column justify-content-between">
                     <div>
                         <i class="fa fa-users fa-3x text-primary mb-3"></i>
-                        <h5 class="card-title">Manajemen Peserta</h5>
-                        <p class="card-text text-muted">Tambah atau hapus siswa dari kelas ini.</p>
+                        <h5 class="card-title">{{__('admin.class_show.students_management')}}</h5>
+                        <p class="card-text text-muted">{{__('admin.class_show.add_delete_students')}}.</p>
                     </div>
                     <a href="{{ route('kelas.peserta', $kelas->id) }}" class="btn btn-primary mt-3">
-                        Kelola Peserta
+                        {{__('admin.class_show.set_students')}}
                     </a>
                 </div>
             </div>
@@ -38,12 +38,12 @@
                 <div class="card-body text-center d-flex flex-column justify-content-between">
                     <div>
                         <i class="fa fa-comments fa-3x text-success mb-3"></i>
-                        <h5 class="card-title">Manajemen Forum</h5>
-                        <p class="card-text text-muted">Atur tim Pro dan Kontra untuk sub-modul debat di kelas ini.</p>
+                        <h5 class="card-title">{{__('admin.class_show.forum_management')}}</h5>
+                        <p class="card-text text-muted">{{__('admin.class_show.set_pro_contra')}}.</p>
                     </div>
                     {{-- Ini adalah link ke halaman "hub forum" yang kita buat sebelumnya --}}
                     <a href="{{ route('kelas.forums', $kelas->id) }}" class="btn btn-success mt-3">
-                        Atur Forum
+                        {{__('admin.class_show.set_forum')}}
                     </a>
                 </div>
             </div>
@@ -53,8 +53,8 @@
             <div class="card h-100 shadow-sm border-dashed">
                 <div class="card-body text-center d-flex flex-column justify-content-center">
                     <i class="fa fa-bar-chart fa-3x text-muted mb-3"></i>
-                    <h5 class="card-title text-muted">Laporan & Nilai</h5>
-                    <p class="card-text text-muted">(Segera Hadir)</p>
+                    <h5 class="card-title text-muted">{{__('admin.class_show.report_grades')}}</h5>
+                    <p class="card-text text-muted">({{__('admin.class_show.coming_soon')}})</p>
                 </div>
             </div>
         </div>

@@ -10,17 +10,17 @@
         <input type="hidden" name="kelas_id" value="{{ $kelas->id }}">
 
         <div class="modal-header bg-primary text-white">
-          <h5 class="modal-title" id="joinKelasModalLabel">Gabung ke Kelas</h5>
+          <h5 class="modal-title" id="joinKelasModalLabel">{{__('admin.class_participants.join.title')}}</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
         </div>
         
         <div class="modal-body">
-          <p>Anda akan bergabung ke Kelas: <strong>{{ $kelas->nama_kelas ?? 'Nama Kelas' }}</strong> atas nama **{{ $userLogin->name ?? 'Pengguna' }}**.</p>
+          <p>{{__('admin.class_participants.join.text')}} <strong>{{ $kelas->nama_kelas ?? 'Nama Kelas' }}</strong> {{__('admin.class_participants.join.an')}} {{ $userLogin->name ?? '{{__('admin.class_participants.join.user')}}' }}.</p>
           
           <div class="form-group mb-3">
-            <label for="kode_join" class="form-label">Masukkan Kode Kelas (Kode Join)</label>
+            <label for="kode_join" class="form-label">{{__('admin.class_participants.join.instruction')}}</label>
             {{-- Input ini adalah KUNCI untuk proses join --}}
-            <input type="text" name="kode_join" id="kode_join" class="form-control" placeholder="Contoh: KLS1234" required>
+            <input type="text" name="kode_join" id="kode_join" class="form-control" placeholder='{{__('admin.class_participants.join.placeholder')}}' required>
             
             {{-- Pesan error, berguna jika form gagal validasi --}}
             @error('kode_join')
@@ -30,9 +30,9 @@
         </div>
         
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{__('admin.class_participants.join.cancel')}}</button>
           {{-- Ganti id dan type menjadi submit --}}
-          <button type="submit" id="btnJoin" class="btn btn-primary">Gabung Sekarang</button>
+          <button type="submit" id="btnJoin" class="btn btn-primary">{{__('admin.class_participants.join.join_class')}}</button>
         </div>
       </form>
     </div>

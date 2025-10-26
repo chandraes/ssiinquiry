@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-    Atur Tim: {{ $subModule->title }}
+    {{ __('admin.forum_settings.title') }} {{ $subModule->title }}
 @endsection
 
 @section('content')
@@ -9,12 +9,12 @@
 
     <div class="card shadow-sm mb-4">
         <div class="card-body">
-            <h2 class="card-title">Atur Tim: {{ $subModule->title }}</h2>
+            <h2 class="card-title">{{ __('admin.forum_settings.title') }}  {{ $subModule->title }}</h2>
             <p class="text-muted">
-                Anda sedang mengatur tim untuk Kelas: <strong>{{ $kelas->nama_kelas }}</strong>
+                {{ __('admin.forum_settings.setting_team_for_class') }} <strong>{{ $kelas->nama_kelas }}</strong>
             </p>
             <a href="{{ route('kelas.forums', $kelas->id) }}" class="btn btn-sm btn-outline-secondary">
-                <i class="fa fa-arrow-left me-2"></i>Kembali ke Daftar Forum
+                <i class="fa fa-arrow-left me-2"></i>{{ __('admin.forum_settings.back_text') }}
             </a>
         </div>
     </div>

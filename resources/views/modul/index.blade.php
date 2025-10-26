@@ -39,6 +39,8 @@
                         $imageUrl = $modul->image
                                     ? asset('storage/' . $modul->image)
                                     : 'https://via.placeholder.com/400x250?text=' . urlencode($modul->getTranslation('judul', 'en'));
+
+                        dd($imageUrl);
                     @endphp
 
                     {{-- GAMBAR MODUL --}}

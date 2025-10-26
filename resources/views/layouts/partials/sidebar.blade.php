@@ -52,7 +52,8 @@
                 $isKelasPage = false;
 
                 // Cek apakah route saat ini terkait dengan kelas
-                if(request()->routeIs('kelas.*') || request()->routeIs('kelas.forums') || request()->routeIs('kelas.forum.teams')) {
+                if(request()->routeIs('kelas.*') || request()->routeIs('kelas.peserta')  || request()->routeIs('kelas.peserta>*') || 
+                    request()->routeIs('kelas.forums') || request()->routeIs('kelas.forum.teams')) {
 
                     // Ambil parameter 'kelas' dari route
                     $currentKelasParam = request()->route()->parameter('kelas');
@@ -92,11 +93,11 @@
                                 {{-- 4. Terapkan Logika Spesifik ke 'Detail Modul' --}}
                                 <a href="{{ route('modul.show', $modul->id) }}"
                                     class="slide-item {{ $isModulDetailPage || $isSubModulPage ? 'active' : '' }}">
-                                    <i class="fa fa-info-circle me-2"></i> Detail Modul
+                                    <i class="fa fa-info-circle me-2"></i>{{ __('admin.sidebar.module_details') }}
                                 </a>
                             </li>
                             <li class="sub-category">
-                                <h3 style="padding-left:0px">Kelas</h3>
+                                <h3 style="padding-left:0px">{{ __('admin.sidebar.classes') }}</h3>
                             </li>
 
                             {{-- 5. Logika Kelas (PERBAIKAN DI SINI) --}}

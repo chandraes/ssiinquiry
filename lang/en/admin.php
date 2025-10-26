@@ -11,9 +11,12 @@ return [
         'dashboard' => 'Dashboard',
         'user' => 'User',
         'modules_classes' => 'Modules & Classes',
+        'module_details' => 'Module Details',
+        'classes' => 'Classes',
         'no_class' => 'No Class Yet',
         'settings' => 'Settings',
         'application' => 'Application',
+        
     ],
 
     'lang' => [
@@ -92,6 +95,71 @@ return [
         'delete_title' => 'Delete Data',
     ],
 
+    'class_show'=> [
+        'title' => 'Class Details',
+        'module' => 'Module',
+        'teacher' => 'Teacher',
+        'num_of_students' => 'Number of Participants',
+        'students' => 'Students',
+        'students_management' => 'Participant Management',
+        'add_delete_students' => 'Add or remove students from this class.',
+        'set_students' => 'Manage Participants',
+        'forum_management' => 'Forum Management',
+        'set_pro_contra' => 'Set Pro and Con teams for the debate sub-module in this class',
+        'set_forum' => 'Manage Forum',
+        'report_grades' => 'Reports & Grades',
+        'coming_soon' => 'Coming Soon',
+        'no_students' => 'There are no participants in this class yet.',
+    ],
+
+    'class_participants' => [
+        'title' => 'Class Participants',
+        'list_title' => 'Class Participant List',
+        'add_participants' => 'Add Class Participants',
+        'join_class' => 'Join Class',
+
+        'select_students' => 'Select Students',
+        'table_no' => 'No',
+        'table_name' => 'Participant Name',
+        'table_status' => 'Status (Pro / Contra)',
+        'table_action' => 'Action',
+        'status_pro' => 'Pro',
+        'status_contra' => 'Contra',
+        'no_status' => 'Not Specified',
+        'no_participants' => 'There are no participants in this class yet.',
+        'create' => [
+            'title' => 'Add Class Participants',
+            'instruction' => 'Select Participants',
+            'close' => 'Close',
+            'save' => 'Save',
+            'cancel' => 'Cancel',
+        ],
+        'join' => [
+            'title' => 'Join Class',
+            'text' => 'You are about to join the class:',
+            'an' => 'on behalf of',
+            'user' => 'User',
+            'instruction' => 'Enter Class Code (Join Code)',
+            'placeholder' => 'Example: CLS123',
+            'cancel' => 'Cancel',
+            'join_class' => 'Join Class',
+        ],
+        'swal' => [
+            'create' => [
+                'title' => 'Save Data?',
+                'text' => 'Make sure the participant data is correct!',
+                'confirm' => 'Yes, Save!',
+                'cancel' => 'Cancel',
+            ],
+            'delete' => [
+                'title' => 'Delete Participant?',
+                'text' => 'The participant will be removed from this class!',
+                'confirm' => 'Yes, Delete!',
+                'cancel' => 'Cancel',
+            ]
+        ]
+    ],
+
     'modul_detail' => [
         'title' => 'Module Detail',
         'module_info' => 'Module Information',
@@ -168,8 +236,29 @@ return [
         'slot_group' => 'Experiment Group',
     ],
 
+    'forum' => [ 
+        'title' => 'Forum Management',
+        'sub_title' => 'Forum Team Management',
+        'class' => 'Class',
+        'instruction' => 'Select one of the forum submodules below to start setting up the Pro and Contra teams for this class.',
+        'forum_available' => 'Available Forums from Module:',
+        'set_team' => 'Set Team',
+        'no_submodul' => 'No forum submodules found for this module.',
+        // 'create' => [
+        //     'title' => 'Create New Forum Configuration',
+        //     'select_forum' => 'Select Forum Submodule',
+        //     'forum_placeholder' => '-- Select Forum Submodule --',
+        //     'close' => 'Close',
+        //     'save' => 'Save',
+        // ]
+    ],
+
+    
     'forum_settings' => [
-        'title' => 'Debate Forum Settings',
+        // 'title' => 'Debate Forum Settings',
+        'title' => 'Set Team: ',
+        'setting_team_for_class' => 'You are setting up a team for Class: ',
+        'back_text' => 'Back to Forum List',
         'general_settings' => 'General Forum Settings',
         'update_settings' => 'Save Settings',
         'debate_topic' => 'Debate Topic',
@@ -187,5 +276,24 @@ return [
         'remove_from_team' => 'Remove from Team',
         'no_students_in_class' => 'No students in related classes.', // Adjust message
         'no_members' => 'No members yet.',
+    ],
+
+    'settings' => [
+        'title' => 'Settings',
+        'application' => 'Application Settings',
+        'update_settings' => 'Update Settings',
+        'app_name' => 'Application Name',
+        'app_email' => 'Application Email',
+        'app_logo' => 'Application Logo',
+        'app_logo_help' => 'Recommended size: 200x50 pixels. Max size: 2MB.',
+        'app_icon_help' => 'Max size: 50KB.',
+        'save_settings' => 'Save Settings',
+        'swal' => [
+            'text' => 'Are you sure you want to save the settings?',
+            'default' => 'Drag and drop files here or click',
+            'replace' => 'Drag and drop or click to replace',
+            'remove' => 'Delete',
+            'error' => 'An error occurred.',
+        ],
     ],
 ];
