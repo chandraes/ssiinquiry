@@ -64,6 +64,11 @@ class Kelas extends Model
         return $this->hasMany(ForumTeam::class, 'kelas_id');
     }
 
+    public function forumPosts()
+    {
+        return $this->hasMany(ForumPost::class, 'kelas_id');
+    }
+
 
 
 }

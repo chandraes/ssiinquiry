@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ForumPost;
+use App\Models\ForumTeam;
 use App\Models\Kelas;
 use App\Models\PracticumSubmission;
 use App\Models\PracticumUploadSlot;
@@ -12,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Exception;
 use Illuminate\Support\Facades\Storage;
+use Mews\Purifier\Facades\Purifier;
 
 class StudentController extends Controller
 {
@@ -157,14 +160,40 @@ class StudentController extends Controller
 
         } elseif ($subModule->type == 'forum') {
             // Tipe: Forum Debat
-            // Ambil info tim siswa untuk forum ini
+            // Ambil info tim siswa (kode ini sudah Anda miliki)
             $teamInfo = $student->forumTeams()
                                 ->where('sub_module_id', $subModule->id)
                                 ->where('kelas_id', $kelas->id)
                                 ->first();
 
-            $viewData['teamInfo'] = $teamInfo; // Isinya 'pro', 'con', atau null
-            // TODO: Muat postingan forum
+            $viewData['teamInfo'] = $teamInfo;
+
+            // [BARU] Ambil semua postingan untuk forum & kelas ini
+            // Kita hanya ambil postingan level atas (parent_post_id = null)
+            // Lalu kita eager load balasan, user, dan buktinya.
+            $posts = ForumPost::where('sub_module_id', $subModule->id)
+                ->where('kelas_id', $kelas->id)
+                ->whereNull('parent_post_id') // Hanya ambil postingan utama
+                ->with([
+                    'user', // User pembuat postingan
+                    'evidence.submission', // Bukti & file submission-nya
+                    'replies' => function ($query) {
+                        // Muat juga balasan, user, dan bukti dari balasan
+                        $query->with(['user', 'evidence.submission'])->orderBy('created_at', 'asc');
+                    }
+                ])
+                ->orderBy('created_at', 'desc') // Postingan utama terbaru di atas
+                ->get();
+
+            $viewData['posts'] = $posts;
+
+            // [BARU] Ambil semua file praktikum siswa di kelas ini
+            $mySubmissions = PracticumSubmission::where('student_id', $student->id)
+                ->where('course_class_id', $kelas->id)
+                ->get();
+
+            $viewData['mySubmissions'] = $mySubmissions;
+
             return view('student.show_forum', $viewData);
         }
 
@@ -366,6 +395,59 @@ class StudentController extends Controller
 
         } catch (Exception $e) {
             return redirect()->back()->with('error', 'Gagal mengunggah file: ' . $e->getMessage());
+        }
+    }
+
+    public function storeForumPost(Request $request, Kelas $kelas, SubModule $subModule)
+    {
+        $student = Auth::user();
+
+        // 1. Validasi
+        $request->validate([
+            'content' => 'required|string|min:10',
+            'parent_post_id' => 'nullable|exists:forum_posts,id',
+            'evidence_ids' => 'nullable|array', // Validasi array bukti
+            'evidence_ids.*' => 'exists:practicum_submissions,id', // Pastikan ID-nya ada
+        ], [
+            'content.required' => 'Postingan tidak boleh kosong.',
+            'content.min' => 'Postingan Anda terlalu pendek (minimal 10 karakter).',
+            'evidence_ids.*.exists' => 'File bukti yang Anda pilih tidak valid.',
+        ]);
+
+        // 2. Dapatkan tim siswa
+        $teamInfo = ForumTeam::where('user_id', $student->id)
+                            ->where('kelas_id', $kelas->id)
+                            ->where('sub_module_id', $subModule->id)
+                            ->first();
+
+        if (!$teamInfo) {
+            return redirect()->back()->with('error', 'Anda tidak terdaftar di tim Pro atau Kontra.');
+        }
+
+        try {
+            // 3. Buat postingan
+            $newPost = ForumPost::create([
+                'sub_module_id' => $subModule->id,
+                'user_id' => $student->id,
+                'kelas_id' => $kelas->id,
+                'team' => $teamInfo->team,
+                'content' => Purifier::clean($request->content),
+                'parent_post_id' => $request->parent_post_id,
+                'visibility' => 'public',
+            ]);
+
+            // 4. [BARU] Lampirkan bukti (jika ada)
+            if ($request->has('evidence_ids')) {
+                // 'attach' akan mengisi tabel pivot 'forum_post_evidence'
+                $newPost->evidence()->attach($request->evidence_ids);
+            }
+
+            // 5. Kembalikan ke halaman forum
+            return redirect()->route('student.submodule.show', [$kelas->id, $subModule->id])
+                             ->with('success', 'Postingan Anda berhasil dikirim!');
+
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 }

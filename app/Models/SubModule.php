@@ -11,7 +11,7 @@ class SubModule extends Model
     use HasTranslations; // <--- 2. Gunakan Trait
 
     // 3. Tentukan kolom mana yang bisa diterjemahkan
-    public $translatable = ['title', 'description', 'debate_topic'];
+    public $translatable = ['title', 'description', 'debate_topic','debate_rules'];
 
     // Tentukan kolom yang boleh diisi
     protected $fillable = [

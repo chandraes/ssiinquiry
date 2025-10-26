@@ -39,4 +39,14 @@ class PracticumSubmission extends Model
     {
         return $this->belongsToMany(ForumPost::class, 'forum_post_evidence');
     }
+
+    public function evidencePosts()
+{
+    return $this->belongsToMany(
+        ForumPost::class,
+        'forum_post_evidence',
+        'practicum_submission_id',
+        'forum_post_id'
+    );
+}
 }

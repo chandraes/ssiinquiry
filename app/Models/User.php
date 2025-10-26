@@ -85,5 +85,10 @@ class User extends Authenticatable
         return $this->hasMany(ForumTeam::class, 'user_id');
     }
 
+    public function forumPosts()
+    {
+        return $this->hasMany(ForumPost::class, 'user_id');
+    }
+
 
 }

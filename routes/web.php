@@ -41,6 +41,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/my-class/{kelas}/sub-module/{subModule}/complete', [StudentController::class, 'markAsComplete'])->name('student.submodule.complete');
         Route::post('/my-class/{kelas}/sub-module/{subModule}/reflection', [StudentController::class, 'storeReflection'])->name('student.reflection.store');
         Route::post('/my-class/{kelas}/sub-module/{subModule}/practicum/{slot}', [StudentController::class, 'storePracticum'])->name('student.practicum.store');
+        Route::post('/my-class/{kelas}/sub-module/{subModule}/forum', [StudentController::class, 'storeForumPost'])->name('student.forum.store');
     });
 
     Route::group(['prefix' => 'admin', 'middleware' => ['role:admin']], function () {
