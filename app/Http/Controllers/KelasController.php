@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Models\ForumTeam;
 
 class KelasController extends Controller
 {
@@ -334,17 +335,19 @@ class KelasController extends Controller
 
     /**
      * [DIPERBAIKI] Mengambil detail submission siswa untuk ditampilkan di modal Gradebook.
-     * Menggunakan kolom 'student_id' yang benar.
+     * Menggunakan kolom 'user_id' yang benar untuk ForumPost.
      */
     public function getSubmissionDetails(Request $request)
     {
         $request->validate([
             'student_id' => 'required|exists:users,id',
             'sub_module_id' => 'required|exists:sub_modules,id',
+            'kelas_id' => 'required|exists:kelas,id',
         ]);
 
         $studentId = $request->query('student_id');
         $subModuleId = $request->query('sub_module_id');
+        $kelasId = $request->query('kelas_id');
         $subModule = SubModule::find($subModuleId);
 
         $html = '';
@@ -353,17 +356,13 @@ class KelasController extends Controller
             switch ($subModule->type) {
 
                 case 'reflection':
-                    // (Logika ini sudah benar menggunakan student_id)
-                    $questionIds = ReflectionQuestion::where('sub_module_id', $subModuleId)
-                                     ->pluck('id');
+                    // ... (Logika refleksi Anda sudah benar) ...
+                    $questionIds = ReflectionQuestion::where('sub_module_id', $subModuleId)->pluck('id');
                     $answers = ReflectionAnswer::where('student_id', $studentId)
                                ->whereIn('reflection_question_id', $questionIds)
-                               ->with('question')
-                               ->get();
-
+                               ->with('question')->get();
                     if ($answers->isNotEmpty()) {
-                        $html = '<h5>Jawaban Refleksi Siswa:</h5>';
-                        $html .= '<ul class="list-group list-group-flush">';
+                        $html = '<h5>Jawaban Refleksi Siswa:</h5><ul class="list-group list-group-flush">';
                         foreach ($answers as $answer) {
                             $html .= '<li class="list-group-item p-2" style="font-size: 0.9em;">';
                             $html .= '<strong>' . e($answer->question->question_text ?? 'Pertanyaan') . ':</strong>';
@@ -376,34 +375,23 @@ class KelasController extends Controller
                     }
                     break;
 
-                // [BLOK YANG DIPERBAIKI]
                 case 'practicum':
-                    // [PERBAIKAN] Ganti 'user_id' menjadi 'student_id'
+                    // ... (Logika praktikum Anda sudah benar) ...
                     $submissions = PracticumSubmission::where('student_id', $studentId)
                                     ->whereHas('slot', fn($q) => $q->where('sub_module_id', $subModuleId))
-                                    ->with('slot')
-                                    ->get();
-
+                                    ->with('slot')->get();
                     if ($submissions->isNotEmpty()) {
                         $chartData = [];
                         $fileListHtml = '<ul>';
                         foreach ($submissions as $sub) {
                             $fileListHtml .= '<li><i class="fa fa-file-csv text-success"></i> ' . e($sub->original_filename) . '</li>';
                             $url = Storage::url($sub->file_path);
-                            $chartData[] = [
-                                'label' => e($sub->slot->label),
-                                'url' => $url
-                            ];
+                            $chartData[] = ['label' => e($sub->slot->label), 'url' => $url];
                         }
                         $fileListHtml .= '</ul>';
-
                         $html = '<h5><i class="fa fa-chart-line"></i> Pratinjau Grafik</h5>';
-                        $html .= '<div class="chart-container mb-3" style="position: relative; height:300px; background-color:#fff; border: 1px solid #ddd; padding: 5px; border-radius: 5px;">';
-                        $html .= '<canvas id="gradebookChartCanvas"></canvas>';
-                        $html .= '</div>';
-                        $html .= '<button type="button" class="btn btn-primary btn-sm w-100" id="loadGradebookChartBtn"';
-                        $html .= ' data-json="' . e(json_encode($chartData)) . '">';
-                        $html .= '<i class="fa fa-sync-alt"></i> Muat / Ulangi Grafik</button>';
+                        $html .= '<div class="chart-container mb-3" style="position: relative; height:300px; background-color:#fff; border: 1px solid #ddd; padding: 5px; border-radius: 5px;"><canvas id="gradebookChartCanvas"></canvas></div>';
+                        $html .= '<button type="button" class="btn btn-primary btn-sm w-100" id="loadGradebookChartBtn" data-json="' . e(json_encode($chartData)) . '"><i class="fa fa-sync-alt"></i> Muat / Ulangi Grafik</button>';
                         $html .= '<hr><h5>File yang Diunggah:</h5>' . $fileListHtml;
                     } else {
                         $html = '<p class="text-muted text-center">Siswa belum mengunggah file praktikum.</p>';
@@ -412,25 +400,56 @@ class KelasController extends Controller
 
                 // [BLOK YANG DIPERBAIKI]
                 case 'forum':
-                    // [PERBAIKAN] Ganti 'user_id' menjadi 'student_id'
-                    $posts = ForumPost::where('student_id', $studentId)
-                                ->where('sub_module_id', $subModuleId)
-                                ->orderBy('created_at', 'asc')
-                                ->get();
+                    // 1. Dapatkan ID tim (Logika ini sudah benar)
+                    $proTeamIds = ForumTeam::where('sub_module_id', $subModuleId)
+                                    ->where('kelas_id', $kelasId)
+                                    ->where('team', 'pro')
+                                    ->pluck('user_id');
 
-                    if ($posts->isNotEmpty()) {
-                        $html = '<h5>Aktivitas Forum Siswa (' . $posts->count() . ' post):</h5>';
-                        $html .= '<ul class="list-group list-group-flush">';
-                        foreach ($posts as $post) {
-                            $html .= '<li class="list-group-item p-2" style="font-size: 0.9em;">';
-                            $html .= '<strong class="text-muted">' . $post->created_at->format('d M Y, H:i') . ':</strong>';
-                            $html .= '<div class="rich-text-content border-start ps-2">' . $post->content . '</div>';
-                            $html .= '</li>';
-                        }
-                        $html .= '</ul>';
-                    } else {
-                        $html = '<p class="text-muted text-center">Siswa belum berpartisipasi di forum.</p>';
+                    $kontraTeamIds = ForumTeam::where('sub_module_id', $subModuleId)
+                                    ->where('kelas_id', $kelasId)
+                                    ->where('team', 'kontra')
+                                    ->pluck('user_id');
+
+                    // 2. Dapatkan semua postingan utama (bukan balasan)
+                    $proPosts = ForumPost::where('sub_module_id', $subModuleId)
+                                    ->where('kelas_id', $kelasId) // <-- [FIX #2] Filter berdasarkan kelas
+                                    ->whereIn('user_id', $proTeamIds)
+                                    ->whereNull('parent_post_id') // <-- [FIX #1] Ganti nama kolom
+                                    ->with('user', 'replies.user')
+                                    ->orderBy('created_at', 'asc')
+                                    ->get();
+
+                    $kontraPosts = ForumPost::where('sub_module_id', $subModuleId)
+                                    ->where('kelas_id', $kelasId) // <-- [FIX #2] Filter berdasarkan kelas
+                                    ->whereIn('user_id', $kontraTeamIds)
+                                    ->whereNull('parent_post_id') // <-- [FIX #1] Ganti nama kolom
+                                    ->with('user', 'replies.user')
+                                    ->orderBy('created_at', 'asc')
+                                    ->get();
+
+                    // 3. Bangun HTML (Logika ini sudah benar)
+                    $html = '<div class="row">';
+                    $html .= '<div class="col-6"><h5 class="text-success text-center">Tim PRO</h5><div class="forum-column">';
+                    if ($proPosts->isEmpty()) {
+                        $html .= '<p class="text-muted text-center small">Belum ada postingan.</p>';
                     }
+                    foreach ($proPosts as $post) {
+                        $highlightClass = ($post->user_id == $studentId) ? 'post-highlight' : '';
+                        $html .= self::buildForumPostHtml($post, $studentId, $highlightClass);
+                    }
+                    $html .= '</div></div>';
+
+                    $html .= '<div class="col-6"><h5 class="text-danger text-center">Tim KONTRA</h5><div class="forum-column">';
+                    if ($kontraPosts->isEmpty()) {
+                        $html .= '<p class="text-muted text-center small">Belum ada postingan.</p>';
+                    }
+                    foreach ($kontraPosts as $post) {
+                        $highlightClass = ($post->user_id == $studentId) ? 'post-highlight' : '';
+                        $html .= self::buildForumPostHtml($post, $studentId, $highlightClass);
+                    }
+                    $html .= '</div></div>';
+                    $html .= '</div>';
                     break;
 
                 default:
@@ -444,6 +463,32 @@ class KelasController extends Controller
                 'html' => '<div class="alert alert-danger">Gagal memuat data: ' . $e->getMessage() . '</div>'
             ], 500);
         }
+    }
+
+    /**
+     * [FUNGSI HELPER BARU]
+     * Fungsi private untuk membangun HTML postingan forum.
+     * Ini akan membuat method 'getSubmissionDetails' lebih bersih.
+     */
+    private static function buildForumPostHtml($post, $studentId, $highlightClass = '')
+    {
+        $html = '<div class="forum-post ' . $highlightClass . '">';
+        $html .= '<div><span class="post-author">' . e($post->user->name) . '</span> <small class="text-muted">(' . $post->created_at->format('d M H:i') . ')</small></div>';
+        $html .= '<div class="rich-text-content mt-1">' . $post->content . '</div>';
+
+        // Tampilkan balasan
+        if ($post->replies->isNotEmpty()) {
+            foreach ($post->replies as $reply) {
+                // Highlight balasan jika ID user cocok
+                $replyHighlight = ($reply->user_id == $studentId) ? 'post-highlight' : '';
+                $html .= '<div class="forum-reply ' . $replyHighlight . '">';
+                $html .= '<div><span class="reply-author">' . e($reply->user->name) . '</span> <small class="text-muted">(' . $reply->created_at->format('d M H:i') . ')</small></div>';
+                $html .= '<div class="rich-text-content mt-1">' . $reply->content . '</div>';
+                $html .= '</div>'; // Tutup forum-reply
+            }
+        }
+        $html .= '</div>'; // Tutup forum-post
+        return $html;
     }
 
     public function showForums(Kelas $kelas)

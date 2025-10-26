@@ -56,6 +56,44 @@
         border-style: solid;
         border-color: #28a745;
     }
+
+    .post-highlight {
+        background-color: #fff3cd !important; /* Warna kuning 'warning' Bootstrap */
+        border: 1px solid #ffeeba;
+        box-shadow: 0 0 10px rgba(255, 193, 7, 0.3);
+    }
+
+    /* [BARU] CSS untuk Tampilan Forum di Modal */
+    .forum-column {
+        padding: 8px;
+        border: 1px solid #eee;
+        border-radius: 5px;
+        height: 400px; /* Beri tinggi tetap agar bisa scroll internal */
+        overflow-y: auto;
+        background: #fdfdfd;
+    }
+    .forum-post {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+        background: #fff;
+    }
+    .forum-reply {
+        border-top: 1px dashed #ccc;
+        padding: 8px 8px 8px 15px; /* Indentasi balasan */
+        margin-top: 8px;
+        margin-left: 10px;
+        background: #f9f9f9;
+    }
+    .post-author {
+        font-weight: bold;
+        color: #0d6efd;
+    }
+    .reply-author {
+        font-weight: bold;
+        color: #555;
+    }
 </style>
 @endpush
 
@@ -440,7 +478,7 @@ $(document).ready(function() {
         $.ajax({
             url: "{{ route('kelas.get_submission') }}",
             type: "GET",
-            data: { student_id: studentId, sub_module_id: subModuleId },
+            data: { student_id: studentId, sub_module_id: subModuleId, kelas_id: $('#modal-kelas-id').val() },
             success: function(response) {
                 submissionContent.html(response.html);
                 var $chartButton = submissionContent.find('#loadGradebookChartBtn');
