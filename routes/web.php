@@ -100,6 +100,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/{subModul}/json', [SubModulController::class, 'showJson'])->name('submodul.show.json');
         Route::put('/{subModul}', [SubModulController::class, 'update'])->name('submodul.update');
         Route::delete('/{subModul}', [SubModulController::class, 'destroy'])->name('submodul.destroy');
+
+        Route::put('/{subModul}/forum-settings', [SubModulController::class, 'updateForumSettings'])
+         ->name('submodul.forum.update_settings');
     });
 
     Route::group(['prefix' => 'practicum-slot', 'middleware' => ['role:admin,guru']], function () {
@@ -118,11 +121,16 @@ Route::group(['middleware' => 'auth'], function () {
         Route::delete('/delete/{id}', [App\Http\Controllers\KelasController::class, 'destroy'])->name('kelas.delete');
         Route::get('/guru/search', [App\Http\Controllers\KelasController::class, 'search_guru_pengajar'])->name('search-pengajar');
 
+        Route::post('/save-grade', [KelasController::class, 'saveGrade'])->name('kelas.save_grade');
+        Route::get('/get-submission-details', [KelasController::class, 'getSubmissionDetails'])->name('kelas.get_submission');
+
         Route::get('/{kelas}/forums', [KelasController::class, 'showForums'])->name('kelas.forums');
         Route::get('/{kelas}', [KelasController::class, 'show'])->name('kelas.show');
 
         // [BARU] Halaman "manajemen tim" untuk 1 forum spesifik di 1 kelas spesifik
         Route::get('/{kelas}/forum/{subModule}/teams', [ForumTeamController::class, 'index'])->name('kelas.forum.teams');
+
+
 
         Route::group(['prefix' => 'peserta', 'middleware' => ['role:admin,guru']], function () {
             Route::get('/{id}', [App\Http\Controllers\KelasUserController::class, 'index'])->name('kelas.peserta');
@@ -171,7 +179,7 @@ Route::group(['middleware' => 'auth'], function () {
                 ->name('siswa.submodul.show');
             Route::post('/reflection/store', [App\Http\Controllers\ReflectionQuestionController::class, 'storeAnswer'])
                 ->name('siswa.reflection.store');
-            Route::post('/practicum-slot/{id}/upload-csv', [App\Http\Controllers\PracticumSlotController::class, 'uploadCsv'])
+            Route::post('/practicum-slot/{id}/upload-csv', [App\Http\Controllers\PracticumUploadSlotController::class, 'uploadCsv'])
                 ->name('practicum_slot.upload_csv');
 
         });

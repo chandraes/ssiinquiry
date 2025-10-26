@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Support\Facades\View;
+use Mews\Purifier\Facades\Purifier;
 class SubModulController extends Controller
 {
     /**
@@ -16,40 +17,30 @@ class SubModulController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+   public function store(Request $request)
     {
-        // [DIUBAH] Tambahkan validasi untuk tipe 'forum'
+        // Validasi HANYA untuk field yang ada di modal
         $request->validate([
             'modul_id' => 'required|exists:moduls,id',
-            'type' => 'required|in:learning,reflection,practicum,forum', // Tambahkan 'forum'
+            'type' => 'required|in:learning,reflection,practicum,forum',
             'title.id' => 'required|string|max:255',
             'title.en' => 'required|string|max:255',
             'description.id' => 'nullable|string',
             'description.en' => 'nullable|string',
             'order' => 'nullable|integer',
-
-            // Validasi baru (hanya jika type == 'forum')
-            'debate_topic.id' => 'nullable|required_if:type,forum|string',
-            'debate_topic.en' => 'nullable|required_if:type,forum|string',
-            'debate_rules' => 'nullable|required_if:type,forum|string',
-            'debate_start_time' => 'nullable|required_if:type,forum|date',
-            'debate_end_time' => 'nullable|required_if:type,forum|date|after:debate_start_time',
-            'phase1_end_time' => 'nullable|date|after:debate_start_time|before:debate_end_time',
-            'phase2_end_time' => 'nullable|date|after:phase1_end_time|before:debate_end_time',
+            'max_points' => 'nullable|integer|min:0',
+            // SEMUA validasi 'debate_*' dihapus
         ]);
 
         try {
-            // Ambil semua data request
             $data = $request->all();
 
-            // [PERBAIKAN KEAMANAN]
-            // Bersihkan input HTML untuk 'debate_rules' jika ada
-            if ($request->type == 'forum' && $request->has('debate_rules')) {
-                // Pastikan Anda sudah menginstal mews/purifier
-                $data['debate_rules'] = clean($request->debate_rules);
+            if ($data['type'] == 'learning') {
+                $data['max_points'] = 0;
             }
 
-            // Buat sub modul
+            // Logika 'clean()' untuk 'debate_rules' dihapus
+
             SubModule::create($data);
 
             return redirect()->back()->with('success', 'Sub modul berhasil ditambahkan!');
@@ -91,51 +82,104 @@ class SubModulController extends Controller
         $subModul->load(['learningMaterials' => fn($q) => $q->orderBy('order', 'asc')]);
         return view('submodul.show_learning', compact('subModul'));
     }
-    /**
-     * Mengambil data satu sub-modul sebagai JSON.
-     * Ini digunakan untuk mengisi modal edit secara dinamis.
-     *
-     * @param  \App\Models\SubModule  $subModul
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function showJson(SubModule $subModul)
+
+   public function showJson(SubModule $subModul)
     {
-        // Kirim data sebagai JSON
         return response()->json([
             'id' => $subModul->id,
-            'module_id' => $subModul->module_id,
-            // getTranslations() akan mengembalikan array: {"id": "...", "en": "..."}
+
+            // Data Inti
+            'type' => $subModul->type,
+            'order' => $subModul->order,
+            'max_points' => $subModul->max_points,
+
+            // Translatable fields
             'title' => $subModul->getTranslations('title'),
             'description' => $subModul->getTranslations('description'),
-            'order' => $subModul->order,
+
+            // SEMUA field 'debate_*' dihapus dari sini
         ]);
     }
 
     /**
-     * Update data sub-modul yang ada dari modal edit.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\SubModule  $subModul
-     * @return \Illuminate\Http\RedirectResponse
+     * Memperbarui sub-modul yang ada di database.
+     * [DISESUAIKAN agar konsisten dengan 'store']
      */
     public function update(Request $request, SubModule $subModul)
     {
-        // Validasi sama seperti store
+        // Validasi HANYA untuk field yang ada di modal
         $request->validate([
+            'type' => 'required|in:learning,reflection,practicum,forum',
             'title.id' => 'required|string|max:255',
             'title.en' => 'required|string|max:255',
             'description.id' => 'nullable|string',
             'description.en' => 'nullable|string',
             'order' => 'nullable|integer',
+            'max_points' => 'nullable|integer|min:0',
+            // SEMUA validasi 'debate_*' dihapus
         ]);
 
         try {
-            // Model akan menangani pembaruan data JSON secara otomatis
-            $subModul->update($request->all());
+            $data = $request->all();
+
+            if ($data['type'] == 'learning') {
+                $data['max_points'] = 0;
+            }
+
+            // Logika 'clean()' untuk 'debate_rules' dihapus
+
+            $subModul->update($data);
 
             return redirect()->back()->with('success', 'Sub modul berhasil diperbarui!');
         } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Gagal memperbarui sub modul: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'Gagal memperbarui sub modul: '. $e->getMessage());
+        }
+    }
+
+    /**
+     * [DIPERBARUI] Menyimpan pengaturan spesifik untuk sub-modul Tipe Forum.
+     * Sekarang menangani 'debate_rules' sebagai field translatable.
+     */
+    public function updateForumSettings(Request $request, SubModule $subModul)
+    {
+        if ($subModul->type !== 'forum') {
+            return redirect()->back()->with('error', 'Aksi tidak diizinkan.');
+        }
+
+        // 1. [DIUBAH] Validasi untuk 'debate_rules' sebagai array
+        $request->validate([
+            'debate_topic.id' => 'required|string|max:255',
+            'debate_topic.en' => 'required|string|max:255',
+
+            'debate_rules' => 'required|array', // Harus array
+            'debate_rules.id' => 'required|string', // Wajib ID
+            'debate_rules.en' => 'required|string', // Wajib EN
+
+            'debate_start_time' => 'required|date',
+            'debate_end_time' => 'required|date|after:debate_start_time',
+            'phase1_end_time' => 'nullable|date|after:debate_start_time|before:debate_end_time',
+            'phase2_end_time' => 'nullable|date|after:phase1_end_time|before:debate_end_time',
+        ]);
+
+        try {
+            // 2. [DIUBAH] Ambil data dan bersihkan HTML untuk array
+            $data = $request->except('debate_rules'); // Ambil semua KECUALI rules
+
+            // Bersihkan setiap elemen 'debate_rules' secara manual
+           $cleanedRules = [
+                'id' => Purifier::clean($request->input('debate_rules.id')),
+                'en' => Purifier::clean($request->input('debate_rules.en'))
+            ];
+
+            $data['debate_rules'] = $cleanedRules; // Masukkan kembali data rules yang sudah bersih
+
+            // 3. Update sub-modul
+            $subModul->update($data);
+
+            return redirect()->back()->with('success', 'Pengaturan forum berhasil diperbarui!');
+
+        } catch (Exception $e) {
+            return redirect()->back()->withInput()->with('error', 'Gagal memperbarui pengaturan: '. $e->getMessage());
         }
     }
 

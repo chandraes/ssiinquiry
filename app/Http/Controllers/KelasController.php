@@ -7,10 +7,18 @@ use App\Models\User;
 use App\Models\Kelas;
 use App\Models\Modul;
 use App\Models\KelasUser;
+use App\Models\SubModule;
+use App\Models\SubModuleProgress;
+use App\Models\PracticumSubmission;
+use App\Models\ForumPost;
+use App\Models\ReflectionAnswer;
+use App\Models\ReflectionQuestion;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use App\Models\ForumTeam;
 
 class KelasController extends Controller
 {
@@ -234,12 +242,253 @@ class KelasController extends Controller
         }
     }
 
+    /**
+     * Menampilkan dashboard kelas untuk Guru (DIPERBARUI UNTUK GRADEBOOK)
+     */
     public function show(Kelas $kelas)
     {
-        // Muat relasi yang diperlukan untuk ditampilkan di halaman detail
-        $kelas->load('modul', 'guru', 'peserta');
+        // 1. Muat relasi dasar kelas
+        // Kita juga butuh 'modul' untuk mengambil daftar sub-modul
+        $kelas->load('students', 'modul');
 
-        return view('kelas.show', compact('kelas'));
+        // 2. Ambil semua sub-modul yang BISA DINILAI untuk modul ini
+        // Kita tidak mengambil tipe 'learning' (Materi)
+        $gradableSubModules = SubModule::where('modul_id', $kelas->modul_id)
+            ->where('type', '!=', 'learning')
+            ->orderBy('order', 'asc')
+            ->get();
+
+        // 3. Ambil SEMUA progress siswa untuk SELURUH kelas ini
+        // Ini jauh lebih efisien daripada me-load progress per siswa
+        $allProgress = SubModuleProgress::where('kelas_id', $kelas->id)
+            // Ubah collection menjadi array asosiatif 2D
+            // Kuncinya adalah "user_id"_"sub_module_id"
+            ->get()
+            ->keyBy(function ($item) {
+                return $item->user_id . '_' . $item->sub_module_id;
+            });
+
+        // 4. Kirim data ke view
+        return view('kelas.show', [
+            'kelas' => $kelas,
+            'students' => $kelas->students,       // Daftar siswa (untuk Baris)
+            'subModules' => $gradableSubModules, // Daftar kolom tugas (untuk Kolom)
+            'allProgress' => $allProgress,     // Semua data nilai (untuk Sel)
+        ]);
+    }
+
+    /**
+     * [BARU] Menyimpan nilai dan feedback dari modal Gradebook.
+     */
+    public function saveGrade(Request $request)
+    {
+        // 1. Validasi input
+        $request->validate([
+            'student_id' => 'required|exists:users,id',
+            'sub_module_id' => 'required|exists:sub_modules,id',
+            'kelas_id' => 'required|exists:kelas,id',
+            'score' => 'required|integer|min:0',
+            'feedback' => 'nullable|string',
+        ]);
+
+        try {
+            // 2. Cari SubModul untuk Poin Maks
+            $subModule = SubModule::find($request->sub_module_id);
+            if ($request->score > $subModule->max_points) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Nilai tidak boleh melebihi poin maksimal (' . $subModule->max_points . ').'
+                ], 422); // Unprocessable Entity
+            }
+
+            // 3. Update atau buat data progress
+            $progress = SubModuleProgress::updateOrCreate(
+                [
+                    'user_id' => $request->student_id,
+                    'sub_module_id' => $request->sub_module_id,
+                    'kelas_id' => $request->kelas_id,
+                ],
+                [
+                    'score' => $request->score,
+                    'feedback' => $request->feedback,
+                    // Jika siswa belum 'selesai' tapi dinilai, anggap selesai
+                    'completed_at' => now(),
+                ]
+            );
+
+            // 4. Kirim respons sukses
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Nilai berhasil disimpan.',
+                'new_cell_text' => $progress->score . ' / ' . $subModule->max_points,
+                'student_id' => $progress->user_id,
+            ]);
+
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Terjadi kesalahan server: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+
+    /**
+     * [DIPERBAIKI] Mengambil detail submission siswa untuk ditampilkan di modal Gradebook.
+     * Menggunakan kolom 'user_id' yang benar untuk ForumPost.
+     */
+    public function getSubmissionDetails(Request $request)
+    {
+        $request->validate([
+            'student_id' => 'required|exists:users,id',
+            'sub_module_id' => 'required|exists:sub_modules,id',
+            'kelas_id' => 'required|exists:kelas,id',
+        ]);
+
+        $studentId = $request->query('student_id');
+        $subModuleId = $request->query('sub_module_id');
+        $kelasId = $request->query('kelas_id');
+        $subModule = SubModule::find($subModuleId);
+
+        $html = '';
+
+        try {
+            switch ($subModule->type) {
+
+                case 'reflection':
+                    // ... (Logika refleksi Anda sudah benar) ...
+                    $questionIds = ReflectionQuestion::where('sub_module_id', $subModuleId)->pluck('id');
+                    $answers = ReflectionAnswer::where('student_id', $studentId)
+                               ->whereIn('reflection_question_id', $questionIds)
+                               ->with('question')->get();
+                    if ($answers->isNotEmpty()) {
+                        $html = '<h5>Jawaban Refleksi Siswa:</h5><ul class="list-group list-group-flush">';
+                        foreach ($answers as $answer) {
+                            $html .= '<li class="list-group-item p-2" style="font-size: 0.9em;">';
+                            $html .= '<strong>' . e($answer->question->question_text ?? 'Pertanyaan') . ':</strong>';
+                            $html .= '<div class="rich-text-content border-start ps-2 mt-1">' . $answer->answer_text . '</div>';
+                            $html .= '</li>';
+                        }
+                        $html .= '</ul>';
+                    } else {
+                        $html = '<p class="text-muted text-center">Siswa belum mengirimkan refleksi.</p>';
+                    }
+                    break;
+
+                case 'practicum':
+                    // ... (Logika praktikum Anda sudah benar) ...
+                    $submissions = PracticumSubmission::where('student_id', $studentId)
+                                    ->whereHas('slot', fn($q) => $q->where('sub_module_id', $subModuleId))
+                                    ->with('slot')->get();
+                    if ($submissions->isNotEmpty()) {
+                        $chartData = [];
+                        $fileListHtml = '<ul>';
+                        foreach ($submissions as $sub) {
+                            $fileListHtml .= '<li><i class="fa fa-file-csv text-success"></i> ' . e($sub->original_filename) . '</li>';
+                            $url = Storage::url($sub->file_path);
+                            $chartData[] = ['label' => e($sub->slot->label), 'url' => $url];
+                        }
+                        $fileListHtml .= '</ul>';
+                        $html = '<h5><i class="fa fa-chart-line"></i> Pratinjau Grafik</h5>';
+                        $html .= '<div class="chart-container mb-3" style="position: relative; height:300px; background-color:#fff; border: 1px solid #ddd; padding: 5px; border-radius: 5px;"><canvas id="gradebookChartCanvas"></canvas></div>';
+                        $html .= '<button type="button" class="btn btn-primary btn-sm w-100" id="loadGradebookChartBtn" data-json="' . e(json_encode($chartData)) . '"><i class="fa fa-sync-alt"></i> Muat / Ulangi Grafik</button>';
+                        $html .= '<hr><h5>File yang Diunggah:</h5>' . $fileListHtml;
+                    } else {
+                        $html = '<p class="text-muted text-center">Siswa belum mengunggah file praktikum.</p>';
+                    }
+                    break;
+
+                // [BLOK YANG DIPERBAIKI]
+                case 'forum':
+                    // 1. Dapatkan ID tim (Logika ini sudah benar)
+                    $proTeamIds = ForumTeam::where('sub_module_id', $subModuleId)
+                                    ->where('kelas_id', $kelasId)
+                                    ->where('team', 'pro')
+                                    ->pluck('user_id');
+
+                    $kontraTeamIds = ForumTeam::where('sub_module_id', $subModuleId)
+                                    ->where('kelas_id', $kelasId)
+                                    ->where('team', 'kontra')
+                                    ->pluck('user_id');
+
+                    // 2. Dapatkan semua postingan utama (bukan balasan)
+                    $proPosts = ForumPost::where('sub_module_id', $subModuleId)
+                                    ->where('kelas_id', $kelasId) // <-- [FIX #2] Filter berdasarkan kelas
+                                    ->whereIn('user_id', $proTeamIds)
+                                    ->whereNull('parent_post_id') // <-- [FIX #1] Ganti nama kolom
+                                    ->with('user', 'replies.user')
+                                    ->orderBy('created_at', 'asc')
+                                    ->get();
+
+                    $kontraPosts = ForumPost::where('sub_module_id', $subModuleId)
+                                    ->where('kelas_id', $kelasId) // <-- [FIX #2] Filter berdasarkan kelas
+                                    ->whereIn('user_id', $kontraTeamIds)
+                                    ->whereNull('parent_post_id') // <-- [FIX #1] Ganti nama kolom
+                                    ->with('user', 'replies.user')
+                                    ->orderBy('created_at', 'asc')
+                                    ->get();
+
+                    // 3. Bangun HTML (Logika ini sudah benar)
+                    $html = '<div class="row">';
+                    $html .= '<div class="col-6"><h5 class="text-success text-center">Tim PRO</h5><div class="forum-column">';
+                    if ($proPosts->isEmpty()) {
+                        $html .= '<p class="text-muted text-center small">Belum ada postingan.</p>';
+                    }
+                    foreach ($proPosts as $post) {
+                        $highlightClass = ($post->user_id == $studentId) ? 'post-highlight' : '';
+                        $html .= self::buildForumPostHtml($post, $studentId, $highlightClass);
+                    }
+                    $html .= '</div></div>';
+
+                    $html .= '<div class="col-6"><h5 class="text-danger text-center">Tim KONTRA</h5><div class="forum-column">';
+                    if ($kontraPosts->isEmpty()) {
+                        $html .= '<p class="text-muted text-center small">Belum ada postingan.</p>';
+                    }
+                    foreach ($kontraPosts as $post) {
+                        $highlightClass = ($post->user_id == $studentId) ? 'post-highlight' : '';
+                        $html .= self::buildForumPostHtml($post, $studentId, $highlightClass);
+                    }
+                    $html .= '</div></div>';
+                    $html .= '</div>';
+                    break;
+
+                default:
+                    $html = '<p class="text-muted text-center">Tipe sub-modul ini tidak memiliki pratinjau submission.</p>';
+            }
+
+            return response()->json(['html' => $html]);
+
+        } catch (Exception $e) {
+            return response()->json([
+                'html' => '<div class="alert alert-danger">Gagal memuat data: ' . $e->getMessage() . '</div>'
+            ], 500);
+        }
+    }
+
+    /**
+     * [FUNGSI HELPER BARU]
+     * Fungsi private untuk membangun HTML postingan forum.
+     * Ini akan membuat method 'getSubmissionDetails' lebih bersih.
+     */
+    private static function buildForumPostHtml($post, $studentId, $highlightClass = '')
+    {
+        $html = '<div class="forum-post ' . $highlightClass . '">';
+        $html .= '<div><span class="post-author">' . e($post->user->name) . '</span> <small class="text-muted">(' . $post->created_at->format('d M H:i') . ')</small></div>';
+        $html .= '<div class="rich-text-content mt-1">' . $post->content . '</div>';
+
+        // Tampilkan balasan
+        if ($post->replies->isNotEmpty()) {
+            foreach ($post->replies as $reply) {
+                // Highlight balasan jika ID user cocok
+                $replyHighlight = ($reply->user_id == $studentId) ? 'post-highlight' : '';
+                $html .= '<div class="forum-reply ' . $replyHighlight . '">';
+                $html .= '<div><span class="reply-author">' . e($reply->user->name) . '</span> <small class="text-muted">(' . $reply->created_at->format('d M H:i') . ')</small></div>';
+                $html .= '<div class="rich-text-content mt-1">' . $reply->content . '</div>';
+                $html .= '</div>'; // Tutup forum-reply
+            }
+        }
+        $html .= '</div>'; // Tutup forum-post
+        return $html;
     }
 
     public function showForums(Kelas $kelas)
