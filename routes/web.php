@@ -54,7 +54,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/', [App\Http\Controllers\ProfileController::class, 'index'])->name('profile.index');
         Route::get('/ubah', [App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
         Route::put('/update', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
-        Route::get('/delete-foto', [App\Http\Controllers\ProfileController::class, 'delete_foto'])->name('profile.delete-foto');
+        Route::delete('/delete-foto', [App\Http\Controllers\ProfileController::class, 'delete_foto'])->name('profile.delete-foto');
     });
 
     Route::group(['prefix' => 'pengguna', 'middleware' => ['role:admin,guru']], function () {

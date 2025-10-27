@@ -1,131 +1,73 @@
 @extends('layouts.app')
+
 @section('title')
 Profile
 @endsection
+
 @section('content')
 @include('swal')
 <section class="main-content mt-0">
-    <!-- ROW-1 OPEN -->
     <div class="row" id="user-profile">
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-body">
                     <div class="wideget-user">
                         <div class="row">
-                            <div class="col-lg-12 col-md-12 col-xl-6">
-                                <div class="wideget-user-desc text-xl-right">
-                                    <div class="wideget-user-img">
-                                        @if($user->profile && $user->profile->foto)
-                                            <img class="" style="height:300px; width:300px" src="{{ asset('storage/' . $user->profile?->foto) }}" alt="Foto Profil">
-                                         @else
-                                            <img class="" style="height:300px; width:300px" src="{{ asset('assets/images/users/default.jpg') }}" alt="Foto Profil">
-                                        @endif
-                                    </div>
+                            <div class="col-lg-12 col-md-12 col-xl-4 d-flex justify-content-center align-items-center mb-4 mb-xl-0">
+                                <div class="wideget-user-img">
+                                    @if($user->profile && $user->profile->foto)
+                                        <img class="rounded-circle shadow-sm" style="height:250px; width:250px; object-fit: cover;"
+                                             src="{{ asset('storage/' . $user->profile?->foto) }}" alt="Foto Profil">
+                                     @else
+                                        <img class="rounded-circle shadow-sm" style="height:250px; width:250px; object-fit: cover;"
+                                             src="{{ asset('assets/images/users/default.jpg') }}" alt="Foto Profil">
+                                    @endif
                                 </div>
                             </div>
-                            <div class="col-lg-12 col-md-12 col-xl-6">
-                                <div class="user-wrap">
+                            <div class="col-lg-12 col-md-12 col-xl-8">
+                                <div class="user-wrap mt-xl-5">
                                     <h3>{{ $user->name ?? 'Guest' }}</h3>
                                     <h5 class="text-muted mb-3">{{ $user->roles->first()->name ?? 'Tanpa Role' }}</h5>
-                                    {{-- <a href="javascript:void(0);" class="btn btn-primary mt-1 mb-1"><i class="fa fa-rss"></i> Follow</a>
-                                    <a href="emailservices.html" class="btn btn-secondary mt-1 mb-1"><i class="fa fa-envelope"></i> E-mail</a> --}}
                                 </div>
-                                <div class="text-xl-left mt-4 mt-xl-0">
-                                    <a href="{{route('profile.edit')}}" class="btn btn-lg btn-primary mb-1">Edit Profile</a>
+                                <div class="mt-4">
+                                    <a href="{{route('profile.edit')}}" class="btn btn-lg btn-primary">
+                                        <i class="fe fe-edit me-1"></i> Edit Profile
+                                    </a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="border-top">
-                    <div class="wideget-user-tab">
-                        <div class="tab-menu-heading">
-                            <div class="tabs-menu1">
-                                <ul class="nav">
-                                    <li class=""><a href="#tab-51" class="active show" data-bs-toggle="tab">Profile</a></li>
-                                    {{-- <li><a href="#tab-61" data-bs-toggle="tab" class="">Friends</a></li>
-                                    <li><a href="#tab-71" data-bs-toggle="tab" class="">Gallery</a></li>
-                                    <li><a href="#tab-81" data-bs-toggle="tab" class="">Followers</a></li> --}}
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
                 </div>
-            </div>
-            <div class="tab-content">
-                <div class="tab-pane active show" id="tab-51">
-                    <div id="profile-log-switch">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="media-heading">
-                                    <h5><strong>Informasi Pribadi</strong></h5>
-                                </div>
-                                <div class="table-responsive ">
-                                    <table class="table row table-borderless">
-                                        <tbody class="col-lg-12 col-xl-6 p-0">
-                                            <tr>
-                                                <td><strong>Nama Lengkap </strong></td>
-                                                <td>: {{$user->name}}</td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong>Asal Sekolah </strong></td>
-                                                <td>: {{$user->profile?->asal_sekolah}}</td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong>No. HP </strong></td>
-                                                <td>: {{$user->profile?->nomor_hp}}</td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong>Email </strong></td>
-                                                <td>: {{$user->email}}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="media-heading mb-3">
+                        <h5><strong>Informasi Pribadi</strong></h5>
+                    </div>
+
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            <span class="fw-bold text-muted">Nama Lengkap</span>
+                            <span class="text-end">{{ $user->name }}</span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            <span class="fw-bold text-muted">Asal Sekolah</span>
+                            <span class="text-end">{{ $user->profile?->asal_sekolah ?? '-' }}</span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            <span class="fw-bold text-muted">No. HP</span>
+                            <span class="text-end">{{ $user->profile?->nomor_hp ?? '-' }}</span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            <span class="fw-bold text-muted">Email</span>
+                            <span class="text-end">{{ $user->email }}</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- COL-END -->
-    </div>
-    <!-- ROW-1 CLOSED -->
-</section>
+        </div>
+    </section>
 @endsection
 
-@push('js')
-<script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
-<script src="{{asset('assets/vendor_components/select2/dist/js/select2.min.js')}}"></script>
-<script src="{{asset('assets/plugins/sweetalert/sweetalert.min.js')}}"></script>
-<script>
-    $(function() {
-        "use strict";
-        $('#data').DataTable();
-    });
-
-
-
-
-
-    // Hapus data
-    function deleteRuang(id) {
-        Swal.fire({
-            title: 'Delete Data',
-            text: "Apakah anda yakin ingin menghapus data?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Lanjutkan',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                document.getElementById('delete-form-' + id).submit();
-            }
-        })
-    }
-
-   
-</script>
-@endpush

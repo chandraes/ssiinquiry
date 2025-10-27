@@ -27,7 +27,7 @@ class ProfileController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request)
+   public function update(Request $request)
     {
         $user = Auth::user();
 
@@ -39,42 +39,48 @@ class ProfileController extends Controller
         ]);
 
         try {
+            // ... (Logika update Anda sudah benar semua) ...
             $profile = ProfileUser::firstOrNew(['user_id' => $user->id]);
 
-            // Upload foto baru
             if ($request->hasFile('foto')) {
-                // Hapus foto lama jika ada
                 if ($profile->foto && Storage::disk('public')->exists($profile->foto)) {
                     Storage::disk('public')->delete($profile->foto);
                 }
-
                 $file = $request->file('foto');
                 $extension = $file->getClientOriginalExtension();
-
-                // Nama file menggunakan nama user
                 $fileName = Str::slug($user->name) . '_' . date('Ymd_His') . '.' . $extension;
-
-                // Simpan ke folder foto di disk 'public'
                 $path = $file->storeAs('foto', $fileName, 'public');
-
-                // Simpan path ke database
                 $profile->foto = $path;
             }
 
-            // Update data profil
             $profile->nomor_hp = $request->nomor_hp;
             $profile->asal_sekolah = $request->asal_sekolah;
             $profile->user_id = $user->id;
             $profile->save();
 
-            // Update password jika diisi
             if ($request->filled('password')) {
                 $user->password = Hash::make($request->password);
                 $user->save();
             }
 
+            // PERUBAHAN DI SINI: Cek jika ini request AJAX
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Profil berhasil diperbarui!'
+                ]);
+            }
+
             return redirect()->back()->with('success', 'Profil berhasil diperbarui!');
+
         } catch (\Exception $e) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+                ], 500);
+            }
+
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }

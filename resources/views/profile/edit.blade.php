@@ -15,22 +15,28 @@ Edit Profile
                     <div class="card-title">Edit Profil</div>
                 </div>
 
-                <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" id="profileUpdateForm">
                     @csrf
                     @method('PUT')
 
                     <div class="card-body">
-                        <div class="d-flex mb-5 align-items-center">
-                            <div class="position-relative mx-2">
-                                @if($user->profile && $user->profile->foto)
-                                    <img style="width: 300px; height: 300px;" src="{{ asset('storage/' . $user->profile->foto) }}"
-                                    class="avatar-xl"
-                                    alt="Foto Profil">
-                                @else
-                                    <img style="width: 300px; height: 300px;" src="{{ asset('assets/images/users/default.jpg') }}" class="avatar-xl" alt="Default Foto">
-                                @endif
+                        <div class="row align-items-center mb-5">
+                            <div class="col-lg-3 text-center">
+                                <div class="position-relative d-inline-block">
+                                    @if($user->profile && $user->profile->foto)
+                                        <img style="width: 200px; height: 200px; object-fit: cover;"
+                                             src="{{ asset('storage/' . $user->profile->foto) }}"
+                                             class="rounded-circle shadow"
+                                             alt="Foto Profil" id="preview-foto">
+                                    @else
+                                        <img style="width: 200px; height: 200px; object-fit: cover;"
+                                             src="{{ asset('assets/images/users/default.jpg') }}"
+                                             class="rounded-circle shadow"
+                                             alt="Default Foto" id="preview-foto">
+                                    @endif
+                                </div>
                             </div>
-                            <div class="ms-auto mt-xl-2 mt-lg-0 me-lg-2">
+                            <div class="col-lg-9 mt-4 mt-lg-0">
                                 <label class="btn btn-primary btn-lg mt-1 mb-1">
                                     <i class="fe fe-camera me-1"></i> Ganti Foto
                                     <input type="file" name="foto" class="d-none" accept="image/*" onchange="previewImage(event)">
@@ -39,66 +45,72 @@ Edit Profile
                                 @if($user->profile && $user->profile->foto)
                                     <a href="javascript:void(0);"
                                         class="btn btn-danger btn-lg mt-1 mb-1"
-                                        id="hapusFotoBtn"
-                                        data-url="{{ route('profile.delete-foto') }}">
-                                        <i class="fe fe-camera-off me-1 float-start"></i>Hapus Foto
+                                        id="hapusFotoBtn">
+                                        <i class="fe fe-camera-off me-1"></i> Hapus Foto
                                     </a>
                                 @endif
+                                <p class="text-muted mt-2">Format: JPG, JPEG, atau PNG. Ukuran maks: 2MB.</p>
                             </div>
                         </div>
 
-                        <div class="form-group mb-3">
-                            <label class="form-label">Nama Lengkap</label>
-                            <input type="text" class="form-control" value="{{ $user->name }}" disabled>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="name" value="{{ $user->name }}" disabled>
+                            <label for="name">Nama Lengkap</label>
                         </div>
 
-                        <div class="form-group mb-3">
-                            <label class="form-label">Asal Sekolah</label>
-                            <input
-                                type="text"
-                                class="form-control"
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="asal_sekolah"
                                 name="asal_sekolah"
                                 value="{{ old('asal_sekolah', $user->profile->asal_sekolah ?? '') }}"
                                 placeholder="Masukkan asal sekolah">
+                            <label for="asal_sekolah">Asal Sekolah</label>
                         </div>
 
-                        <div class="form-group mb-3">
-                            <label class="form-label">Nomor HP</label>
-                            <input
-                                type="text"
-                                class="form-control"
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="nomor_hp"
                                 name="nomor_hp"
                                 value="{{ old('nomor_hp', $user->profile->nomor_hp ?? '') }}"
                                 placeholder="Masukkan nomor HP">
+                            <label for="nomor_hp">Nomor HP</label>
                         </div>
 
                         <hr class="my-4">
 
-                        <div class="form-group mb-3">
-                            <label class="form-label">Password Baru</label>
-                            <input type="password" name="password" class="form-control" placeholder="Masukkan password baru">
+                        <h5 class="mb-3">Ubah Password (Opsional)</h5>
+                        <p class="text-muted">Kosongkan jika Anda tidak ingin mengubah password.</p>
+
+                        <div class="form-floating mb-3">
+                            <input type="password" name="password" class="form-control" id="password" placeholder="Masukkan password baru">
+                            <label for="password">Password Baru</label>
                         </div>
 
-                        <div class="form-group mb-3">
-                            <label class="form-label">Konfirmasi Password Baru</label>
-                            <input type="password" name="password_confirmation" class="form-control" placeholder="Ulangi password baru">
+                        <div class="form-floating mb-3">
+                            <input type="password" name="password_confirmation" class="form-control" id="password_confirmation" placeholder="Ulangi password baru">
+                            <label for="password_confirmation">Konfirmasi Password Baru</label>
                         </div>
                     </div>
 
                     <div class="card-footer text-end">
-                        <button type="submit" class="btn btn-lg btn-primary">Simpan Perubahan</button>
                         <a href="{{ url()->previous() }}" class="btn btn-lg btn-danger">Batal</a>
+                        <button type="submit" class="btn btn-lg btn-primary">Simpan Perubahan</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </section>
+
+<form id="delete-foto-form" action="{{ route('profile.delete-foto') }}" method="POST" class="d-none">
+    @csrf
+    @method('DELETE')
+</form>
+
 @endsection
 
 @push('js')
 <script src="{{ asset('assets/plugins/sweetalert/sweetalert.min.js') }}"></script>
 <script>
+// Fungsi Pratinjau Gambar (Bug sudah diperbaiki dengan 'id' di HTML)
 function previewImage(event) {
     const reader = new FileReader();
     reader.onload = function(){
@@ -108,9 +120,8 @@ function previewImage(event) {
     reader.readAsDataURL(event.target.files[0]);
 }
 
+// PERBAIKAN KEAMANAN: Event listener untuk 'Hapus Foto'
 document.getElementById('hapusFotoBtn')?.addEventListener('click', function () {
-    const url = this.dataset.url;
-
     Swal.fire({
         title: "Hapus Foto?",
         text: "Apakah kamu yakin ingin menghapus foto profil ini?",
@@ -122,9 +133,90 @@ document.getElementById('hapusFotoBtn')?.addEventListener('click', function () {
         cancelButtonText: "Batal"
     }).then((result) => {
         if (result.isConfirmed) {
-            window.location.href = url;
+            // Submit form tersembunyi
+            document.getElementById('delete-foto-form').submit();
         }
     });
 });
+
+
+// OPTIMASI: Submit form menggunakan AJAX (Fetch API)
+document.getElementById('profileUpdateForm').addEventListener('submit', function(e) {
+    e.preventDefault(); // Mencegah submit standar
+
+    const form = e.target;
+    const formData = new FormData(form);
+    const submitButton = form.querySelector('button[type="submit"]');
+    const originalButtonText = submitButton.innerHTML;
+
+    // Tampilkan status loading pada tombol
+    submitButton.innerHTML = `
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        Menyimpan...
+    `;
+    submitButton.disabled = true;
+
+    fetch(form.action, {
+        method: 'POST', // Form method spoofing (PUT) akan ditangani oleh '@method('PUT')'
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+            'Accept': 'application/json', // Meminta respon JSON dari controller
+        },
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+             // Jika status code bukan 2xx (misal 422, 500)
+             return response.json().then(err => Promise.reject(err));
+        }
+        return response.json(); // Lanjut jika OK
+    })
+    .then(data => {
+        if (data.success) {
+            Swal.fire({
+                title: 'Berhasil!',
+                text: data.message,
+                icon: 'success',
+                timer: 2000,
+                showConfirmButton: false
+            });
+
+            // Jika password diubah, reload halaman setelah 2 detik
+            if (formData.get('password')) {
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+            }
+        } else {
+            // Menampilkan error dari controller (jika success: false)
+            Swal.fire({
+                title: 'Gagal!',
+                text: data.message || 'Terjadi kesalahan.',
+                icon: 'error',
+            });
+        }
+    })
+    .catch(error => {
+        // Menangani error validasi (422) atau server error (500)
+        let errorMessage = 'Terjadi kesalahan. Silakan coba lagi.';
+        if (error.message) {
+             errorMessage = error.message;
+        }
+        // Jika ada error validasi, Anda bisa meloop 'error.errors' di sini
+
+        Swal.fire({
+            title: 'Oops!',
+            text: errorMessage,
+            icon: 'error'
+        });
+        console.error('Error:', error);
+    })
+    .finally(() => {
+        // Kembalikan tombol ke kondisi semula
+        submitButton.innerHTML = originalButtonText;
+        submitButton.disabled = false;
+    });
+});
+
 </script>
 @endpush
