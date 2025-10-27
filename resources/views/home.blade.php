@@ -43,15 +43,19 @@ Dashboard Siswa
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-status bg-blue br-tr-7 br-tl-7"></div>
                 @php
-                    if ($kelas->modul->image) {
-                        $imageUrl = asset('storage/' . $kelas->modul->image);
-                    } else {
-                        $text = e($kelas->modul->judul);
-                        $svg = '<svg width="400" height="180" xmlns="http://www.w3.org/2000/svg" style="background-color:#e9ecef;"><text x="50%" y="50%" font-family="Arial, sans-serif" font-size="20" fill="#6c757d" text-anchor="middle" dominant-baseline="middle">' . $text . '</text></svg>';
-                        $imageUrl = 'data:image/svg+xml;base64,' . base64_encode($svg);
-                    }
+                if ($kelas->modul->image) {
+                $imageUrl = asset('storage/' . $kelas->modul->image);
+                } else {
+                $text = e($kelas->modul->judul);
+                $svg = '<svg width="400" height="180" xmlns="http://www.w3.org/2000/svg"
+                    style="background-color:#e9ecef;"><text x="50%" y="50%" font-family="Arial, sans-serif"
+                        font-size="20" fill="#6c757d" text-anchor="middle" dominant-baseline="middle">' . $text .
+                        '</text></svg>';
+                $imageUrl = 'data:image/svg+xml;base64,' . base64_encode($svg);
+                }
                 @endphp
-                <img src="{{ $imageUrl }}" class="card-img-top" alt="{{ $kelas->modul->judul }}" style="height: 180px; object-fit: cover;">
+                <img src="{{ $imageUrl }}" class="card-img-top" alt="{{ $kelas->modul->judul }}"
+                    style="height: 180px; object-fit: cover;">
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title">{{ $kelas->modul->judul }}</h5>
                     <p class="card-subtitle mb-2 text-muted">
@@ -85,15 +89,19 @@ Dashboard Siswa
         <div class="col-md-6 col-xl-4">
             <div class="card shadow-sm border-0 h-100 bg-light-transparent">
                 @php
-                    if ($modul->image) {
-                        $imageUrl = asset('storage/' . $modul->image);
-                    } else {
-                        $text = e($modul->judul);
-                        $svg = '<svg width="400" height="180" xmlns="http://www.w3.org/2000/svg" style="background-color:#f8f9fa;"><text x="50%" y="50%" font-family="Arial, sans-serif" font-size="20" fill="#6c757d" text-anchor="middle" dominant-baseline="middle">' . $text . '</text></svg>';
-                        $imageUrl = 'data:image/svg+xml;base64,' . base64_encode($svg);
-                    }
+                if ($modul->image) {
+                $imageUrl = asset('storage/' . $modul->image);
+                } else {
+                $text = e($modul->judul);
+                $svg = '<svg width="400" height="180" xmlns="http://www.w3.org/2000/svg"
+                    style="background-color:#f8f9fa;"><text x="50%" y="50%" font-family="Arial, sans-serif"
+                        font-size="20" fill="#6c757d" text-anchor="middle" dominant-baseline="middle">' . $text .
+                        '</text></svg>';
+                $imageUrl = 'data:image/svg+xml;base64,' . base64_encode($svg);
+                }
                 @endphp
-                <img src="{{ $imageUrl }}" class="card-img-top" alt="{{ $modul->judul }}" style="height: 180px; object-fit: cover;">
+                <img src="{{ $imageUrl }}" class="card-img-top" alt="{{ $modul->judul }}"
+                    style="height: 180px; object-fit: cover;">
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title">{{ $modul->judul }}</h5>
                     <p class="card-text flex-grow-1">
@@ -122,7 +130,7 @@ Dashboard Siswa
 
     {{-- (Modal 'Tambah Kelas' sudah benar menggunakan @role) --}}
     @role(['admin','guru'])
-        @include('kelas.create')
+    @include('kelas.create')
     @endrole
 
     <div class="row">
@@ -161,12 +169,10 @@ Dashboard Siswa
                                 <div class="card-status bg-blue br-tr-7 br-tl-7"></div>
                                 <div class="card-header">
                                     <h3 class="card-title">{{$m->judul}}</h3>
-                                      @role(['admin','guru'])
+                                    @role(['admin','guru'])
                                     <div class="card-options">
-                                        <a type="button"
-                                            class="btn btn-success btn-icon text-white btn-add-kelas"
-                                            data-modul-id="{{ $m->id }}"
-                                            data-modul-judul="{{ $m->judul }}">
+                                        <a type="button" class="btn btn-success btn-icon text-white btn-add-kelas"
+                                            data-modul-id="{{ $m->id }}" data-modul-judul="{{ $m->judul }}">
                                             <span>
                                                 <i class="fe fe-plus"></i>
                                             </span> Tambah Kelas
@@ -176,15 +182,19 @@ Dashboard Siswa
                                 </div>
 
                                 @php
-                                    if ($m->image) {
-                                        $imageUrl = asset('storage/' . $m->image);
-                                    } else {
-                                        $text = e($m->judul);
-                                        $svg = '<svg width="400" height="180" xmlns="http://www.w3.org/2000/svg" style="background-color:#e9ecef;"><text x="50%" y="50%" font-family="Arial, sans-serif" font-size="20" fill="#6c757d" text-anchor="middle" dominant-baseline="middle">' . $text . '</text></svg>';
-                                        $imageUrl = 'data:image/svg+xml;base64,' . base64_encode($svg);
-                                    }
+                                if ($m->image) {
+                                $imageUrl = asset('storage/' . $m->image);
+                                } else {
+                                $text = e($m->judul);
+                                $svg = '<svg width="400" height="180" xmlns="http://www.w3.org/2000/svg"
+                                    style="background-color:#e9ecef;"><text x="50%" y="50%"
+                                        font-family="Arial, sans-serif" font-size="20" fill="#6c757d"
+                                        text-anchor="middle" dominant-baseline="middle">' . $text . '</text></svg>';
+                                $imageUrl = 'data:image/svg+xml;base64,' . base64_encode($svg);
+                                }
                                 @endphp
-                                <img src="{{ $imageUrl }}" class="card-img-top" alt="{{ $m->judul }}" style="height: 180px; object-fit: cover;">
+                                <img src="{{ $imageUrl }}" class="card-img-top" alt="{{ $m->judul }}"
+                                    style="height: 180px; object-fit: cover;">
 
                                 <div class="row card-body text-center justify-content-center">
                                     <strong class="text-start">Deskripsi :</strong>
@@ -192,17 +202,17 @@ Dashboard Siswa
 
                                     @php $phyphoxIds = $m->phyphox_id ?? []; @endphp
                                     @if (!empty($phyphoxIds))
-                                        <strong class="text-start">Alat :</strong>
-                                        @foreach ($phyphoxIds as $phyphoxId)
-                                            @if(isset($allPhyphoxTools[$phyphoxId]))
-                                                @php $phyphox = $allPhyphoxTools[$phyphoxId]; @endphp
-                                                <div class="col-md-12 ">
-                                                    <p class="mb-1">{{ $phyphox->nama }} ({{ $phyphox->kategori }})</p>
-                                                </div>
-                                            @endif
-                                        @endforeach
+                                    <strong class="text-start">Alat :</strong>
+                                    @foreach ($phyphoxIds as $phyphoxId)
+                                    @if(isset($allPhyphoxTools[$phyphoxId]))
+                                    @php $phyphox = $allPhyphoxTools[$phyphoxId]; @endphp
+                                    <div class="col-md-12 ">
+                                        <p class="mb-1">{{ $phyphox->nama }} ({{ $phyphox->kategori }})</p>
+                                    </div>
+                                    @endif
+                                    @endforeach
                                     @else
-                                        <p class="text-muted">Tidak ada alat Phyphox terkait.</p>
+                                    <p class="text-muted">Tidak ada alat Phyphox terkait.</p>
                                     @endif
                                 </div>
                                 <div class="card-footer text-center">
@@ -211,11 +221,12 @@ Dashboard Siswa
                                     @else
                                     <p class="text-primary mb-1"><strong>Daftar Kelas :</strong></p>
                                     @foreach($m->kelas as $k)
-                                    <div class="col-md-12">
+                                    <div class="d-grid d-md-block col-12 mt-1 mb-1">
                                         <a href="{{ route('kelas.show', $k->id) }}" type="button"
-                                            class="btn btn-info  mt-1 mb-1 me-3">
+                                            class="btn btn-info text-start d-flex justify-content-between align-items-center">
                                             <span>{{ $k->nama_kelas }}</span>
-                                            <span class="badge bg-white rounded-pill">{{ $k->peserta_count }}</span>
+                                            <span class="badge bg-white rounded-pill text-dark">{{ $k->peserta_count
+                                                }}</span>
                                         </a>
                                     </div>
                                     @endforeach
