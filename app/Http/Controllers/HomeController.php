@@ -22,57 +22,59 @@ class HomeController extends Controller
     }
 
     /**
-     * Show the application dashboard based on user role.
-     * @return \Illuminate\Contracts\Support\Renderable
+     * [DIPERBAIKI & DIOPTIMALKAN]
+     * Mengatasi N+1 Query dari 'relatedPhyphox' dengan manual eager-loading.
      */
     public function index()
     {
-        $userLogin = Auth::user()->load('roles'); // Muat relasi roles
-        $viewData = ['userLogin' => $userLogin]; // Data dasar untuk semua view
+        $userLogin = Auth::user();
+        $data = ['userLogin' => $userLogin];
 
-        // Cek Role (Asumsi Anda punya relasi 'roles' di model User)
-        // Sesuaikan 'Siswa', 'Administrator', 'Guru' dengan nama role Anda
-        if ($userLogin->roles->contains('name', 'Siswa')) {
-
-            // ======================================
-            // LOGIKA UNTUK SISWA
-            // ======================================
-
-            // 1. Ambil "Kelas Saya" (Gunakan relasi 'kelas' dari model User)
-            // Kita juga eager load 'modul' agar efisien
-            $myClasses = $userLogin->kelas()->with('modul')->latest()->get();
-            $viewData['myClasses'] = $myClasses;
-
-            // 2. Ambil "Modul Lain"
-            $myEnrolledModulIds = $myClasses->pluck('modul.id')->unique();
-            $allOtherModules = Modul::whereNotIn('id', $myEnrolledModulIds)->latest()->get();
-            $viewData['allOtherModules'] = $allOtherModules;
-
-        } elseif ($userLogin->roles->contains('name', 'Administrator') || $userLogin->roles->contains('name', 'Guru')) {
-
-            // ======================================
-            // LOGIKA UNTUK ADMIN & GURU
-            // ======================================
-
-            // Data yang sudah Anda load sebelumnya
-            $viewData['phyphox'] = Phyphox::where('is_active', '1')->get();
-            $viewData['data'] = Kelas::with(['modul', 'guru'])->latest()->get(); // Ini semua kelas
-            $viewData['modul'] = Modul::with(['kelas', 'kelas.peserta'])->get(); // Ini semua modul
-
-            // $viewData['guru'] = []; // Guru hanya untuk Admin (jika perlu)
-            // if ($userLogin->roles->contains('name', 'Administrator')) {
-            //     $viewData['guru'] = User::whereHas('roles', fn($q) => $q->where('name', 'Guru'))->get();
-            // }
-
-            // Variabel $kelas_siswa sepertinya tidak diperlukan lagi dengan logika baru
-            // $viewData['kelas_siswa'] = ... ;
+        if ($userLogin->hasRole('Siswa')) {
+            // ==================
+            // DATA UNTUK SISWA (Tidak Berubah)
+            // ==================
+            $myClassIds = $userLogin->kelas->pluck('id');
+            $data['myClasses'] = Kelas::whereIn('id', $myClassIds)
+                                    ->with('modul')
+                                    ->get();
+            $myModuleIds = $data['myClasses']->pluck('modul.id');
+            $data['allOtherModules'] = Modul::whereNotIn('id', $myModuleIds)
+                                         ->get();
 
         } else {
-            // Role lain (jika ada), mungkin tampilkan halaman kosong atau pesan error
-            // Atau redirect ke halaman lain
+            // ==================
+            // DATA UNTUK ADMIN & GURU
+            // ==================
+
+            // 1. [OPTIMASI] Ambil modul DAN relasi kelas (dengan jumlah peserta)
+            $moduls = Modul::with([
+                'kelas' => function ($query) {
+                    $query->withCount('peserta');
+                }
+            ])
+            ->latest()
+            ->get();
+
+            // 2. [PERBAIKAN N+1] Ambil semua ID phyphox dari modul
+            $allPhyphoxIds = $moduls->pluck('phyphox_id') // Ambil array [[1,2], [2,3]]
+                                   ->flatten()          // Jadikan [1,2,2,3]
+                                   ->filter()           // Hapus null
+                                   ->unique();          // Jadikan [1,2,3]
+
+            // 3. [PERBAIKAN N+1] Jalankan SATU kueri untuk semua alat Phyphox
+            // Kita gunakan keyBy('id') agar pencarian di view cepat
+            $data['allPhyphoxTools'] = Phyphox::whereIn('id', $allPhyphoxIds)
+                                            ->get()
+                                            ->keyBy('id');
+
+            // 4. Kirim data modul
+            $data['modul'] = $moduls;
+
+            // 5. Data untuk modal 'Tambah Modul'
+            $data['phyphox'] = Phyphox::where('is_active', '1')->get();
         }
 
-        // Kirim semua data yang relevan ke view 'home'
-        return view('home', $viewData);
+        return view('home', $data);
     }
 }

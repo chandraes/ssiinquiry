@@ -76,7 +76,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/search', [App\Http\Controllers\ModulController::class, 'search'])->name('search-guru');
         Route::get('/search-phyphox', [App\Http\Controllers\ModulController::class, 'search_phyphox'])->name('search-phyphox');
 
+        Route::get('/{modul}/json', [ModulController::class, 'showJson'])->name('modul.json');
         Route::get('/{modul}', [ModulController::class, 'show'])->name('modul.show');
+
 
     });
 
@@ -127,6 +129,7 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::get('/{kelas}/forums', [KelasController::class, 'showForums'])->name('kelas.forums');
         Route::get('/{kelas}', [KelasController::class, 'show'])->name('kelas.show');
+        Route::get('/{kelas}/json', [KelasController::class, 'showJson'])->name('kelas.json');
 
         // [BARU] Halaman "manajemen tim" untuk 1 forum spesifik di 1 kelas spesifik
         Route::get('/{kelas}/forum/{subModule}/teams', [ForumTeamController::class, 'index'])->name('kelas.forum.teams');

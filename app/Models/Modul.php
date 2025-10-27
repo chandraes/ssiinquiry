@@ -41,7 +41,7 @@ class Modul extends Model
     {
         return $this->hasMany(SubModule::class, 'modul_id');
     }
-    
+
     public function getRelatedPhyphoxAttribute()
     {
         // Pastikan kolom phyphox_id memiliki nilai dan berbentuk array

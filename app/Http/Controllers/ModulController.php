@@ -2,28 +2,51 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Role;
 use App\Models\User;
 use App\Models\Modul;
 use App\Models\Phyphox;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class ModulController extends Controller
 {
-    /**
-     * [DIUBAH] Menampilkan halaman daftar modul (Card View)
-     */
     public function index()
     {
-        $userLogin = auth()->user();
-        $moduls = Modul::latest()->get(); // Ambil semua modul
+        $userLogin = Auth::user();
 
-        // Variabel ini dibutuhkan oleh modal 'modul.create'
-        $phyphox = Phyphox::where('is_active', '1')->get(); // Sesuaikan jika perlu
-        // dd($phyphox);
+        // Mulai query
+        $query = Modul::query();
+
+        // 1. [OPTIMASI] Filter berdasarkan Role
+        // if ($userLogin->roles->contains('name', 'Guru') && !$userLogin->roles->contains('name', 'Administrator')) {
+        //     // Jika HANYA guru, tampilkan modul yang terhubung dengannya
+        //     // (Menggunakan relasi 'moduls' dari model User)
+        //     $query->whereHas('users', function ($q) use ($userLogin) {
+        //         $q->where('user_id', $userLogin->id);
+        //     });
+        // }
+
+        // 2. [OPTIMASI] Eager Load relasi & Hitung jumlah kelas
+        // Asumsi Model 'Modul' Anda memiliki relasi 'hasMany(Kelas::class)'
+        $moduls = $query->withCount('kelas') // Membuat properti 'kelas_count'
+                       ->latest()
+                       ->get();
+
+        // Variabel ini dibutuhkan oleh modal 'modul.create' (Sudah benar)
+        $phyphox = Phyphox::where('is_active', '1')->get();
 
         return view('modul.index', compact('moduls', 'userLogin', 'phyphox'));
+    }
+
+    public function showJson(Modul $modul)
+    {
+        return response()->json([
+            'id' => $modul->id,
+            'judul' => $modul->getTranslations('judul'), // Kirim {en, id}
+            'deskripsi' => $modul->getTranslations('deskripsi'), // Kirim {en, id}
+            // Tambahkan field lain yang Anda perlukan di modal edit
+        ]);
     }
 
     /**

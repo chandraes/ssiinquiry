@@ -1,92 +1,52 @@
-<div class="modal fade" id="createModalKelas" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
-    aria-labelledby="createModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
+{{--
+File: resources/views/kelas/create.blade.php
+[DIPERBAIKI] Modal ini sekarang memiliki ID statis dan hidden input
+--}}
+
+<div class="modal fade" id="createModalKelas" tabindex="-1" role="dialog" aria-labelledby="createModalKelasLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="createModalLabel">
-                    {{-- [DIUBAH] --}}
-                    {{ __('admin.kelas_modal.add_title') }}
+                <h5 class="modal-title" id="createModalKelasLabel">
+                    Tambah Kelas Baru untuk:
+                    <strong id="createModalKelasJudul" class="text-primary">...</strong>
                 </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
             </div>
-            <form action="{{ route('kelas.store') }}" method="post" id="storeFormKelas">
-                @csrf
-                <div class="modal-body">
-                    <div class="col-md-12 mb-3">
-                        <div class="form-group">
-                            {{-- [DIUBAH] --}}
-                            <label for="modul_id" class="form-label">{{ __('admin.kelas_modal.select_module') }}</label>
-                            <select name="modul_id" id="modul_id" class="form-control"
-                                style="width: 100%; border-color:darkgrey">
-                                {{-- [DIUBAH] --}}
-                                <option value="" disabled {{ old('modul_id') ? '' : 'selected' }}>{{ __('admin.kelas_modal.module_placeholder') }}</option>
-                                @foreach ($modul as $m)
-                                    <option value="{{ $m->id }}" {{ (string) old('modul_id') === (string) $m->id ? 'selected' : '' }}>
-                                        {{-- [PERBAIKAN KRITIS] Menggunakan Spatie, bukan kolom _id/_en --}}
-                                        {{ $m->judul }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
+            <div class="modal-body">
+                <form id="storeFormKelas" action="{{ route('kelas.store') }}" method="POST">
+                    @csrf
+
+                    {{-- [BARU] Hidden input untuk Modul ID, diisi oleh JS --}}
+                    <input type="hidden" name="modul_id" id="modul_id_for_kelas" value="">
+
+                    {{-- Nama Kelas (ID) --}}
+                    <div class="form-group mb-3">
+                        <label for="nama_kelas_id" class="form-label">Nama Kelas (Bahasa Indonesia)</label>
+                        <input type="text" class="form-control" id="nama_kelas_id" name="nama_kelas[id]" required>
                     </div>
 
-                    <ul class="nav nav-tabs mb-3" id="kelasLangTabs" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="kelas-id-tab" data-bs-toggle="tab" data-bs-target="#kelas-id-pane" type="button" role="tab">
-                                Indonesia (ID)
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="kelas-en-tab" data-bs-toggle="tab" data-bs-target="#kelas-en-pane" type="button" role="tab">
-                                English (EN)
-                            </button>
-                        </li>
-                    </ul>
-
-                    <div class="tab-content" id="kelasLangTabsContent">
-                        {{-- Tab Bahasa Indonesia --}}
-                        <div class="tab-pane fade show active" id="kelas-id-pane" role="tabpanel">
-                            <div class="col-md-12 mb-3">
-                                <div class="form-group">
-                                    {{-- [DIUBAH] --}}
-                                    <label for="nama_kelas_id" class="form-label">{{ __('admin.kelas_modal.class_name_id') }}</label>
-                                    {{-- Perhatikan name="nama_kelas[id]" --}}
-                                    <input type="text" name="nama_kelas[id]" id="nama_kelas_id" required class="form-control" style="border-color:darkgrey">
-                                </div>
-                            </div>
-                        </div>
-                        {{-- Tab Bahasa Inggris --}}
-                        <div class="tab-pane fade" id="kelas-en-pane" role="tabpanel">
-                            <div class="col-md-12 mb-3">
-                                <div class="form-group">
-                                    {{-- [DIUBAH] --}}
-                                    <label for="nama_kelas_en" class="form-label">{{ __('admin.kelas_modal.class_name_en') }}</label>
-                                    {{-- Perhatikan name="nama_kelas[en]" --}}
-                                    <input type="text" name="nama_kelas[en]" id="nama_kelas_en" required class="form-control" style="border-color:darkgrey">
-                                </div>
-                            </div>
-                        </div>
+                    {{-- Nama Kelas (EN) --}}
+                    <div class="form-group mb-3">
+                        <label for="nama_kelas_en" class="form-label">Nama Kelas (English)</label>
+                        <input type="text" class="form-control" id="nama_kelas_en" name="nama_kelas[en]" required>
                     </div>
-                    @if ($isAdmin)
-                        <div class="col-md-12 mb-3">
-                            <div class="form-group">
-                                {{-- [DIUBAH] --}}
-                                <label for="guru_id" class="form-label">{{ __('admin.kelas_modal.select_teacher') }}</label>
-                                <select name="guru_id" id="guru_id" class="form-control"
-                                    style="width: 100%; border-color:darkgrey">
 
-                                </select>
-                            </div>
-                        </div>
-                    @endif
-                </div>
+                    {{-- Guru Pengajar (Select2) --}}
+                    <div class="form-group mb-3">
+                        <label for="guru_id" class="form-label">Guru Pengajar (Owner)</label>
+                        <select class="form-control" id="guru_id" name="owner" style="width: 100%;">
+                            {{-- Select2 akan mengisi ini --}}
+                        </select>
+                    </div>
 
-                <div class="modal-footer">
-                    {{-- [DIUBAH] --}}
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('admin.kelas_modal.close') }}</button>
-                    <button type="button" id="btnCreateKelas" class="btn btn-primary">{{ __('admin.kelas_modal.save') }}</button>
-                </div>
-            </form>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-primary" id="btnCreateKelas">Simpan</button>
+            </div>
         </div>
     </div>
 </div>

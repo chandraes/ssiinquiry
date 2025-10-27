@@ -22,22 +22,61 @@ use App\Models\ForumTeam;
 
 class KelasController extends Controller
 {
-    /**
-     * Menampilkan semua data kelas
-     */
     public function index()
     {
-        $userLogin = auth()->user();
-        $data = Kelas::with(['modul', 'guru'])->latest()->get();
-        $modul = Modul::all();
+        $userLogin = Auth::user();
 
-        // Hanya tampilkan guru jika role user login adalah Administrator
-        $guru = [];
-        if (Auth::user()->role == 'Administrator') {
-            $guru = User::where('role', 'guru')->get();
+        // Mulai query
+        $query = Kelas::query();
+
+        // 1. [PERBAIKAN] Filter berdasarkan Role (Sesuai Konsep Baru)
+        if ($userLogin->roles->contains('name', 'Guru') && !$userLogin->roles->contains('name', 'Administrator')) {
+
+            $query->where(function ($q) use ($userLogin) {
+                // Tampilkan jika dia adalah OWNER (dari kolom 'owner')
+                $q->where('owner', $userLogin->id)
+                  // ATAU jika dia terdaftar sebagai GURU TAMBAHAN (dari pivot)
+                  ->orWhereHas('additional_teachers', function ($subQ) use ($userLogin) {
+                      // [FIX AMBIGUOUS ID] Tentukan nama tabel 'users.id'
+                      $subQ->where('users.id', $userLogin->id);
+                  });
+            });
         }
 
+        // 2. [OPTIMASI] Eager Load relasi & Hitung peserta
+        // 'guru' adalah relasi ke 'owner'
+        // 'peserta' adalah relasi ke siswa di pivot
+        $data = $query->with(['modul', 'guru'])
+                      ->withCount('peserta') // [PERBAIKAN] Menggunakan relasi 'peserta' baru
+                      ->orderBy('nama_kelas', 'asc')
+                      ->get();
+
+        // Data untuk modal (sudah benar)
+        $modul = Modul::all();
+        $guru = User::whereHas('roles', fn($q) => $q->where('name', 'guru'))->get();
+
         return view('kelas.index', compact('data', 'modul', 'guru', 'userLogin'));
+    }
+
+    /**
+     * [DIPERBAIKI] Mengirim data Kelas sebagai JSON untuk Modal Edit.
+     * Menggunakan relasi 'guru()' (owner) yang sudah diperbaiki.
+     */
+    public function showJson(Kelas $kelas)
+    {
+        $guruData = null;
+        if ($kelas->guru) { // 'guru' adalah relasi ke 'owner'
+            $guruData = [
+                'id' => $kelas->guru->id,
+                'name' => $kelas->guru->name
+            ];
+        }
+
+        return response()->json([
+            'modul_id' => $kelas->modul_id,
+            'nama_kelas' => $kelas->getTranslations('nama_kelas'),
+            'guru' => $guruData // Kirim data owner
+        ]);
     }
 
     public function search_guru_pengajar(Request $request)

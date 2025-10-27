@@ -57,7 +57,7 @@ class User extends Authenticatable
 
     public function getRoleAttribute()
     {
-        return $this->roles()->first();
+        return $this->roles->first();
     }
 
     public function profile()
