@@ -4,96 +4,23 @@
     Detail Kelas: {{ $kelas->nama_kelas }}
 @endsection
 
-{{-- [BARU] CSS Kustom untuk Gradebook --}}
+{{-- CSS Kustom Anda (Tidak Berubah) --}}
 @push('css')
 <style>
-    .gradebook-table th, .gradebook-table td {
-        vertical-align: middle;
-        text-align: center;
-        min-width: 170px; /* Lebar minimum per kolom tugas */
-        padding: 0.5rem;
-    }
-    .gradebook-table th:first-child, .gradebook-table td:first-child {
-        text-align: left;
-        min-width: 220px; /* Lebar kolom nama */
-        position: sticky;
-        left: 0;
-        background-color: #f8f9fa; /* Warna agar 'fixed' */
-        z-index: 1;
-    }
-    .gradebook-table thead th {
-        position: sticky;
-        top: 0; /* Header tabel 'fixed' saat scroll vertikal */
-        background-color: #e9ecef;
-        z-index: 2;
-    }
-    /* Style untuk setiap sel nilai */
-    .grade-cell {
-        display: block;
-        padding: 0.75rem 0.5rem;
-        text-decoration: none;
-        color: #212529;
-        border-radius: 4px;
-        background-color: #fff;
-        border: 1px dashed #ced4da;
-        min-height: 50px;
-    }
-    .grade-cell:hover {
-        background-color: #f1f3f5;
-        border-color: #0d6efd;
-        cursor: pointer;
-    }
-    /* Sel yang sudah dinilai */
-    .grade-cell.graded {
-        background-color: #e6f7ff;
-        border-color: #b3e0ff;
-        border-style: solid;
-        font-weight: bold;
-    }
-    /* Sel yang sudah dikerjakan siswa tapi belum dinilai */
-    .grade-cell.completed {
-        background-color: #f0fff4;
-        border-style: solid;
-        border-color: #28a745;
-    }
-
-    .post-highlight {
-        background-color: #fff3cd !important; /* Warna kuning 'warning' Bootstrap */
-        border: 1px solid #ffeeba;
-        box-shadow: 0 0 10px rgba(255, 193, 7, 0.3);
-    }
-
-    /* [BARU] CSS untuk Tampilan Forum di Modal */
-    .forum-column {
-        padding: 8px;
-        border: 1px solid #eee;
-        border-radius: 5px;
-        height: 400px; /* Beri tinggi tetap agar bisa scroll internal */
-        overflow-y: auto;
-        background: #fdfdfd;
-    }
-    .forum-post {
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        padding: 10px;
-        margin-bottom: 10px;
-        background: #fff;
-    }
-    .forum-reply {
-        border-top: 1px dashed #ccc;
-        padding: 8px 8px 8px 15px; /* Indentasi balasan */
-        margin-top: 8px;
-        margin-left: 10px;
-        background: #f9f9f9;
-    }
-    .post-author {
-        font-weight: bold;
-        color: #0d6efd;
-    }
-    .reply-author {
-        font-weight: bold;
-        color: #555;
-    }
+    /* ... (semua style CSS Anda tetap di sini) ... */
+    .gradebook-table th, .gradebook-table td { vertical-align: middle; text-align: center; min-width: 170px; padding: 0.5rem; }
+    .gradebook-table th:first-child, .gradebook-table td:first-child { text-align: left; min-width: 220px; position: sticky; left: 0; background-color: #f8f9fa; z-index: 1; }
+    .gradebook-table thead th { position: sticky; top: 0; background-color: #e9ecef; z-index: 2; }
+    .grade-cell { display: block; padding: 0.75rem 0.5rem; text-decoration: none; color: #212529; border-radius: 4px; background-color: #fff; border: 1px dashed #ced4da; min-height: 50px; }
+    .grade-cell:hover { background-color: #f1f3f5; border-color: #0d6efd; cursor: pointer; }
+    .grade-cell.graded { background-color: #e6f7ff; border-color: #b3e0ff; border-style: solid; font-weight: bold; }
+    .grade-cell.completed { background-color: #f0fff4; border-style: solid; border-color: #28a745; }
+    .post-highlight { background-color: #fff3cd !important; border: 1px solid #ffeeba; box-shadow: 0 0 10px rgba(255, 193, 7, 0.3); }
+    .forum-column { padding: 8px; border: 1px solid #eee; border-radius: 5px; height: 400px; overflow-y: auto; background: #fdfdfd; }
+    .forum-post { border: 1px solid #ddd; border-radius: 5px; padding: 10px; margin-bottom: 10px; background: #fff; }
+    .forum-reply { border-top: 1px dashed #ccc; padding: 8px 8px 8px 15px; margin-top: 8px; margin-left: 10px; background: #f9f9f9; }
+    .post-author { font-weight: bold; color: #0d6efd; }
+    .reply-author { font-weight: bold; color: #555; }
 </style>
 @endpush
 
@@ -101,17 +28,18 @@
 @section('content')
 <div class="container-fluid">
 
-    {{-- [DARI KODE ANDA] Info Kelas (Tidak Berubah) --}}
     <div class="card shadow-sm mb-4">
         <div class="card-body">
             <h2 class="card-title">{{ $kelas->nama_kelas }}</h2>
             <p class="text-muted mb-1">Modul: <strong>{{ $kelas->modul->judul }}</strong></p>
-            <p class="text-muted mb-1">Guru Pengajar: <strong>{{ $kelas->guru?->name }}</strong></p>
-            <p class="text-muted mb-0">Jumlah Peserta: <strong>{{ $kelas->peserta?->count() }} Siswa</strong></p>
+            <p class="text-muted mb-1">Guru Pengajar: <strong>{{ $kelas->guru?->name ?? 'Belum Ditugaskan' }}</strong></p>
+
+            {{-- [PERBAIKAN N+1] Menggunakan 'peserta_count' dari controller --}}
+            <p class="text-muted mb-0">Jumlah Peserta: <strong>{{ $kelas->peserta_count }} Siswa</strong></p>
         </div>
     </div>
 
-    {{-- [BARU] Navigasi Tab --}}
+    {{-- Navigasi Tab Anda (Tidak Berubah) --}}
     <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link active" id="summary-tab" data-bs-toggle="tab" data-bs-target="#summary-pane" type="button" role="tab" aria-controls="summary-pane" aria-selected="true">
@@ -125,7 +53,6 @@
         </li>
     </ul>
 
-    {{-- [BARU] Konten Tab --}}
     <div class="tab-content" id="myTabContent">
 
         {{-- =================================== --}}
@@ -134,7 +61,29 @@
         <div class="tab-pane fade show active" id="summary-pane" role="tabpanel" aria-labelledby="summary-tab" tabindex="0">
             <div class="card shadow-sm border-top-0 rounded-0 rounded-bottom">
                 <div class="card-body p-4">
-                    {{-- [DARI KODE ANDA] Kartu Navigasi --}}
+
+                    {{-- [KARTU BARU] Menampilkan Kode Gabung Kelas --}}
+                    <div class="card shadow-sm mb-4 border-primary">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5 class="card-title mb-0 text-primary">Kode Gabung Kelas</h5>
+                                    <p class="card-text text-muted mb-0">Bagikan kode ini kepada siswa.</p>
+                                </div>
+                                <div class="text-center">
+                                    <span id="joinCode" class="badge bg-primary-light text-primary p-3 fs-4 me-2" style="font-family: 'Courier New', monospace; letter-spacing: 2px;">
+    {{ $kelas->kode_join }}
+</span>
+                                    <button class="btn btn-secondary btn-sm" id="copyCodeBtn" title="Salin Kode">
+                                        <i class="fa fa-copy"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{-- [AKHIR KARTU BARU] --}}
+
+                    {{-- Kartu Navigasi Anda (Tidak Berubah) --}}
                     <div class="row">
                         <div class="col-md-6 col-lg-4 mb-3">
                             <div class="card h-100 shadow-sm">
@@ -165,8 +114,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        {{-- Kartu Laporan & Nilai dihapus karena sudah menjadi tab sendiri --}}
                     </div>
                 </div>
             </div>
@@ -180,7 +127,6 @@
                 <div class="card-body">
                     <div class="table-responsive">
 
-                        {{-- Hitung total poin maks --}}
                         @php
                             $totalMaxPoints = $subModules->sum('max_points');
                         @endphp
@@ -189,8 +135,6 @@
                             <thead class="table-light">
                                 <tr>
                                     <th>Nama Siswa</th>
-
-                                    {{-- Loop 1: Buat Kolom Header (Tugas) --}}
                                     @foreach($subModules as $subModule)
                                         <th>
                                             {{ $subModule->title }}
@@ -199,7 +143,6 @@
                                             </span>
                                         </th>
                                     @endforeach
-
                                     <th>
                                         Total Skor
                                         <span class="badge bg-primary">
@@ -209,15 +152,13 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {{-- Loop 2: Buat Baris (Siswa) --}}
                                 @forelse($students as $student)
                                     @php
-                                        $studentTotalScore = 0; // Reset skor total
+                                        $studentTotalScore = 0;
                                     @endphp
                                     <tr>
                                         <td>{{ $student->name }}</td>
 
-                                        {{-- Loop 3 (Bersarang): Buat Sel Nilai --}}
                                         @foreach($subModules as $subModule)
                                             @php
                                                 $key = $student->id . '_' . $subModule->id;
@@ -286,10 +227,8 @@
     </div>
 </div>
 
-{{-- [BARU] Modal Penilaian (Disembunyikan) --}}
+{{-- Modal Penilaian Anda (Tidak Berubah) --}}
 <div class="modal fade" id="gradingModal" tabindex="-1" aria-labelledby="gradingModalLabel" aria-hidden="true">
-
-    {{-- [PERUBAHAN 1] Tambahkan class 'modal-dialog-scrollable' --}}
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
@@ -297,37 +236,28 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                {{-- Info Siswa & Tugas (diisi oleh JS) --}}
                 <h6>Siswa: <strong id="modal-student-name"></strong></h6>
                 <h6>Tugas: <strong id="modal-submodule-title"></strong></h6>
                 <hr>
-
-                {{-- [PERUBAHAN 2] Hapus style 'max-height' dan 'overflow-y' --}}
-                {{-- Kita biarkan border dan bg-light agar tetap menarik --}}
                 <div id="modal-submission-content" class="mb-3 p-3 border" style="background-color: #f8f9fa;">
                     <p class="text-muted text-center">Memuat data submission siswa...</p>
                 </div>
-
-                {{-- Form Penilaian --}}
                 <form id="gradingForm">
                     @csrf
                     <input type="hidden" id="modal-student-id" name="student_id">
                     <input type="hidden" id="modal-submodule-id" name="sub_module_id">
                     <input type="hidden" id="modal-kelas-id" name="kelas_id" value="{{ $kelas->id }}">
-
                     <div class="mb-3">
                         <label for="modal-score" class="form-label">
                             Skor (Poin Maks: <span id="modal-max-points"></span>)
                         </label>
                         <input type="number" class="form-control" id="modal-score" name="score" min="0">
                     </div>
-
                     <div class="mb-3">
                         <label for="modal-feedback" class="form-label">Umpan Balik (Feedback)</label>
                         <textarea class="form-control" id="modal-feedback" name="feedback" rows="4"></textarea>
                     </div>
                 </form>
-
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
@@ -338,6 +268,10 @@
 </div>
 
 @endsection
+
+{{-- ======================================================= --}}
+{{-- 3. Perbarui @push('js') (Menambahkan script Salin Kode) --}}
+{{-- ======================================================= --}}
 @push('js')
 <script>
 $(document).ready(function() {
@@ -346,8 +280,29 @@ $(document).ready(function() {
     var totalMaxPoints = {{ $totalMaxPoints }};
     var myChart = null;
 
+    // [SCRIPT BARU] Untuk tombol "Salin Kode"
+    $('#copyCodeBtn').on('click', function() {
+        var code = $('#joinCode').text().trim();
+        navigator.clipboard.writeText(code).then(function() {
+            Swal.fire({
+                icon: 'success',
+                title: 'Kode Disalin!',
+                text: '"' + code + '" telah disalin ke clipboard.',
+                timer: 2000,
+                showConfirmButton: false
+            });
+        }, function() {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Gagal menyalin kode.'
+            });
+        });
+    });
+    // [AKHIR SCRIPT BARU]
+
     // ===================================================================
-    // FUNGSI HELPER UNTUK GRAFIK (TIDAK BERUBAH)
+    // FUNGSI HELPER UNTUK GRAFIK (Tidak Berubah)
     // ===================================================================
 
     function fetchAndParseCsv(url, label, delimiter) {
@@ -444,10 +399,10 @@ $(document).ready(function() {
     }
 
     // ===================================================================
-    // EVENT LISTENER MODAL
+    // EVENT LISTENER MODAL (Tidak Berubah)
     // ===================================================================
 
-    // 1. SAAT MODAL AKAN DITAMPILKAN (Tidak Berubah)
+    // 1. SAAT MODAL AKAN DITAMPILKAN
     modalEl.addEventListener('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
         var studentId = button.data('student-id');
@@ -492,7 +447,7 @@ $(document).ready(function() {
         });
     });
 
-    // 2. SAAT TOMBOL "MUAT GRAFIK" DIKLIK (Tidak Berubah)
+    // 2. SAAT TOMBOL "MUAT GRAFIK" DIKLIK
     $('#gradingModal').on('click', '#loadGradebookChartBtn', function() {
         loadChart(this);
     });
@@ -522,9 +477,6 @@ $(document).ready(function() {
 
                     $cell.html(response.new_cell_text);
                     $cell.removeClass('completed pending draft').addClass('graded');
-
-                    // [PERBAIKAN DI SINI]
-                    // Ganti .attr() menjadi .data() untuk memperbarui cache jQuery
                     $cell.data('current-score', newScore);
                     $cell.data('current-feedback', newFeedback);
 
@@ -545,7 +497,7 @@ $(document).ready(function() {
         });
     });
 
-    // 4. FUNGSI HELPER UNTUK UPDATE TOTAL SKOR (Tidak Berubah)
+    // 4. FUNGSI HELPER UNTUK UPDATE TOTAL SKOR
     function updateStudentTotalScore(studentId) {
         var newTotalScore = 0;
         var $row = $('#total-score-' + studentId).closest('tr');
