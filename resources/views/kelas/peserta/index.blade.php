@@ -38,7 +38,7 @@ Peserta Kelas
                                                 <i class="fa fa-sign-in-alt me-2"></i>Gabung Kelas
                                             </button>
                                         @endif
-                                    </div>                                    
+                                    </div>
                                 </div>
 
                                 <div class="card-body">
@@ -48,7 +48,7 @@ Peserta Kelas
                                                 <tr>
                                                     <th class="text-center align-middle" width="5%">No</th>
                                                     <th class="text-start align-middle">Nama Peserta</th>
-                                                    <th class="text-center align-middle">Status (Pro/Kontra)</th>
+                                                    {{-- <th class="text-center align-middle">Status (Pro/Kontra)</th> --}}
                                                     <th class="text-center align-middle" width="15%">Aksi</th>
                                                 </tr>
                                             </thead>
@@ -57,7 +57,7 @@ Peserta Kelas
                                                     <tr>
                                                         <td class="text-center align-middle">{{ $loop->iteration }}</td>
                                                         <td class="text-start align-middle">{{ $p->user->name }}</td>
-                                                        <td class="text-center align-middle">
+                                                        {{-- <td class="text-center align-middle">
                                                             @if ($p->pro_kontra_id == '1')
                                                                 <span class="badge bg-success">Pro</span>
                                                             @elseif ($p->pro_kontra_id == '0')
@@ -65,7 +65,7 @@ Peserta Kelas
                                                             @else
                                                                 <span class="badge bg-danger">Belum ditentukan</span>
                                                             @endif
-                                                        </td>
+                                                        </td> --}}
                                                         <td class="text-center align-middle">
                                                         @if($isAdmin || $isGuru)
                                                             <button type="button"
@@ -107,9 +107,9 @@ Peserta Kelas
             </div>
         </div>
     </div>
-    
 
-    
+
+
 </section>
 @endsection
 
