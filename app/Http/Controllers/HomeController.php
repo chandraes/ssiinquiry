@@ -30,15 +30,25 @@ class HomeController extends Controller
         $userLogin = Auth::user();
         $data = ['userLogin' => $userLogin];
 
-        if ($userLogin->hasRole('Siswa')) {
+        // [PENTING] Gunakan 'slug' (cth: 'siswa') bukan 'nama' (cth: 'Siswa')
+        // Sesuaikan 'siswa' dengan 'slug' di tabel roles Anda
+        if ($userLogin->hasRole('siswa')) {
             // ==================
-            // DATA UNTUK SISWA (Tidak Berubah)
+            // DATA UNTUK SISWA
             // ==================
+
+            // 1. Ambil ID kelas siswa
             $myClassIds = $userLogin->kelas->pluck('id');
+
+            // 2. Ambil data Kelas Saya (DI SINILAH $myClasses DIBUAT)
             $data['myClasses'] = Kelas::whereIn('id', $myClassIds)
-                                    ->with('modul')
+                                    ->with('modul') // Eager load modul
                                     ->get();
+
+            // 3. Ambil ID modul yang sudah diikuti siswa
             $myModuleIds = $data['myClasses']->pluck('modul.id');
+
+            // 4. Ambil modul lain (DI SINILAH $allOtherModules DIBUAT)
             $data['allOtherModules'] = Modul::whereNotIn('id', $myModuleIds)
                                          ->get();
 
@@ -57,24 +67,24 @@ class HomeController extends Controller
             ->get();
 
             // 2. [PERBAIKAN N+1] Ambil semua ID phyphox dari modul
-            $allPhyphoxIds = $moduls->pluck('phyphox_id') // Ambil array [[1,2], [2,3]]
-                                   ->flatten()          // Jadikan [1,2,2,3]
-                                   ->filter()           // Hapus null
-                                   ->unique();          // Jadikan [1,2,3]
+            $allPhyphoxIds = $moduls->pluck('phyphox_id')
+                                   ->flatten()
+                                   ->filter()
+                                   ->unique();
 
             // 3. [PERBAIKAN N+1] Jalankan SATU kueri untuk semua alat Phyphox
-            // Kita gunakan keyBy('id') agar pencarian di view cepat
             $data['allPhyphoxTools'] = Phyphox::whereIn('id', $allPhyphoxIds)
                                             ->get()
                                             ->keyBy('id');
 
-            // 4. Kirim data modul
+            // 4. Kirim data modul (DI SINILAH $modul DIBUAT)
             $data['modul'] = $moduls;
 
             // 5. Data untuk modal 'Tambah Modul'
             $data['phyphox'] = Phyphox::where('is_active', '1')->get();
         }
 
+        // 6. Kirim semua data ke view
         return view('home', $data);
     }
 }
