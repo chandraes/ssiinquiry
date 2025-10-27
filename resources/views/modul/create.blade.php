@@ -9,15 +9,16 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            <form action="{{ route('modul.store') }}" method="post" id="storeForm" enctype="multipart/form-data">
-                @csrf
+
                 <div class="modal-body">
+                      <form action="{{ route('modul.store') }}" method="post" id="storeForm" enctype="multipart/form-data">
+                @csrf
                     <div class="col-md-12 mb-3">
                         <div class="form-group">
                             <label for="phyphox_id" class="form-label">Pilih Alat Phyphox</label>
                             {{-- <select name="phyphox_id[]" id="phyphox_id" class="form-control" multiple="multiple"
                                 style="width: 100%; border-color:darkgrey"> --}}
-                            <select name="phyphox_id[]" id="phyphox_id" class="form-control form-select select2" multiple="multiple" 
+                            <select name="phyphox_id[]" id="phyphox_id" class="form-control form-select select2" multiple="multiple"
                             data-bs-placeholder="Select" style="width: 100%; border-color:darkgrey">
                                 {{-- 💡 TAMBAHKAN OPSI KOSONG INI --}}
                                 @foreach ($phyphox as $p)
@@ -96,13 +97,14 @@
                             </div>
                         </div>
                     </div>
+                    </form>
                 </div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    <button type="button" id="btnCreate" class="btn btn-primary">Simpan</button>
+                    <button type="submit" form="storeForm" id="btnCreate" class="btn btn-primary">Simpan</button>
                 </div>
-            </form>
+
         </div>
     </div>
 </div>

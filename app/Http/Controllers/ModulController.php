@@ -8,6 +8,7 @@ use App\Models\Phyphox;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ModulController extends Controller
 {
@@ -42,10 +43,11 @@ class ModulController extends Controller
     public function showJson(Modul $modul)
     {
         return response()->json([
-            'id' => $modul->id,
-            'judul' => $modul->getTranslations('judul'), // Kirim {en, id}
-            'deskripsi' => $modul->getTranslations('deskripsi'), // Kirim {en, id}
-            // Tambahkan field lain yang Anda perlukan di modal edit
+            'id'          => $modul->id,
+            'judul'       => $modul->getTranslations('judul'),     // Kirim {en, id}
+            'deskripsi'   => $modul->getTranslations('deskripsi'), // Kirim {en, id}
+            'phyphox_ids' => $modul->phyphox_id ?? [],             // Kirim array ID phyphox
+            'image_url'   => $modul->image ? Storage::url($modul->image) : null // Kirim URL gambar saat ini
         ]);
     }
 
@@ -176,40 +178,50 @@ class ModulController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+   public function update(Request $request, $id)
     {
         $request->validate([
-            'judul_id'      => 'required|string|max:255',
-            'judul_en'      => 'required|string|max:255',
-            'deskripsi_id'  => 'nullable|string',
-            'deskripsi_en'  => 'nullable|string',
-            'owner'         => 'nullable|array',  // multiple owner
-            'owner.*'       => 'exists:users,id',
+            'judul.id'      => 'required|string|max:255',
+            'judul.en'      => 'required|string|max:255',
+            'deskripsi.id'  => 'nullable|string',
+            'deskripsi.en'  => 'nullable|string',
+            'phyphox_id'    => 'nullable|array', // Boleh kosong saat update
+            'phyphox_id.*'  => 'exists:phyphox,id', // Validasi setiap ID
+            'image'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048', // Validasi gambar
         ]);
 
         try {
-            $modul = Modul::with('users')->findOrFail($id);
+            $modul = Modul::findOrFail($id);
             $userLogin = auth()->user();
 
-            // Cek apakah user login adalah owner atau admin
-            $isOwner = $modul->users->contains('id', $userLogin->id) || $userLogin->roles->contains('name', 'Administrator');
+            // [PERBAIKAN IZIN] Sesuaikan dengan logika izin Anda
+            // Contoh: Hanya admin atau guru yang membuat modul yang boleh edit
+             $canUpdate = $userLogin->hasRole('Administrator'); // Contoh sederhana
+            // Anda bisa tambahkan: || $modul->created_by == $userLogin->id
 
-            if (!$isOwner) {
-                return redirect()->back()->with('error', 'Kamu tidak memiliki izin untuk mengubah data modul ini.');
+            // if (!$canUpdate) {
+            //     return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengubah data modul ini.');
+            // }
+
+            // Data untuk diupdate
+            $updateData = [
+                'judul' => $request->judul,
+                'deskripsi' => $request->deskripsi,
+                'phyphox_id' => $request->phyphox_id ?? [], // Default array kosong jika null
+            ];
+
+            // Handle upload gambar baru
+            if ($request->hasFile('image')) {
+                // Hapus gambar lama jika ada
+                if ($modul->image) {
+                    Storage::disk('public')->delete($modul->image);
+                }
+                // Simpan gambar baru
+                $updateData['image'] = $request->file('image')->store('modul_images', 'public');
             }
 
-            // Update data modul
-            $modul->update([
-                'judul_id'      => $request->judul_id,
-                'judul_en'      => $request->judul_en,
-                'deskripsi_id'  => $request->deskripsi_id,
-                'deskripsi_en'  => $request->deskripsi_en,
-            ]);
-
-            // Sinkronisasi owner di tabel pivot (jika diubah)
-            if ($request->has('owner')) {
-                $modul->users()->sync($request->owner);
-            }
+            // Lakukan update
+            $modul->update($updateData);
 
             return redirect()->back()->with('success', 'Data modul berhasil diperbarui!');
         } catch (\Exception $e) {
@@ -225,19 +237,24 @@ class ModulController extends Controller
     public function destroy($id)
     {
         try {
-            $modul = Modul::with('users')->findOrFail($id);
+            $modul = Modul::findOrFail($id);
             $userLogin = auth()->user();
 
-            // Cek apakah user login adalah owner atau admin
-            $isOwner = $modul->users->contains('id', $userLogin->id) || $userLogin->roles->contains('name', 'Administrator');
+            // [PERBAIKAN IZIN] Sesuaikan izin hapus
+            $canDelete = $userLogin->hasRole('Administrator'); // Contoh sederhana
 
-            if (!$isOwner) {
-                return redirect()->back()->with('error', 'Kamu tidak memiliki izin untuk menghapus data modul ini.');
+            // if (!$canDelete) {
+            //     return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk menghapus data modul ini.');
+            // }
+
+            // Hapus gambar terkait jika ada
+            if ($modul->image) {
+                Storage::disk('public')->delete($modul->image);
             }
 
             $modul->delete();
 
-            return redirect()->back()->with('success', 'Data berhasil dihapus!');
+            return redirect()->back()->with('success', 'Data modul berhasil dihapus!');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }

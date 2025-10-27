@@ -130,43 +130,39 @@
 @include('modul.edit')
 
 @endsection
-
 @push('js')
 <script>
-    /**
-     * Fungsi untuk mengisi modal edit
-     */
-    function editButton(button) {
-        const url = $(button).data('url'); // URL JSON
-        const updateUrl = $(button).data('update-url'); // URL Update
+$(document).ready(function() {
+    // --- Inisialisasi Select2 Phyphox untuk Modal EDIT ---
+    // Pastikan Select2 diinisialisasi SEBELUM editButton dipanggil
+    $('#edit_phyphox_id').select2({
+        dropdownParent: $('#editModal'),
+        placeholder: 'Pilih alat Phyphox',
+        allowClear: true,
+        theme: 'bootstrap-5' // Sesuaikan tema jika perlu
+    });
 
-        // 1. Set action form edit
-        const form = document.getElementById('editForm'); // Asumsi ID form edit
-        form.action = updateUrl;
-
-        // 2. Panggil AJAX
-        $.get(url, function (data) {
-            // data = { id: ..., judul: {id, en}, deskripsi: {id, en} }
-
-            // 3. Isi field input di dalam modal edit
-            // Sesuaikan ID input ini dengan file 'modul.edit.blade.php' Anda
-            $('#edit_judul_id').val(data.judul.id);
-            $('#edit_judul_en').val(data.judul.en);
-            $('#edit_deskripsi_id').val(data.deskripsi.id);
-            $('#edit_deskripsi_en').val(data.deskripsi.en);
-
-            // 4. Tampilkan modal-nya
-            $('#editModal').modal('show');
-
-        }).fail(function() {
-            Swal.fire('Error', 'Gagal mengambil data modul.', 'error');
+    // --- Tombol Simpan Perubahan (Update) ---
+     $('#btnUpdate').on('click', function() {
+        // Tampilkan konfirmasi Swal
+         Swal.fire({
+            title: '{{ __("admin.swal.update_title") }}',
+            text: "{{ __("admin.swal.update_text") }}",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: '{{ __("admin.swal.update_confirm") }}',
+            cancelButtonText: '{{ __("admin.swal.cancel") }}',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Submit form jika dikonfirmasi
+                 $('#editForm').submit();
+            }
         });
-    }
+    });
 
-    /**
-     * Fungsi untuk konfirmasi hapus
-     */
-    function deleteButton(id) {
+     // Fungsi deleteButton Anda (sudah benar)
+     window.deleteButton = function(id) { // Jadikan global agar bisa dipanggil dari HTML
         Swal.fire({
             title: '{{ __("admin.swal.delete_title") }}',
             text: "{{ __("admin.swal.delete_text") }}",
@@ -181,5 +177,73 @@
             }
         })
     }
+
+    // Fungsi Preview Gambar saat file dipilih di modal edit
+    $('#edit_image').on('change', function(event) {
+        var reader = new FileReader();
+        reader.onload = function(){
+            var output = document.getElementById('edit_image_preview');
+            output.src = reader.result;
+            output.style.display = 'inline-block'; // Tampilkan preview baru
+        };
+        if(event.target.files[0]){
+            reader.readAsDataURL(event.target.files[0]);
+            $('#edit_image_current').hide(); // Sembunyikan gambar lama jika ada file baru
+        } else {
+             $('#edit_image_preview').hide().attr('src', '#'); // Sembunyikan preview baru
+             // Tampilkan lagi gambar lama jika ada
+             if ($('#edit_image_current').attr('src') && $('#edit_image_current').attr('src') !== '#') {
+                 $('#edit_image_current').show();
+             }
+        }
+    });
+
+}); // Akhir document ready
+
+    /**
+     * [FUNGSI DIPERBARUI] Untuk mengisi modal edit
+     * Mengisi field terjemahan, select2 phyphox, dan preview gambar.
+     */
+     // Jadikan global agar bisa dipanggil dari HTML
+     window.editButton = function(button) {
+        const url = $(button).data('url'); // URL JSON
+        const updateUrl = $(button).data('update-url'); // URL Update
+
+        const form = document.getElementById('editForm');
+        form.action = updateUrl;
+
+        $.get(url, function (data) {
+            // data = { id: ..., judul: {id, en}, deskripsi: {id, en}, phyphox_ids: [], image_url: '...' }
+
+            // 1. Isi field judul dan deskripsi
+            $('#edit_judul_id').val(data.judul.id);
+            $('#edit_judul_en').val(data.judul.en);
+            $('#edit_deskripsi_id').val(data.deskripsi.id);
+            $('#edit_deskripsi_en').val(data.deskripsi.en);
+
+            // 2. Isi Select2 Phyphox
+             if(data.phyphox_ids && Array.isArray(data.phyphox_ids)) {
+                 $('#edit_phyphox_id').val(data.phyphox_ids).trigger('change');
+             } else {
+                 $('#edit_phyphox_id').val(null).trigger('change'); // Kosongkan jika tidak ada
+             }
+
+            // 3. Reset dan Tampilkan Preview Gambar
+            $('#edit_image').val(''); // Kosongkan input file
+            $('#edit_image_preview').hide().attr('src', '#'); // Sembunyikan preview baru
+            if (data.image_url) {
+                $('#edit_image_current').attr('src', data.image_url).show(); // Tampilkan gambar saat ini
+            } else {
+                 $('#edit_image_current').hide().attr('src', '#'); // Sembunyikan jika tidak ada gambar
+            }
+
+            // 4. Tampilkan modal-nya
+            $('#editModal').modal('show');
+
+        }).fail(function() {
+            Swal.fire('Error', 'Gagal mengambil data modul.', 'error');
+        });
+    }
+
 </script>
 @endpush

@@ -48,7 +48,7 @@
 
 
                         <div class="responsive-logo">
-                            <a href="index.html" class="header-logo">
+                            <a href="{{route('home')}}" class="header-logo">
                                 {{-- [DIUBAH] alt text --}}
                                 <img src="{{ $logoUrl }}" class="mobile-logo logo-1" alt="{{ __('admin.logo_alt') }}"
                                     height="50px">
@@ -56,7 +56,7 @@
                                     alt="{{ __('admin.logo_alt') }}" height="50px">
                             </a>
                         </div>
-                        <a class="logo-horizontal " href="index.html">
+                        <a class="logo-horizontal " href="{{route('home')}}">
                             {{-- [DIUBAH] alt text --}}
                             <img src="{{ $logoUrl }}" class="header-brand-img desktop-logo"
                                 alt="{{ __('admin.logo_alt') }}">
@@ -99,18 +99,18 @@
     <script src="{{asset('assets/plugins/bootstrap/js/popper.min.js')}}"></script>
     <script src="{{asset('assets/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
     <script src="{{asset('assets/js/jquery.sparkline.min.js')}}"></script>
-    <script src="{{asset(" assets/js/circle-progress.min.js")}}"></script>
+    <script src="{{asset("assets/js/circle-progress.min.js")}}"></script>
     <script src="{{asset('assets/plugins/chart/Chart.bundle.js')}}"></script>
-    <script src="{{asset(" assets/plugins/chart/utils.js")}}"></script>
-    <script src="{{asset(" assets/plugins/peitychart/jquery.peity.min.js")}}"></script>
-    <script src="{{asset(" assets/plugins/peitychart/peitychart.init.js")}}"></script>
+    <script src="{{asset("assets/plugins/chart/utils.js")}}"></script>
+    <script src="{{asset("assets/plugins/peitychart/jquery.peity.min.js")}}"></script>
+    <script src="{{asset("assets/plugins/peitychart/peitychart.init.js")}}"></script>
     <script src="{{asset('assets/plugins/select2/select2.full.min.js')}}"></script>
-    <link href="{{ asset('assets/plugins/select2/select2.min.css') }}" rel="stylesheet" />
+    {{-- <link href="{{ asset('assets/plugins/select2/select2.min.css') }}" rel="stylesheet" /> --}}
     <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css"
         rel="stylesheet" />
-    <script src="{{asset(" assets/plugins/datatable/js/jquery.dataTables.min.js")}}"></script>
-    <script src="{{asset(" assets/plugins/datatable/js/dataTables.bootstrap5.js")}}"></script>
-    <script src="{{asset(" assets/plugins/datatable/dataTables.responsive.min.js")}}"></script>
+    <script src="{{asset("assets/plugins/datatable/js/jquery.dataTables.min.js")}}"></script>
+    <script src="{{asset("assets/plugins/datatable/js/dataTables.bootstrap5.js")}}"></script>
+    <script src="{{asset("assets/plugins/datatable/dataTables.responsive.min.js")}}"></script>
     <script src="{{asset('assets/plugins/echarts/echarts.js')}}"></script>
     <script src="{{asset('assets/plugins/sidemenu/sidemenu.js')}}"></script>
     <script src="{{asset('assets/js/sticky.js')}}"></script>

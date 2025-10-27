@@ -55,7 +55,7 @@
 
                         </div>
                         <div class="container-login100-form-btn">
-                            <button type="submit" href="index.html" class="login100-form-btn btn-primary">
+                            <button type="submit" class="login100-form-btn btn-primary">
                                 <strong>Login</strong>
                             </button>
                         </div>
