@@ -109,9 +109,9 @@
     <div class="card shadow-sm mb-4">
         <div class="card-body">
             <h2 class="card-title">{{ $kelas->nama_kelas }}</h2>
-            <p class="text-muted mb-1">Modul: <strong>{{ $kelas->modul->judul }}</strong></p>
-            <p class="text-muted mb-1">Guru Pengajar: <strong>{{ $kelas->guru?->name ?? 'Belum Ditugaskan' }}</strong></p>
-            <p class="text-muted mb-0">Jumlah Peserta: <strong>{{ $kelas->peserta_count }} Siswa</strong></p>
+            <p class="text-muted mb-1">{{__('admin.kelas.show.module')}}: <strong>{{ $kelas->modul->judul }}</strong></p>
+            <p class="text-muted mb-1">{{__('admin.kelas.show.teacher')}}: <strong>{{ $kelas->guru?->name ?? 'Belum Ditugaskan' }}</strong></p>
+            <p class="text-muted mb-0">{{__('admin.kelas.show.num_participants')}}: <strong>{{ $kelas->peserta_count }} Siswa</strong></p>
         </div>
     </div>
 
@@ -119,12 +119,12 @@
     <ul class="nav nav-tabs nav-fill mb-0" id="myTab" role="tablist"> {{-- Removed mb-0 if you want card connected --}}
         <li class="nav-item" role="presentation">
             <button class="nav-link active" id="summary-tab" data-bs-toggle="tab" data-bs-target="#summary-pane" type="button" role="tab" aria-controls="summary-pane" aria-selected="true">
-                <i class="fa fa-th-large me-2"></i> Ringkasan & Manajemen
+                <i class="fa fa-th-large me-2"></i> {{__('admin.kelas.show.resume_management')}}
             </button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="gradebook-tab" data-bs-toggle="tab" data-bs-target="#gradebook-pane" type="button" role="tab" aria-controls="gradebook-pane" aria-selected="false">
-                <i class="fa fa-check-square-o me-2"></i> Buku Nilai (Gradebook)
+                <i class="fa fa-check-square-o me-2"></i> {{__('admin.kelas.show.gradebook')}} (Gradebook)
             </button>
         </li>
     </ul>
@@ -144,8 +144,8 @@
                             {{-- [PERBAIKAN] Added join-code-container class --}}
                             <div class="d-flex justify-content-between align-items-center join-code-container">
                                 <div>
-                                    <h5 class="card-title mb-0 text-primary">Kode Gabung Kelas</h5>
-                                    <p class="card-text text-muted mb-0">Bagikan kode ini kepada siswa.</p>
+                                    <h5 class="card-title mb-0 text-primary">{{__('admin.kelas.show.join_code')}}</h5>
+                                    <p class="card-text text-muted mb-0">{{__('admin.kelas.show.instruction_join_code')}}.</p>
                                 </div>
                                 {{-- [PERBAIKAN] Added join-code-display class --}}
                                 <div class="text-center join-code-display">
@@ -153,7 +153,7 @@
                                         {{ $kelas->kode_join }}
                                     </span>
                                     <button class="btn btn-secondary btn-sm" id="copyCodeBtn" title="Salin Kode">
-                                        <i class="fa fa-copy"></i> Salin
+                                        <i class="fa fa-copy"></i> {{__('admin.kelas.show.copy')}}
                                     </button>
                                 </div>
                             </div>
@@ -168,11 +168,11 @@
                                 <div class="card-body text-center d-flex flex-column justify-content-between">
                                     <div>
                                         <i class="fa fa-users fa-3x text-primary mb-3"></i>
-                                        <h5 class="card-title">Manajemen Peserta</h5>
-                                        <p class="card-text text-muted small">Tambah/hapus siswa.</p>
+                                        <h5 class="card-title">{{__('admin.kelas.show.manage_participants')}}</h5>
+                                        <p class="card-text text-muted small">{{__('admin.kelas.show.add_delete_participants')}}.</p>
                                     </div>
                                     <a href="{{ route('kelas.peserta', $kelas->id) }}" class="btn btn-primary mt-3">
-                                        Kelola Peserta
+                                        {{__('admin.kelas.show.button_manage_participant')}}
                                     </a>
                                 </div>
                             </div>
@@ -183,11 +183,11 @@
                                 <div class="card-body text-center d-flex flex-column justify-content-between">
                                     <div>
                                         <i class="fa fa-comments fa-3x text-success mb-3"></i>
-                                        <h5 class="card-title">Manajemen Forum</h5>
-                                        <p class="card-text text-muted small">Atur tim Pro & Kontra.</p>
+                                        <h5 class="card-title">{{__('admin.kelas.show.manage_forum')}}</h5>
+                                        <p class="card-text text-muted small">{{__('admin.kelas.show.setup_teams')}}.</p>
                                     </div>
                                     <a href="{{ route('kelas.forums', $kelas->id) }}" class="btn btn-success mt-3">
-                                        Atur Forum
+                                        {{__('admin.kelas.show.button_manage_forum')}}
                                     </a>
                                 </div>
                             </div>
@@ -208,19 +208,19 @@
                         <table class="table table-bordered table-hover gradebook-table mb-0"> {{-- Removed mb-0 --}}
                             <thead class="table-light">
                                 <tr>
-                                    <th>Nama Siswa</th>
+                                    <th>{{__('admin.kelas.show.participant_table_name')}}</th>
                                     @foreach($subModules as $subModule)
                                         <th>
                                             {{ $subModule->title }}
                                             <span class="d-block small text-muted">
-                                                {{ $subModule->max_points }} Poin
+                                                {{ $subModule->max_points }} {{__('admin.kelas.show.participant_table_point')}}
                                             </span>
                                         </th>
                                     @endforeach
                                     <th>
-                                        Total Skor
+                                        {{__('admin.kelas.show.participant_table_score')}}
                                         <span class="d-block small text-muted">
-                                            {{ $totalMaxPoints }} Poin
+                                            {{ $totalMaxPoints }} {{__('admin.kelas.show.participant_table_point')}}
                                         </span>
                                     </th>
                                 </tr>
@@ -234,7 +234,7 @@
                                             @php
                                                 $key = $student->id . '_' . $subModule->id;
                                                 $progress = $allProgress->get($key);
-                                                $cellClass = ''; $cellText = 'Beri Nilai';
+                                                $cellClass = ''; $cellText = "{{__('admin.kelas.show.participant_table_grade')}}";
                                                 if ($progress) {
                                                     if ($progress->score !== null) {
                                                         $cellClass = 'graded';
@@ -242,7 +242,7 @@
                                                         $studentTotalScore += $progress->score;
                                                     } elseif ($progress->completed_at) {
                                                         $cellClass = 'completed';
-                                                        $cellText = '<i class="fa fa-check-circle text-success me-1"></i>Selesai';
+                                                        $cellText = '<i class="fa fa-check-circle text-success me-1"></i>'. __('admin.kelas.show.participant_table_finish');
                                                     } else { $cellClass = 'draft'; $cellText = 'Draf'; }
                                                 } else { $cellClass = 'pending'; $cellText = '-'; }
                                             @endphp
@@ -268,7 +268,7 @@
                                 @empty
                                     <tr>
                                         <td colspan="{{ $subModules->count() + 2 }}" class="text-center p-4 text-muted">
-                                            Belum ada siswa di kelas ini.
+                                            {{__('admin.kelas.show.no_participants')}}.
                                         </td>
                                     </tr>
                                 @endforelse

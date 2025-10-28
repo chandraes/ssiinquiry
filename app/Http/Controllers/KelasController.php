@@ -122,6 +122,8 @@ class KelasController extends Controller
                     'guru_id' => 'required|exists:users,id',
                 ]);
             }
+            
+            dd($request-> all(), $request->modul_id);
 
             // ... (Logika kodeJoin Anda tidak berubah, sudah bagus) ...
             $kodeJoin = (function() {

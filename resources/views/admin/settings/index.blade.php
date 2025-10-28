@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('title')
-    Settings
+    {{__('admin.settings.title')}}
 @endsection
 @section('content')
 <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data" id="storeForm">
@@ -10,14 +10,14 @@
     <div class="row">
         <div class="col-12 mb-4">
             <div class="form-group">
-                <label for="app_name" class="form-label">Nama Aplikasi</label>
+                <label for="app_name" class="form-label">{{ __('admin.settings.app_name') }}</label>
                 <input type="text" class="form-control" id="app_name" name="app_name"
                        value="{{ get_setting('app_name') }}" required>
             </div>
         </div>
 
         <div class="col-lg-6 col-sm-12 mb-4">
-            <label for="app_logo" class="form-label">Logo Aplikasi (Sidebar)</label>
+            <label for="app_logo" class="form-label">{{ __('admin.settings.app_logo') }} (Sidebar)</label>
             @php
                 // Tentukan path URL logo saat ini untuk Dropify
                 $currentLogoPath = get_setting('app_logo');
@@ -28,7 +28,7 @@
                    data-default-file="{{ $defaultLogo }}"
                    data-allowed-file-extensions="jpg png jpeg svg" />
 
-            <small class="form-text text-muted">Maksimal 2MB (JPG, PNG, SVG).</small>
+            <small class="form-text text-muted">{{ __('admin.settings.app_logo_help') }} (.jpg, .png, .svg).</small>
         </div>
 
         <div class="col-lg-6 col-sm-12 mb-4">
@@ -43,11 +43,11 @@
                    data-default-file="{{ $defaultFavicon }}"
                    data-allowed-file-extensions="ico png jpg" />
 
-            <small class="form-text text-muted">Maksimal 50KB (ICO, PNG).</small>
+            <small class="form-text text-muted">{{ __('admin.settings.app_icon_help') }} (.ico, .png).</small>
         </div>
     </div>
 
-    <button type="submit" class="btn btn-primary mt-3">Simpan Pengaturan</button>
+    <button type="submit" class="btn btn-primary mt-3">{{ __('admin.settings.save_settings') }}</button>
 </form>
 @endsection
 @push('js')
@@ -58,14 +58,14 @@
 
 
     $(document).ready(function() {
-        confirmAndSubmit('#storeForm', 'Yakin ingin menyimpan pengaturan?');
+        confirmAndSubmit('#storeForm', '{{ __('admin.settings.swal.text') }}');
 
         $('.dropify').dropify({
             messages: {
-                'default': 'Seret dan lepas file di sini atau klik',
-                'replace': 'Seret dan lepas atau klik untuk mengganti',
-                'remove':  'Hapus',
-                'error':   'Terjadi kesalahan.'
+                'default': '{{ __('admin.settings.swal.default') }}',
+                'replace': '{{ __('admin.settings.swal.replace') }}',
+                'remove':  '{{ __('admin.settings.swal.remove') }}',
+                'error':   '{{ __('admin.settings.swal.error') }}',
             }
         });
     });

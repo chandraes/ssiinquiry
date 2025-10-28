@@ -2,7 +2,7 @@
 @section('title')
 {{-- [PERBAIKAN] Menggunakan @role --}}
 @role('siswa')
-Dashboard Siswa
+{{ __('admin.dashboard.students.title') }}
 @else
 {{ __('admin.dashboard.title') }}
 @endrole
@@ -26,8 +26,8 @@ Dashboard Siswa
         <div class="col-md-12">
             <div class="card shadow-sm border-0" style="background-color: #f8f9fa;">
                 <div class="card-body">
-                    <h2 class="card-title">Selamat Datang, {{ $userLogin->name }}!</h2>
-                    <p class="text-muted mb-0">Pilih kelas di bawah ini untuk memulai pembelajaran.</p>
+                    <h2 class="card-title">{{ __('admin.dashboard.students.welcome') }}, {{ $userLogin->name }}!</h2>
+                    <p class="text-muted mb-0">{{ __('admin.dashboard.students.choose_class') }}.</p>
                 </div>
             </div>
         </div>
@@ -35,7 +35,7 @@ Dashboard Siswa
 
     {{-- ... (Seluruh sisa tampilan Siswa sudah benar) ... --}}
     <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
-        <h3 class="card-title mb-0">Kelas Saya</h3>
+        <h3 class="card-title mb-0">{{ __('admin.dashboard.students.my_class') }}</h3>
     </div>
     <div class="row">
         @forelse($myClasses as $kelas)
@@ -59,13 +59,13 @@ Dashboard Siswa
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title">{{ $kelas->modul->judul }}</h5>
                     <p class="card-subtitle mb-2 text-muted">
-                        Nama Kelas: <strong>{{ $kelas->nama_kelas }}</strong>
+                        {{ __('admin.dashboard.students.class_name') }}: <strong>{{ $kelas->nama_kelas }}</strong>
                     </p>
                     <p class="card-text flex-grow-1">
                         {{ Str::limit(strip_tags($kelas->modul->deskripsi ?? ''), 100, '...') }}
                     </p>
                     <a href="{{ route('student.class.show', $kelas->id) }}" class="btn btn-primary mt-auto">
-                        Masuk Kelas <i class="fa fa-arrow-right ms-2"></i>
+                        {{ __('admin.dashboard.students.join_class') }} <i class="fa fa-arrow-right ms-2"></i>
                     </a>
                 </div>
             </div>
@@ -73,7 +73,7 @@ Dashboard Siswa
         @empty
         <div class="col-12">
             <div class="alert alert-info" role="alert">
-                Anda belum terdaftar di kelas manapun.
+                {{ __('admin.dashboard.students.unregistered_student') }}
             </div>
         </div>
         @endforelse
@@ -82,7 +82,7 @@ Dashboard Siswa
     <hr class="my-4">
 
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3 class="card-title mb-0">Jelajahi Modul Lain</h3>
+        <h3 class="card-title mb-0">{{ __('admin.dashboard.students.explore_modules') }}</h3>
     </div>
     <div class="row">
         @forelse($allOtherModules as $modul)
@@ -108,7 +108,7 @@ Dashboard Siswa
                         {{ Str::limit(strip_tags($modul->deskripsi ?? ''), 100, '...') }}
                     </p>
                     <a href="#" class="btn btn-outline-secondary mt-auto">
-                        Gabung Kelas
+                        {{ __('admin.dashboard.students.join_class') }}
                     </a>
                 </div>
             </div>
@@ -116,7 +116,7 @@ Dashboard Siswa
         @empty
         <div class="col-12">
             <div class="alert alert-light" role="alert">
-                Tidak ada modul lain yang tersedia saat ini.
+                {{ __('admin.dashboard.students.no_modules_available') }}
             </div>
         </div>
         @endforelse
@@ -137,7 +137,7 @@ Dashboard Siswa
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">MODUL DAN KELAS</h3>
+                    <h3 class="card-title">{{ __('admin.dashboard.header') }}</h3>
 
                     {{-- [PERBAIKAN] Gunakan @role('admin') --}}
                     @role('admin')
@@ -147,7 +147,7 @@ Dashboard Siswa
                             class="btn btn-primary btn-icon text-white me-2">
                             <span>
                                 <i class="fe fe-plus"></i>
-                            </span> Tambah Modul
+                            </span> {{ __('admin.dashboard.add_modules') }}
                         </a>
                     </div>
                     @endrole
@@ -157,7 +157,7 @@ Dashboard Siswa
                 @if($modul->isEmpty())
                 <div class="card-body">
                     <div class="alert alert-info" role="alert">
-                        Tidak ada modul tersedia. Silakan tambahkan modul baru.
+                        {{ __('admin.dashboard.no_modules') }}
                     </div>
                 </div>
                 @else
@@ -175,7 +175,7 @@ Dashboard Siswa
                                             data-modul-id="{{ $m->id }}" data-modul-judul="{{ $m->judul }}">
                                             <span>
                                                 <i class="fe fe-plus"></i>
-                                            </span> Tambah Kelas
+                                            </span> {{ __('admin.dashboard.add_class') }}
                                         </a>
                                     </div>
                                     @endrole
@@ -197,12 +197,12 @@ Dashboard Siswa
                                     style="height: 180px; object-fit: cover;">
 
                                 <div class="row card-body text-center justify-content-center">
-                                    <strong class="text-start">Deskripsi :</strong>
+                                    <strong class="text-start">{{ __('admin.dashboard.description') }} :</strong>
                                     <p>{{Str::limit(strip_tags($m->deskripsi ?? ''), 100, '...') }}</p>
 
                                     @php $phyphoxIds = $m->phyphox_id ?? []; @endphp
                                     @if (!empty($phyphoxIds))
-                                    <strong class="text-start">Alat :</strong>
+                                    <strong class="text-start">{{ __('admin.dashboard.tools') }} :</strong>
                                     @foreach ($phyphoxIds as $phyphoxId)
                                     @if(isset($allPhyphoxTools[$phyphoxId]))
                                     @php $phyphox = $allPhyphoxTools[$phyphoxId]; @endphp
@@ -212,14 +212,14 @@ Dashboard Siswa
                                     @endif
                                     @endforeach
                                     @else
-                                    <p class="text-muted">Tidak ada alat Phyphox terkait.</p>
+                                    <p class="text-muted">{{ __('admin.dashboard.no_phyphox') }}.</p>
                                     @endif
                                 </div>
                                 <div class="card-footer text-center">
                                     @if($m->kelas->isEmpty())
-                                    <p class="text-danger">Belum ada kelas untuk modul ini.</p>
+                                    <p class="text-danger">{{ __('admin.dashboard.no_classes') }}.</p>
                                     @else
-                                    <p class="text-primary mb-1"><strong>Daftar Kelas :</strong></p>
+                                    <p class="text-primary mb-1"><strong>{{ __('admin.dashboard.list_class') }} :</strong></p>
                                     @foreach($m->kelas as $k)
                                     <div class="d-grid d-md-block col-12 mt-1 mb-1">
                                         <a href="{{ route('kelas.show', $k->id) }}" type="button"
