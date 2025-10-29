@@ -81,6 +81,24 @@ return [
         'delete_title' => 'Hapus Data?',
         'delete_text' => 'Apakah anda yakin ingin menghapus data?',
         'delete_confirm' => 'Lanjutkan',
+        'create' => [
+            'title' => 'Simpan Data?',
+            'text' => 'Pastikan semua data sudah benar!',
+            'confirm' => 'Ya, Simpan!',
+            'cancel' => 'Batal',
+        ],
+        'edit' => [
+            'title' => 'Simpan Perubahan?',
+            'text' => 'Apakah Anda yakin ingin menyimpan perubahan pada data ini?',
+            'confirm' => 'Ya, Simpan',
+            'cancel' => 'Batal',
+        ],
+        'delete' => [
+            'title' => 'Hapus Data?',
+            'text' => 'Apakah anda yakin ingin menghapus data ini?',
+            'confirm' => 'Lanjutkan',
+            'cancel' => 'Batal',    
+        ],
     ],
 
     'kelas_modal' => [
@@ -184,16 +202,6 @@ return [
         ]
     ],
 
-    'modul_detail' => [
-        'title' => 'Detail Modul',
-        'module_info' => 'Informasi Modul',
-        'submodule_list' => 'Daftar Sub Modul',
-        'add_submodule' => 'Tambah Sub Modul',
-        'no_submodule' => 'Belum ada sub modul untuk modul ini.',
-        'edit' => 'Ubah',
-        'delete' => 'Hapus',
-    ],
-
     'submodul_modal' => [
         'add_title' => 'Tambah Sub Modul Baru',
         'edit_title' => 'Ubah Sub Modul',
@@ -210,14 +218,34 @@ return [
         'save_changes' => 'Simpan Perubahan',
     ],
 
-    'modul_list' => [
+    'modul' => [
         'page_title' => 'Manajemen Modul',
         'card_title' => 'Daftar Modul',
         'add_new' => 'Buat Modul Baru',
         'view_details' => 'Lihat Detail',
         'no_modules' => 'Belum ada modul yang dibuat.',
-        'edit' => 'Ubah',
-        'delete' => 'Hapus',
+        'detail' => [
+            'title' => 'Detail Modul',
+            'module_info' => 'Informasi Modul',
+            'tools' => 'Alat Ukur Phyphox',
+            'owner' => 'Pemilik Modul',
+            'dropdown_materi' => 'Sub Modul Materi (Video, Teks, dll)',
+            'dropdown_question' => 'Sub Modul Pertanyaan Refleksi',
+            'dropdown_practicum' => 'Sub Modul Praktikum Phyphox',
+            'dropdown_forum' => 'Sub Modul Forum Debat',
+            'submodule_list' => 'Daftar Sub Modul',
+            'add_submodule' => 'Tambah Sub Modul',
+            'no_submodule' => 'Belum ada sub modul untuk modul ini.',
+        ],
+        'create' => [
+            'header' => 'Tambah Data Modul',
+            'input_tool_phyphox' => 'Pilih Alat Phyphox',
+            'instructions_tool' => 'Kamu bisa memilih lebih dari satu Alat Phyphox',
+            'input_image' => 'Gambar Modul (Opsional)',
+            'input_title' => 'Judul Modul',
+            'input_description' => 'Deskripsi',
+        ],
+        'edit_header' => 'Ubah Data Modul',
     ],
 
    'material_modal' => [
@@ -294,6 +322,33 @@ return [
         'no_members' => 'Belum ada anggota.',
     ],
 
+    //USER MANAGEMENT
+    'user' => [
+        'title' => 'Manajemen Pengguna',
+        'card_title' => 'Daftar Pengguna',
+        'add_new' => 'Buat Pengguna Baru',
+        'table_no' => 'No',
+        'table_name' => 'Nama',
+        'table_username' => 'Nama Pengguna',
+        'table_gender' => 'Jenis Kelamin',
+        'table_role' => 'Peran',
+        'table_email' => 'Email',
+        'table_action' => 'Aksi',
+        'edit_title' => 'Ubah Pengguna',
+        'delete_title' => 'Hapus Pengguna',
+        'create'=>[
+            'header' => 'Tambah Data Pengguna',
+            'input_name' => 'Nama Lengkap',
+            'input_role' => 'Pilih Peran',
+            'choose_role' => '-- Pilih Peran --',
+            'input_username' => 'Nama Pengguna',
+            'input_email' => 'Email',
+            'input_password' => 'Kata Sandi',
+            'input_password_confirmation' => 'Konfirmasi Kata Sandi',
+        ],
+        'edit_header' => 'Ubah Data Pengguna',
+    ],
+
     'settings' => [
         'title' => 'Pengaturan',
         'application' => 'Pengaturan Aplikasi',
@@ -315,8 +370,12 @@ return [
 
     'button'=>[
         'save'=>'Simpan',
+        'save_changes'=>'Simpan Perubahan',
         'close'=>'Tutup',
         'cancel'=>'Batal',
         'forward'=>'Lanjutkan',
+        'delete'=>'Hapus',
+        'edit'=>'Ubah',
+        'add'=>'Tambah',
     ]
 ];

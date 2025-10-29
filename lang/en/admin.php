@@ -72,16 +72,35 @@ return [
 
     'swal' => [
         'save_title' => 'Save Data?',
-        'save_text' => 'Please ensure all data is correct!',
+        'save_text' => 'Make sure all data is correct!',
         'save_confirm' => 'Yes, Save!',
         'cancel' => 'Cancel',
         'update_title' => 'Save Changes?',
-        'update_text' => 'Are you sure you want to save the changes for this class?',
+        'update_text' => 'Are you sure you want to save changes to this class?',
         'update_confirm' => 'Yes, Save',
         'delete_title' => 'Delete Data?',
         'delete_text' => 'Are you sure you want to delete this data?',
         'delete_confirm' => 'Continue',
+        'create' => [
+            'title' => 'Save Data?',
+            'text' => 'Make sure all data is correct!',
+            'confirm' => 'Yes, Save!',
+            'cancel' => 'Cancel',
+        ],
+        'edit' => [
+            'title' => 'Save Changes?',
+            'text' => 'Are you sure you want to save changes to this data?',
+            'confirm' => 'Yes, Save',
+            'cancel' => 'Cancel',
+        ],
+        'delete' => [
+            'title' => 'Delete Data?',
+            'text' => 'Are you sure you want to delete this data?',
+            'confirm' => 'Continue',
+            'cancel' => 'Cancel',    
+        ],
     ],
+
 
     'kelas_modal' => [
         'add_title' => 'Add Class Data',
@@ -184,17 +203,6 @@ return [
         ],
     ],
 
-
-    'modul_detail' => [
-        'title' => 'Module Detail',
-        'module_info' => 'Module Information',
-        'submodule_list' => 'Sub Module List',
-        'add_submodule' => 'Add Sub Module',
-        'no_submodule' => 'No sub modules found for this module.',
-        'edit' => 'Edit',
-        'delete' => 'Delete',
-    ],
-
     'submodul_modal' => [
         'add_title' => 'Add New Sub Module',
         'edit_title' => 'Edit Sub Module',
@@ -211,14 +219,34 @@ return [
         'save_changes' => 'Save Changes',
     ],
 
-    'modul_list' => [
+    'modul' => [
         'page_title' => 'Module Management',
         'card_title' => 'Module List',
         'add_new' => 'Create New Module',
         'view_details' => 'View Details',
         'no_modules' => 'No modules have been created yet.',
-        'edit' => 'Edit',
-        'delete' => 'Delete',
+        'detail' => [
+            'title' => 'Module Details',
+            'module_info' => 'Module Information',
+            'tools' => 'Phyphox Measuring Tools',
+            'owner' => 'Module Owner',
+            'dropdown_materi' => 'Submodule: Material (Video, Text, etc.)',
+            'dropdown_question' => 'Submodule: Reflection Questions',
+            'dropdown_practicum' => 'Submodule: Phyphox Practicum',
+            'dropdown_forum' => 'Submodule: Debate Forum',
+            'submodule_list' => 'Submodule List',
+            'add_submodule' => 'Add Submodule',
+            'no_submodule' => 'No submodules available for this module.',
+        ],
+        'create' => [
+            'header' => 'Add New Module',
+            'input_tool_phyphox' => 'Select Phyphox Tool',
+            'instructions_tool' => 'You can select more than one Phyphox Tool.',
+            'input_image' => 'Module Image (Optional)',
+            'input_title' => 'Module Title',
+            'input_description' => 'Description',
+        ],
+        'edit_header' => 'Edit Module Data',
     ],
 
    'material_modal' => [
@@ -295,6 +323,33 @@ return [
         'no_members' => 'No members yet.',
     ],
 
+    // USER MANAGEMENT
+    'user' => [
+        'title' => 'User Management',
+        'card_title' => 'User List',
+        'add_new' => 'Create New User',
+        'table_no' => 'No',
+        'table_name' => 'Name',
+        'table_username' => 'Username',
+        'table_gender' => 'Gender',
+        'table_role' => 'Role',
+        'table_email' => 'Email',
+        'table_action' => 'Action',
+        'edit_title' => 'Edit User',
+        'delete_title' => 'Delete User',
+        'create' => [
+            'header' => 'Add New User',
+            'input_name' => 'Full Name',
+            'input_role' => 'Select Role',
+            'choose_role' => '-- Select Role --',
+            'input_username' => 'Username',
+            'input_email' => 'Email',
+            'input_password' => 'Password',
+            'input_password_confirmation' => 'Confirm Password',
+        ],
+        'edit_header' => 'Edit User Data',
+    ],
+
     'settings' => [
         'title' => 'Settings',
         'application' => 'Application Settings',
@@ -314,10 +369,14 @@ return [
         ],
     ],
 
-    'button'=>[
-        'save'=>'Save',
-        'close'=>'Close',
-        'cancel'=>'Cancel',
-        'forward'=>'Forward',
-    ]
+    'button' => [
+        'save' => 'Save',
+        'save_changes' => 'Save Changes',
+        'close' => 'Close',
+        'cancel' => 'Cancel',
+        'forward' => 'Next',
+        'delete' => 'Delete',
+        'edit' => 'Edit',
+        'add' => 'Add',
+    ],
 ];

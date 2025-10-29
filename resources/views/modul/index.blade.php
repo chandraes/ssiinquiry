@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-{{ __('admin.modul_list.page_title') }}
+{{ __('admin.modul.page_title') }}
 @endsection
 
 @section('content')
@@ -10,7 +10,7 @@
 <div class="container-fluid">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="card-title">{{ __('admin.modul_list.card_title') }}</h2>
+        <h2 class="card-title">{{ __('admin.modul.card_title') }}</h2>
     </div>
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
@@ -25,7 +25,7 @@
                 <div class="card-body d-flex justify-content-center align-items-center">
                     <div class="text-center text-primary">
                         <i class="fa fa-plus fa-3x mb-3"></i>
-                        <h5 class="card-title mb-0">{{ __('admin.modul_list.add_new') }}</h5>
+                        <h5 class="card-title mb-0">{{ __('admin.modul.add_new') }}</h5>
                     </div>
                 </div>
             </div>
@@ -73,7 +73,7 @@
 
                 <div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center">
                     <a href="{{ route('modul.show', $modul->id) }}" class="btn btn-primary btn-sm">
-                        {{ __('admin.modul_list.view_details') }}
+                        {{ __('admin.modul.view_details') }}
                     </a>
 
                     <span class="badge bg-light text-dark">
@@ -87,7 +87,7 @@
                     @role(['guru', 'admin'])
                     <div>
                         {{-- Tombol Edit --}}
-                        <button class="btn btn-warning btn-sm" title="{{ __('admin.modul_list.edit') }}"
+                        <button class="btn btn-warning btn-sm" title="{{ __('admin.button.edit') }}"
                             data-bs-toggle="modal" data-bs-target="#editModal"
                             data-url="{{ route('modul.json', $modul->id) }}"
                             data-update-url="{{ route('modul.update', $modul->id) }}" onclick="editButton(this)">
@@ -95,7 +95,7 @@
                         </button>
 
                         {{-- Tombol Delete (Hanya Admin) --}}
-                        <button class="btn btn-danger btn-sm" title="{{ __('admin.modul_list.delete') }}"
+                        <button class="btn btn-danger btn-sm" title="{{ __('admin.button.delete') }}"
                             onclick="deleteButton({{ $modul->id }})">
                             <i class="fa fa-trash"></i>
                         </button>
@@ -115,7 +115,7 @@
         @empty
         <div class="col-12">
             <div class="alert alert-info text-center">
-                {{ __('admin.modul_list.no_modules') }}
+                {{ __('admin.modul.no_modules') }}
             </div>
         </div>
         @endforelse
