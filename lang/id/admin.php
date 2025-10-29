@@ -8,12 +8,19 @@ return [
 
     'sidebar' => [
         'main' => 'Utama',
-        'dashboard' => 'Dasbor',
-        'user' => 'Pengguna',
-        'modules_classes' => 'Modul dan Kelas',
-        'no_class' => 'Belum Ada Kelas',
+        'management' => 'Manajemen',
+        'akun' => 'Akun',
         'settings' => 'Pengaturan',
+        'dashboard' => 'Dasbor',
+        'management_class' => 'Manajemen Kelas',
+        'management_module' => 'Manajemen Modul',
+        'user' => 'Pengguna',
+        'my_profile' => 'Profil Saya',
         'application' => 'Aplikasi',
+        'students'=>[
+            'learning'=>'Pembelajaran',
+            'my_class'=>'Kelas Saya'
+        ]
     ],
 
     'lang' => [
@@ -31,15 +38,30 @@ return [
 
     'dashboard' => [
         'title' => 'Dasbor',
-        'header' => 'Dasbor',
+        'header' => 'Modul dan Kelas',
         'module_title' => 'Modul',
-        'create_module' => 'Buat Modul Baru',
-        'total_modules' => 'Total Modul',
-        'total_owners' => 'Total Owner',
-        'class_title' => 'Kelas',
-        'create_class' => 'Buat Kelas Baru',
-        'total_classes' => 'Total Kelas',
+        'add_modules' => 'Tambah Modul',
+        'no_modules' => 'Tidak ada modul tersedia. Silakan tambahkan modul baru.',
+        'add_class' => 'Tambah Kelas',
+        'description' => 'Deskripsi',
+        'tools' => 'Alat',
+        'no_phyphox' => 'Tidak ada alat Phyphox terkait',
+        'no_classes' =>  'Belum ada kelas untuk modul ini',
+        'list_class' => 'Daftar Kelas',
         'total_participants' => 'Total Peserta',
+        'students'=>[
+            'title' => 'Dasbor Siswa',
+            'header' => 'Dasbor',
+            'welcome' => 'Selamat Datang',
+            'choose_class' => 'Pilih kelas di bawah ini untuk memulai pembelajaran',
+            'my_class' => 'Kelas Saya',
+            'class_name' => 'Nama Kelas',
+            'enter_class' => 'Masuk Kelas',
+            'join_class' => 'Masuk Kelas',
+            'unregistered_student' => 'Anda belum terdaftar di kelas manapun',
+            'explore_modules' => 'Jelajahi Modul Lain',
+            'no_modules_available' => 'Tidak ada modul lain yang tersedia saat ini',
+        ]
     ],
 
     'placeholders' => [
@@ -59,6 +81,24 @@ return [
         'delete_title' => 'Hapus Data?',
         'delete_text' => 'Apakah anda yakin ingin menghapus data?',
         'delete_confirm' => 'Lanjutkan',
+        'create' => [
+            'title' => 'Simpan Data?',
+            'text' => 'Pastikan semua data sudah benar!',
+            'confirm' => 'Ya, Simpan!',
+            'cancel' => 'Batal',
+        ],
+        'edit' => [
+            'title' => 'Simpan Perubahan?',
+            'text' => 'Apakah Anda yakin ingin menyimpan perubahan pada data ini?',
+            'confirm' => 'Ya, Simpan',
+            'cancel' => 'Batal',
+        ],
+        'delete' => [
+            'title' => 'Hapus Data?',
+            'text' => 'Apakah anda yakin ingin menghapus data ini?',
+            'confirm' => 'Lanjutkan',
+            'cancel' => 'Batal',    
+        ],
     ],
 
     'kelas_modal' => [
@@ -78,7 +118,7 @@ return [
     'kelas' => [
         'title' => 'Kelas',
         'list_title' => 'Daftar Kelas',
-        'add_button' => 'Tambah Data',
+        'add_button' => 'Tambah Kelas',
         'table_no' => 'No',
         'table_module' => 'Modul',
         'table_class' => 'Kelas',
@@ -88,18 +128,78 @@ return [
         'add_participant_title' => 'Tambah Peserta',
         'add_participant_text' => 'Tambah Peserta',
         'view_participant_title' => 'Lihat Peserta',
-        'edit_title' => 'Edit Data',
-        'delete_title' => 'Hapus Data',
-    ],
+        'edit_title' => 'Edit Kelas',
+        'delete_title' => 'Hapus Kelas',
+        'show'=>[
+            'header' => 'Detail Kelas',
+            'module' => 'Modul',
+            'teacher' => 'Guru Pengajar',
+            'num_participants' => 'Jumlah Peserta',
+            'resume_management' => 'Ringkasan & Manajemen',
+            'gradebook' => 'Buku Nilai',
+            'join_code' => 'Kode Gabung Kelas',
+            'instruction_join_code' => 'Bagikan kode ini kepada siswa untuk bergabung ke kelas ini.',
+            'copy' => 'Salin',
+            
+            //PARTICIPANT MANAGEMENT
+            'manage_participants' => 'Manajemen Peserta',
+            'add_delete_participants' => 'Tambah/Hapus Peserta',
+            'button_manage_participant' => 'Kelola Peserta',
 
-    'modul_detail' => [
-        'title' => 'Detail Modul',
-        'module_info' => 'Informasi Modul',
-        'submodule_list' => 'Daftar Sub Modul',
-        'add_submodule' => 'Tambah Sub Modul',
-        'no_submodule' => 'Belum ada sub modul untuk modul ini.',
-        'edit' => 'Ubah',
-        'delete' => 'Hapus',
+            //FORUM MANAGEMENT
+            'manage_forum' => 'Manajemen Forum',
+            'setup_teams' => 'Kelola Tim Pro dan Kontra untuk Kelas Ini',
+            'button_manage_forum' => 'Kelola Forum',
+            //TABLE
+            'participant_table_name' => 'Nama Peserta',
+            'participant_table_score' => 'Total Skor',
+            'participant_table_point' => 'Point',
+            'participant_table_grade' => 'Beri Nilai',
+            'participant_table_finish' => 'Selesai',
+            'no_participants' => 'Belum ada peserta di kelas ini.',
+        ],
+        'create'=>[
+            'header' => 'Tambah Kelas Baru',
+            'module' => 'Modul',
+            'choose_module' => 'Pilih Modul',
+            'class_name' => 'Nama Kelas',
+            'teacher' => 'Guru Pengajar',
+        ],
+        'peserta' => [
+            'title' => 'Peserta Kelas',
+            'header' => 'Daftar Peserta Kelas',
+            'add_participant' => 'Tambah Peserta',
+            'no_participants' => 'Belum ada peserta di kelas ini.',
+            'join_class' => 'Gabung Kelas',
+            'table_name' => 'Nama Peserta',
+            'table_action' => 'Aksi',
+            'remove_title' => 'Hapus Peserta',
+            'create' => [
+                'header' => 'Tambah Peserta Kelas',
+                'choose_participant' => 'Pilih Peserta',
+            ],
+            'join'=>[
+                'header'=>'Gabung Kelas',
+                'class' => 'Anda akan bergabung ke Kelas',
+                'instruction'=>'Masukkan Kode Kelas (Kode Join)',
+                'placeholder'=>'Contoh: KLS1234',
+                'join_button'=>'Gabung Kelas',
+            ],
+            'swal' => [
+                'create' => [
+                    'title' => 'Simpan Data?',
+                    'text' => 'Pastikan data peserta sudah benar!',
+                    'confirm' => 'Ya, Simpan!',
+                    'cancel' => 'Batal',
+                ],
+                'delete' => [
+                    'title' => 'Hapus Peserta?',
+                    'text' => 'Peserta akan dihapus dari kelas ini!',
+                    'confirm' => 'Ya, Hapus!',
+                    'cancel' => 'Batal',
+                ],
+            ],
+        ]
     ],
 
     'submodul_modal' => [
@@ -118,14 +218,34 @@ return [
         'save_changes' => 'Simpan Perubahan',
     ],
 
-    'modul_list' => [
+    'modul' => [
         'page_title' => 'Manajemen Modul',
         'card_title' => 'Daftar Modul',
         'add_new' => 'Buat Modul Baru',
         'view_details' => 'Lihat Detail',
         'no_modules' => 'Belum ada modul yang dibuat.',
-        'edit' => 'Ubah',
-        'delete' => 'Hapus',
+        'detail' => [
+            'title' => 'Detail Modul',
+            'module_info' => 'Informasi Modul',
+            'tools' => 'Alat Ukur Phyphox',
+            'owner' => 'Pemilik Modul',
+            'dropdown_materi' => 'Sub Modul Materi (Video, Teks, dll)',
+            'dropdown_question' => 'Sub Modul Pertanyaan Refleksi',
+            'dropdown_practicum' => 'Sub Modul Praktikum Phyphox',
+            'dropdown_forum' => 'Sub Modul Forum Debat',
+            'submodule_list' => 'Daftar Sub Modul',
+            'add_submodule' => 'Tambah Sub Modul',
+            'no_submodule' => 'Belum ada sub modul untuk modul ini.',
+        ],
+        'create' => [
+            'header' => 'Tambah Data Modul',
+            'input_tool_phyphox' => 'Pilih Alat Phyphox',
+            'instructions_tool' => 'Kamu bisa memilih lebih dari satu Alat Phyphox',
+            'input_image' => 'Gambar Modul (Opsional)',
+            'input_title' => 'Judul Modul',
+            'input_description' => 'Deskripsi',
+        ],
+        'edit_header' => 'Ubah Data Modul',
     ],
 
    'material_modal' => [
@@ -168,8 +288,21 @@ return [
         'slot_group' => 'Grup Eksperimen',
     ],
 
+    'forum' => [ 
+        'title' => 'Manajemen Forum',
+        'sub_title' => 'Manajemen Tim Forum',
+        'class' => 'Kelas',
+        'instruction' => 'Pilih salah satu sub-modul forum di bawah ini untuk memulai pengaturan tim Pro dan Kontra untuk kelas ini.',
+        'forum_available' => 'Forum Tersedia dari Modul:',
+        'set_team' => 'Atur Tim',
+        'no_submodul' => 'Tidak ada sub-modul forum yang ditemukan untuk modul ini.',
+    ],
+
     'forum_settings' => [
-        'title' => 'Pengaturan Forum Debat',
+        // 'title' => 'Pengaturan Forum Debat',
+        'title' => 'Atur Tim : ',
+        'setting_team_for_class' => 'Anda sedang mengatur tim untuk Kelas: ',
+        'back_text' => 'Kembali ke Daftar Forum',
         'general_settings' => 'Pengaturan Umum Forum',
         'update_settings' => 'Simpan Pengaturan',
         'debate_topic' => 'Topik Debat',
@@ -188,4 +321,61 @@ return [
         'no_students_in_class' => 'Tidak ada siswa di kelas terkait.', // Sesuaikan pesan ini
         'no_members' => 'Belum ada anggota.',
     ],
+
+    //USER MANAGEMENT
+    'user' => [
+        'title' => 'Manajemen Pengguna',
+        'card_title' => 'Daftar Pengguna',
+        'add_new' => 'Buat Pengguna Baru',
+        'table_no' => 'No',
+        'table_name' => 'Nama',
+        'table_username' => 'Nama Pengguna',
+        'table_gender' => 'Jenis Kelamin',
+        'table_role' => 'Peran',
+        'table_email' => 'Email',
+        'table_action' => 'Aksi',
+        'edit_title' => 'Ubah Pengguna',
+        'delete_title' => 'Hapus Pengguna',
+        'create'=>[
+            'header' => 'Tambah Data Pengguna',
+            'input_name' => 'Nama Lengkap',
+            'input_role' => 'Pilih Peran',
+            'choose_role' => '-- Pilih Peran --',
+            'input_username' => 'Nama Pengguna',
+            'input_email' => 'Email',
+            'input_password' => 'Kata Sandi',
+            'input_password_confirmation' => 'Konfirmasi Kata Sandi',
+        ],
+        'edit_header' => 'Ubah Data Pengguna',
+    ],
+
+    'settings' => [
+        'title' => 'Pengaturan',
+        'application' => 'Pengaturan Aplikasi',
+        'update_settings' => 'Perbarui Pengaturan',
+        'app_name' => 'Nama Aplikasi',
+        'app_email' => 'Email Aplikasi',
+        'app_logo' => 'Logo Aplikasi',
+        'app_logo_help' => 'Ukuran yang disarankan: 200x50 piksel. Ukuran maksimal: 2MB.',
+        'app_icon_help' => 'Ukuran maksimal: 50KB.',
+        'save_settings' => 'Simpan Pengaturan',
+        'swal' => [
+            'text' => 'Yakin ingin menyimpan pengaturan?',
+            'default' => 'Seret dan lepas file di sini atau klik',
+            'replace' => 'Seret dan lepas atau klik untuk mengganti',
+            'remove' =>  'Hapus',
+            'error' =>   'Terjadi kesalahan.',
+        ],
+    ],
+
+    'button'=>[
+        'save'=>'Simpan',
+        'save_changes'=>'Simpan Perubahan',
+        'close'=>'Tutup',
+        'cancel'=>'Batal',
+        'forward'=>'Lanjutkan',
+        'delete'=>'Hapus',
+        'edit'=>'Ubah',
+        'add'=>'Tambah',
+    ]
 ];

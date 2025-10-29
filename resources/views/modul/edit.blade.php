@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel">Ubah Data Modul</h5>
+                <h5 class="modal-title" id="editModalLabel">{{__('admin.modul.edit_header')}}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -33,11 +33,11 @@
                         {{-- Tab Bahasa Indonesia --}}
                         <div class="tab-pane fade show active" id="edit-modul-id-pane" role="tabpanel">
                             <div class="mb-3">
-                                <label for="edit_judul_id" class="form-label">Judul Modul (ID)</label>
+                                <label for="edit_judul_id" class="form-label">{{__('admin.modul.create.input_titile')}} (ID)</label>
                                 <input name="judul[id]" id="edit_judul_id" required class="form-control">
                             </div>
                             <div class="mb-3">
-                                <label for="edit_deskripsi_id" class="form-label">Deskripsi (ID)</label>
+                                <label for="edit_deskripsi_id" class="form-label">{{__('admin.modul.create.inout_description')}} (ID)</label>
                                 <textarea name="deskripsi[id]" id="edit_deskripsi_id" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
@@ -45,11 +45,11 @@
                         {{-- Tab Bahasa Inggris --}}
                         <div class="tab-pane fade" id="edit-modul-en-pane" role="tabpanel">
                             <div class="mb-3">
-                                <label for="edit_judul_en" class="form-label">Module Title (EN)</label>
+                                <label for="edit_judul_en" class="form-label">{{__('admin.modul.create.input_titile')}} (EN)</label>
                                 <input type="text" name="judul[en]" id="edit_judul_en" required class="form-control">
                             </div>
                             <div class="mb-3">
-                                <label for="edit_deskripsi_en" class="form-label">Description (EN)</label>
+                                <label for="edit_deskripsi_en" class="form-label">{{__('admin.modul.create.inout_description')}} (EN)</label>
                                 <textarea name="deskripsi[en]" id="edit_deskripsi_en" class="form-control" rows="3"></textarea>
                             </div>
                         </div>

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-{{ __('admin.modul_detail.title') }}: {{ $modul->judul }}
+{{ __('admin.modul.detail.title') }}: {{ $modul->judul }}
 @endsection
 
 @section('content')
@@ -11,7 +11,7 @@
         <div class="col-lg-4">
             <div class="card shadow-sm mb-4">
                 <div class="card-header">
-                    <h5 class="mb-0">{{ __('admin.modul_detail.module_info') }}</h5>
+                    <h5 class="mb-0">{{ __('admin.modul.detail.module_info') }}</h5>
                 </div>
                 <div class="card-body">
                     {{-- Spatie otomatis menampilkan bahasa yang aktif --}}
@@ -21,12 +21,12 @@
                     </p>
                     <hr>
                     <p>
-                        <strong>Phyphox Tools:</strong>
+                        <strong>{{__('admin.modul.detail.tools')}} :</strong>
                         {{-- Asumsi phyphox_id adalah array ID --}}
                         <span class="badge bg-info">{{ count($modul->phyphox_id ?? []) }} Alat</span>
                     </p>
                     <p>
-                        <strong>Pembuat: {{ $modul->owner->name ?? 'N/A' }} </strong>
+                        <strong>{{__('admin.modul.detail.owner')}} : {{ $modul->owner->name ?? 'N/A' }} </strong>
                         {{-- Baris ini dari kode Anda sebelumnya --}}
                     </p>
                 </div>
@@ -36,39 +36,42 @@
         <div class="col-lg-8">
             <div class="card shadow-sm">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">{{ __('admin.modul_detail.submodule_list') }}</h5>
+                    <h5 class="mb-0">{{ __('admin.modul.detail.submodule_list') }}</h5>
 
                     {{-- Tombol memicu modal input sub-modul --}}
                     {{-- [DIUBAH] Tombol "Tambah Sub Modul" sekarang menjadi Dropdown --}}
                     <div class="dropdown">
                         <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="addSubModulMenu"
                             data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa fa-plus me-2"></i>{{ __('admin.modul_detail.add_submodule') }}
+                            <i class="fa fa-plus me-2"></i>{{ __('admin.modul.detail.add_submodule') }}
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="addSubModulMenu">
                             {{-- Tombol ini akan membuka modal yang sama, tapi mengirim data-type 'learning' --}}
                             <li>
                                 <a class="dropdown-item" href="#" data-bs-toggle="modal"
                                     data-bs-target="#createSubModulModal" data-type="learning">
-                                    Sub Modul Materi (Video, Teks, dll)
+                                    {{__('admin.modul.detail.dropdown_materi')}}
                                 </a>
                             </li>
                             {{-- Tombol ini akan membuka modal yang sama, tapi mengirim data-type 'reflection' --}}
                             <li>
                                 <a class="dropdown-item" href="#" data-bs-toggle="modal"
                                     data-bs-target="#createSubModulModal" data-type="reflection">
-                                    Sub Modul Pertanyaan Refleksi
+                                    {{__('admin.modul.detail.dropdown_question')}}
                                 </a>
                             </li>
                             <li>
                                 <a class="dropdown-item" href="#" data-bs-toggle="modal"
                                     data-bs-target="#createSubModulModal" data-type="practicum">
-                                    Sub Modul Praktikum Phyphox
+                                    {{__('admin.modul.detail.dropdown_practicum')}}
                                 </a>
                             </li>
-                            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#createSubModulModal" data-type="forum">
-                                Sub Modul Forum Debat
-                            </a></li>
+                            <li>
+                                <a class="dropdown-item" href="#" data-bs-toggle="modal" 
+                                    data-bs-target="#createSubModulModal" data-type="forum">
+                                    {{__('admin.modul.detail.dropdown_forum')}}
+                                </a>
+                            </li>
                             {{-- <li><a class="dropdown-item" href="#" data-type="forum">Sub Modul Forum (Segera)</a>
                             </li> --}}
                         </ul>
@@ -91,7 +94,7 @@
                                 {{-- Hentikan klik agar link <a> tidak terpicu --}}
                                     <div onclick="event.preventDefault();">
                                         <button class="btn btn-warning btn-sm"
-                                            title="{{ __('admin.modul_detail.edit') }}"
+                                            title="{{ __('admin.button.edit') }}"
                                             data-url="{{ route('submodul.show.json', $subModul->id) }}"
                                             data-update-url="{{ route('submodul.update', $subModul->id) }}"
                                             onclick="editSubModul(this)">
@@ -99,7 +102,7 @@
                                         </button>
 
                                         <button class="btn btn-danger btn-sm"
-                                            title="{{ __('admin.modul_detail.delete') }}"
+                                            title="{{ __('admin.button.delete') }}"
                                             onclick="deleteSubModul({{ $subModul->id }})">
                                             <i class="fa fa-trash"></i>
                                         </button>
@@ -115,7 +118,7 @@
 
                                 @empty
                                 <div class="list-group-item text-center">
-                                    {{ __('admin.modul_detail.no_submodule') }}
+                                    {{ __('admin.modul.detail.no_submodule') }}
                                 </div>
                                 @endforelse
                     </div>

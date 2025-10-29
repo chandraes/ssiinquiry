@@ -1,17 +1,16 @@
 <div class="modal fade" id="editModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
     aria-labelledby="editModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 {{-- [DIUBAH] --}}
                 <h5 class="modal-title" id="editModalLabel">{{ __('admin.kelas_modal.edit_title') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-            <form method="POST" id="editForm">
-                @csrf
-                @method('PATCH')
-                <div class="modal-body">
+            </div>           
+            <div class="modal-body">
+                <form method="POST" id="editForm">
+                    @csrf
+                    @method('PATCH')
                     <div class="col-md-12 mb-3">
                         <div class="form-group">
                             {{-- [DIUBAH] --}}
@@ -65,17 +64,15 @@
                             </div>
                         </div>
                     </div>
-                    {{-- Anda mungkin perlu menambahkan input 'guru_id' di sini untuk Admin --}}
+                {{-- Anda mungkin perlu menambahkan input 'guru_id' di sini untuk Admin --}}
+                </form>
+            </div>
 
-                </div>
-
-                <div class="modal-footer">
-                    {{-- [DIUBAH] --}}
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('admin.kelas_modal.close') }}</button>
-                    <button type="button" id="btnUpdate" class="btn btn-primary">{{ __('admin.kelas_modal.save_changes') }}</button>
-                </div>
-            </form>
-
+            <div class="modal-footer">
+                {{-- [DIUBAH] --}}
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('admin.kelas_modal.close') }}</button>
+                <button type="button" id="btnUpdate" class="btn btn-primary">{{ __('admin.kelas_modal.save_changes') }}</button>
+            </div>
         </div>
     </div>
 </div>

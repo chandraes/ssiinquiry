@@ -35,7 +35,7 @@
                 {{-- 2. MENU GURU & ADMIN --}}
                 @role(['admin', 'guru'])
                 <li class="sub-category">
-                    <h3>Manajemen</h3>
+                    <h3>{{ __('admin.sidebar.management') }}</h3>
                 </li>
 
                 {{-- Link ke Gradebook & Manajemen Kelas --}}
@@ -43,7 +43,7 @@
                     <a class="side-menu__item {{ request()->routeIs('kelas*') || request()->routeIs('forum.teams*') ? 'active' : '' }}"
                        data-bs-toggle="slide" href="{{ route('kelas') }}">
                        <i class="side-menu__icon fe fe-book-open"></i>
-                        <span class="side-menu__label">Manajemen Kelas</span>
+                        <span class="side-menu__label">{{ __('admin.sidebar.management_class') }}</span>
                     </a>
                 </li>
 
@@ -52,7 +52,7 @@
                     <a class="side-menu__item {{ request()->routeIs('modul*') || request()->routeIs('submodul*') || request()->routeIs('learning_material*') || request()->routeIs('reflection_question*') || request()->routeIs('practicum_slot*') ? 'active' : '' }}"
                        data-bs-toggle="slide" href="{{ route('modul') }}">
                        <i class="side-menu__icon fe fe-edit"></i>
-                        <span class="side-menu__label">Manajemen Modul</span>
+                        <span class="side-menu__label">{{ __('admin.sidebar.management_module') }}</span>
                     </a>
                 </li>
 
@@ -68,7 +68,7 @@
                 {{-- 3. MENU SISWA --}}
                 @role('siswa')
                 <li class="sub-category">
-                    <h3>Pembelajaran</h3>
+                    <h3>{{ __('admin.sidebar.students.learning') }}</h3>
                 </li>
                 <li class="slide">
                     {{--
@@ -78,7 +78,7 @@
                     <a class="side-menu__item {{ request()->routeIs('student.class.show') || request()->routeIs('student.submodule.show') || request()->routeIs('student.class.grades') ? 'active' : '' }}"
                        data-bs-toggle="slide" href="{{ route('home') }}">
                        <i class="side-menu__icon fe fe-book-open"></i>
-                        <span class="side-menu__label">Kelas Saya</span>
+                        <span class="side-menu__label">{{ __('admin.sidebar.students.my_class') }}</span>
                     </a>
                 </li>
                 @endrole
@@ -86,18 +86,21 @@
 
                 {{-- 4. MENU PENGATURAN (Semua Role) --}}
                 <li class="sub-category">
-                    <h3>Akun</h3>
+                    <h3>{{ __('admin.sidebar.account') }}</h3>
                 </li>
-                <li class.="slide">
+                <li class="slide">
                     <a class="side-menu__item {{ request()->routeIs('profile.*') ? 'active' : '' }}" data-bs-toggle="slide"
                         href="{{ route('profile.index') }}"><i class="side-menu__icon fe fe-user"></i>
-                        <span class="side-menu__label">Profil Saya</span>
+                        <span class="side-menu__label">{{ __('admin.sidebar.my_profile') }}</span>
                     </a>
                 </li>
 
                 {{-- Khusus Admin --}}
                 @role('admin')
-                <li class.="slide">
+                <li class="sub-category">
+                    <h3>{{ __('admin.sidebar.settings') }}</h3>
+                </li>
+                <li class="slide">
                     <a class="side-menu__item {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}"
                         href="{{ route('admin.settings.index') }}"><i class="side-menu__icon fe fe-settings"></i>
                         <span class="side-menu__label">{{ __('admin.sidebar.application') }}</span>

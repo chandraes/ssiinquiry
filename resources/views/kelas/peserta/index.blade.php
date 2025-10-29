@@ -139,53 +139,35 @@ Peserta Kelas
         });
     });
 
-    // $(document).ready(function() {
-    //     $('#btnUpload').on('click', function(e) {
-    //         e.preventDefault();
-    //         Swal.fire({
-    //             title: 'Upload Peserta?',
-    //             text: "Pastikan file sudah sesuai template!",
-    //             icon: 'question',
-    //             showCancelButton: true,
-    //             confirmButtonText: 'Ya, Upload!',
-    //             cancelButtonText: 'Batal',
-    //         }).then((result) => {
-    //             if (result.isConfirmed) {
-    //                 $('#uploadForm').submit();
-    //             }
-    //         });
+    // function proButton(id) {
+    //     Swal.fire({
+    //         title: 'Ubah Status Peserta?',
+    //         text: "Peserta akan ditandai sebagai Tim Pro!",
+    //         icon: 'warning',
+    //         showCancelButton: true,
+    //         confirmButtonText: 'Lanjutkan!',
+    //         cancelButtonText: 'Batal'
+    //     }).then((result) => {
+    //         if (result.isConfirmed) {
+    //             document.getElementById('pro-form-' + id).submit();
+    //         }
     //     });
-    // });
+    // }
 
-    function proButton(id) {
-        Swal.fire({
-            title: 'Ubah Status Peserta?',
-            text: "Peserta akan ditandai sebagai Tim Pro!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Lanjutkan!',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                document.getElementById('pro-form-' + id).submit();
-            }
-        });
-    }
-
-    function kontraButton(id) {
-        Swal.fire({
-            title: 'Ubah Status Peserta?',
-            text: "Peserta akan ditandai sebagai Tim Kontra!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Lanjutkan!',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                document.getElementById('kontra-form-' + id).submit();
-            }
-        });
-    }
+    // function kontraButton(id) {
+    //     Swal.fire({
+    //         title: 'Ubah Status Peserta?',
+    //         text: "Peserta akan ditandai sebagai Tim Kontra!",
+    //         icon: 'warning',
+    //         showCancelButton: true,
+    //         confirmButtonText: 'Lanjutkan!',
+    //         cancelButtonText: 'Batal'
+    //     }).then((result) => {
+    //         if (result.isConfirmed) {
+    //             document.getElementById('kontra-form-' + id).submit();
+    //         }
+    //     });
+    // }
 
     function deleteButton(id) {
         Swal.fire({

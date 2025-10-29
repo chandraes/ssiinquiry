@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('title')
-Pengguna
+{{ __('admin.user.title') }}
 @endsection
 @section('content')
 @include('swal')
@@ -16,10 +16,10 @@ Pengguna
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-header justify-content-between">
-                                    <h2 class="card-title">Daftar Pengguna</h2>
+                                    <h2 class="card-title">{{__('admin.user.card_title')}}</h2>
                                     <button
                                         type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#createModal">
-                                        <i class="fa fa-plus me-2"></i>Tambah Data
+                                        <i class="fa fa-plus me-2"></i>{{__('admin.user.add_new')}}
                                     </button>
                                 </div>
 
@@ -31,13 +31,13 @@ Pengguna
                                         <table class="table table-bordered text-nowrap border-bottom w-100" id="data">
                                             <thead>
                                                 <tr>
-                                                    <th class="text-center align-middle">No</th>
-                                                    <th class="text-start align-middle">Nama</th>
-                                                    <th class="text-start align-middle">Nama Pengguna</th>
-                                                    {{-- <th class="text-start align-middle">Jenis Kelamin</th> --}}
-                                                    <th class="text-start align-middle">Role</th>
-                                                    <th class="text-start align-middle">Email</th>
-                                                    <th class="text-center align-middle">Aksi</th>
+                                                    <th class="text-center align-middle">{{__('admin.user.table_no')}}</th>
+                                                    <th class="text-start align-middle">{{__('admin.user.table_name')}}</th>
+                                                    <th class="text-start align-middle">{{__('admin.user.table_username')}}</th>
+                                                    {{-- <th class="text-start align-middle">{{__('admin.user.table_gender')}}</th> --}}
+                                                    <th class="text-start align-middle">{{__('admin.user.table_role')}}</th>
+                                                    <th class="text-start align-middle">{{__('admin.user.table_email')}}</th>
+                                                    <th class="text-center align-middle">{{__('admin.user.table_action')}}</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -116,12 +116,12 @@ Pengguna
         e.preventDefault();
 
         Swal.fire({
-            title: 'Apakah Anda yakin?',
-            text: "Data akan disimpan!",
+            title: '{{__('admin.swal.create.title')}}',
+            text: '{{__('admin.swal.create.text')}}',
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: 'Ya, Simpan!',
-            cancelButtonText: 'Batal',
+            confirmButtonText: '{{__('admin.swal.create.confirm')}}',
+            cancelButtonText: '{{__('admin.swal.create.cancel')}}',
             reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
@@ -153,12 +153,12 @@ Pengguna
         e.preventDefault();
 
         Swal.fire({
-            title: 'Simpan Perubahan?',
-            text: "Apakah Anda yakin ingin menyimpan perubahan pada modul ini?",
+            title: '{{__('admin.swal.edit.title')}}',
+            text: '{{__('admin.swal.edit.text')}}',
             icon: 'question',
             showCancelButton: true,
-            confirmButtonText: 'Ya, Simpan',
-            cancelButtonText: 'Batal',
+            confirmButtonText: '{{__('admin.swal.edit.confirm')}}',
+            cancelButtonText: '{{__('admin.swal.edit.cancel')}}',
             reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
@@ -170,14 +170,14 @@ Pengguna
     // Hapus data
     function deleteButton(id) {
         Swal.fire({
-            title: 'Delete Data',
-            text: "Apakah anda yakin ingin menghapus data?",
+            title: '{{__('admin.swal.delete.title')}}',
+            text: '{{__('admin.swal.delete.text')}}',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Lanjutkan',
-            cancelButtonText: 'Batal'
+            confirmButtonText: '{{__('admin.swal.delete.confirm')}}',
+            cancelButtonText: '{{__('admin.swal.delete.cancel')}}',
         }).then((result) => {
             if (result.isConfirmed) {
                 document.getElementById('delete-form-' + id).submit();

@@ -8,12 +8,19 @@ return [
 
     'sidebar' => [
         'main' => 'Main',
-        'dashboard' => 'Dashboard',
-        'user' => 'User',
-        'modules_classes' => 'Modules & Classes',
-        'no_class' => 'No Class Yet',
+        'management' => 'Management',
+        'account' => 'Account',
         'settings' => 'Settings',
+        'dashboard' => 'Dashboard',
+        'management_class' => 'Class Management',
+        'management_module' => 'Module Management',
+        'user' => 'User',
+        'my_profile' => 'My Profile',
         'application' => 'Application',
+        'students' =>[
+            'learning' => 'Learning',
+            'my_class' => 'My Class'
+        ]
     ],
 
     'lang' => [
@@ -31,15 +38,30 @@ return [
 
     'dashboard' => [
         'title' => 'Dashboard',
-        'header' => 'Dashboard',
-        'module_title' => 'Module',
-        'create_module' => 'Create New Module',
-        'total_modules' => 'Total Modules',
-        'total_owners' => 'Total Owners',
-        'class_title' => 'Class',
-        'create_class' => 'Create New Class',
-        'total_classes' => 'Total Classes',
+        'header' => 'Modules and Classes',
+        'module_title' => 'Modules',
+        'add_modules' => 'Add Modules',
+        'no_modules' => 'No modules available. Please add a new module.',
+        'add_class' => 'Add Class',
+        'description' => 'Description',
+        'tools' => 'Tools',
+        'no_phyphox' => 'No associated Phyphox tools',
+        'no_classes' => 'There are no classes for this module yet',
+        'list_class' => 'List of Classes',
         'total_participants' => 'Total Participants',
+        'students' => [
+            'title' => 'Student Dashboard',
+            'header' => 'Dashboard',
+            'welcome' => 'Welcome',
+            'choose_class' => 'Choose a class below to start learning',
+            'my_class' => 'My Class',
+            'class_name' => 'Class Name',
+            'enter_class' => 'Enter Class',
+            'join_class' => 'Join Class',
+            'unregistered_student' => 'You are not yet enrolled in any classes',
+            'explore_modules' => 'Explore Other Modules',
+            'no_modules_available' => 'No other modules are currently available',
+        ]
     ],
 
     'placeholders' => [
@@ -50,16 +72,35 @@ return [
 
     'swal' => [
         'save_title' => 'Save Data?',
-        'save_text' => 'Please ensure all data is correct!',
+        'save_text' => 'Make sure all data is correct!',
         'save_confirm' => 'Yes, Save!',
         'cancel' => 'Cancel',
         'update_title' => 'Save Changes?',
-        'update_text' => 'Are you sure you want to save the changes for this class?',
+        'update_text' => 'Are you sure you want to save changes to this class?',
         'update_confirm' => 'Yes, Save',
         'delete_title' => 'Delete Data?',
         'delete_text' => 'Are you sure you want to delete this data?',
         'delete_confirm' => 'Continue',
+        'create' => [
+            'title' => 'Save Data?',
+            'text' => 'Make sure all data is correct!',
+            'confirm' => 'Yes, Save!',
+            'cancel' => 'Cancel',
+        ],
+        'edit' => [
+            'title' => 'Save Changes?',
+            'text' => 'Are you sure you want to save changes to this data?',
+            'confirm' => 'Yes, Save',
+            'cancel' => 'Cancel',
+        ],
+        'delete' => [
+            'title' => 'Delete Data?',
+            'text' => 'Are you sure you want to delete this data?',
+            'confirm' => 'Continue',
+            'cancel' => 'Cancel',    
+        ],
     ],
+
 
     'kelas_modal' => [
         'add_title' => 'Add Class Data',
@@ -78,28 +119,88 @@ return [
     'kelas' => [
         'title' => 'Class',
         'list_title' => 'Class List',
-        'add_button' => 'Add Data',
+        'add_button' => 'Add Class',
         'table_no' => 'No',
         'table_module' => 'Module',
         'table_class' => 'Class',
         'table_participants' => 'Participants',
-        'table_teacher' => 'Teacher',
+        'table_teacher' => 'Instructor',
         'table_action' => 'Action',
-        'add_participant_title' => 'Add Participants',
-        'add_participant_text' => 'Add Participants',
+        'add_participant_title' => 'Add Participant',
+        'add_participant_text' => 'Add Participant',
         'view_participant_title' => 'View Participants',
-        'edit_title' => 'Edit Data',
-        'delete_title' => 'Delete Data',
-    ],
+        'edit_title' => 'Edit Class',
+        'delete_title' => 'Delete Class',
+        'show'=>[
+            'header' => 'Class Details',
+            'module' => 'Module',
+            'teacher' => 'Teacher',
+            'num_participants' => 'Number of Participants',
+            'resume_management' => 'Summary & Management',
+            'gradebook' => 'Gradebook',
+            'join_code' => 'Class Join Code',
+            'instruction_join_code' => 'Share this code with students to join this class.',
+            'copy' => 'Copy',
 
-    'modul_detail' => [
-        'title' => 'Module Detail',
-        'module_info' => 'Module Information',
-        'submodule_list' => 'Sub Module List',
-        'add_submodule' => 'Add Sub Module',
-        'no_submodule' => 'No sub modules found for this module.',
-        'edit' => 'Edit',
-        'delete' => 'Delete',
+            //PARTICIPANT MANAGEMENT
+            'manage_participants' => 'Participant Management',
+            'add_delete_participants' => 'Add/Delete Participants',
+            'button_manage_participant' => 'Manage Participants',
+
+            //FORUM MANAGEMENT
+            'manage_forum' => 'Forum Management',
+            'setup_teams' => 'Manage Pro and Con Teams for This Class',
+            'button_manage_forum' => 'Manage Forum',
+            //TABLE
+            'participant_table_name' => 'Participant Name',
+            'participant_table_score' => 'Total Score',
+            'participant_table_point' => 'Points',
+            'participant_table_grade' => 'Give Grade',
+            'participant_table_finish' => 'Finish',
+            'no_participants' => 'There are no participants in this class yet.',
+        ],
+        'create' => [
+            'header' => 'Add New Class',
+            'module' => 'Module',
+            'choose_module' => 'Select Module',
+            'class_name' => 'Class Name',
+            'teacher' => 'Instructor',
+        ],
+        'peserta' => [
+            'title' => 'Class Participants',
+            'header' => 'Class Participant List',
+            'add_participant' => 'Add Participant',
+            'no_participants' => 'No participants have joined this class yet.',
+            'join_class' => 'Join Class',
+            'table_name' => 'Participant Name',
+            'table_action' => 'Action',
+            'remove_title' => 'Remove Participant',
+            'create' => [
+                'header' => 'Add Class Participant',
+                'choose_participant' => 'Select Participant',
+            ],
+            'join' => [
+                'header' => 'Join Class',
+                'class' => 'You are about to join the class',
+                'instruction' => 'Enter Class Code (Join Code)',
+                'placeholder' => 'Example: CLS1234',
+                'join_button' => 'Join Class',
+            ],
+            'swal' => [
+                'create' => [
+                    'title' => 'Save Data?',
+                    'text' => 'Make sure the participant data is correct!',
+                    'confirm' => 'Yes, Save!',
+                    'cancel' => 'Cancel',
+                ],
+                'delete' => [
+                    'title' => 'Remove Participant?',
+                    'text' => 'The participant will be removed from this class!',
+                    'confirm' => 'Yes, Remove!',
+                    'cancel' => 'Cancel',
+                ],
+            ],
+        ],
     ],
 
     'submodul_modal' => [
@@ -118,14 +219,34 @@ return [
         'save_changes' => 'Save Changes',
     ],
 
-    'modul_list' => [
+    'modul' => [
         'page_title' => 'Module Management',
         'card_title' => 'Module List',
         'add_new' => 'Create New Module',
         'view_details' => 'View Details',
         'no_modules' => 'No modules have been created yet.',
-        'edit' => 'Edit',
-        'delete' => 'Delete',
+        'detail' => [
+            'title' => 'Module Details',
+            'module_info' => 'Module Information',
+            'tools' => 'Phyphox Measuring Tools',
+            'owner' => 'Module Owner',
+            'dropdown_materi' => 'Submodule: Material (Video, Text, etc.)',
+            'dropdown_question' => 'Submodule: Reflection Questions',
+            'dropdown_practicum' => 'Submodule: Phyphox Practicum',
+            'dropdown_forum' => 'Submodule: Debate Forum',
+            'submodule_list' => 'Submodule List',
+            'add_submodule' => 'Add Submodule',
+            'no_submodule' => 'No submodules available for this module.',
+        ],
+        'create' => [
+            'header' => 'Add New Module',
+            'input_tool_phyphox' => 'Select Phyphox Tool',
+            'instructions_tool' => 'You can select more than one Phyphox Tool.',
+            'input_image' => 'Module Image (Optional)',
+            'input_title' => 'Module Title',
+            'input_description' => 'Description',
+        ],
+        'edit_header' => 'Edit Module Data',
     ],
 
    'material_modal' => [
@@ -168,8 +289,21 @@ return [
         'slot_group' => 'Experiment Group',
     ],
 
+    'forum' => [ 
+        'title' => 'Forum Management',
+        'sub_title' => 'Forum Team Management',
+        'class' => 'Class',
+        'instruction' => 'Select one of the forum submodules below to start setting up the Pro and Contra teams for this class.',
+        'forum_available' => 'Available Forums from Module:',
+        'set_team' => 'Set Team',
+        'no_submodul' => 'No forum submodules found for this module.',
+    ],
+
     'forum_settings' => [
-        'title' => 'Debate Forum Settings',
+        // 'title' => 'Debate Forum Settings',
+        'title' => 'Set Team: ',
+        'setting_team_for_class' => 'You are setting up a team for Class: ',
+        'back_text' => 'Back to Forum List',
         'general_settings' => 'General Forum Settings',
         'update_settings' => 'Save Settings',
         'debate_topic' => 'Debate Topic',
@@ -187,5 +321,62 @@ return [
         'remove_from_team' => 'Remove from Team',
         'no_students_in_class' => 'No students in related classes.', // Adjust message
         'no_members' => 'No members yet.',
+    ],
+
+    // USER MANAGEMENT
+    'user' => [
+        'title' => 'User Management',
+        'card_title' => 'User List',
+        'add_new' => 'Create New User',
+        'table_no' => 'No',
+        'table_name' => 'Name',
+        'table_username' => 'Username',
+        'table_gender' => 'Gender',
+        'table_role' => 'Role',
+        'table_email' => 'Email',
+        'table_action' => 'Action',
+        'edit_title' => 'Edit User',
+        'delete_title' => 'Delete User',
+        'create' => [
+            'header' => 'Add New User',
+            'input_name' => 'Full Name',
+            'input_role' => 'Select Role',
+            'choose_role' => '-- Select Role --',
+            'input_username' => 'Username',
+            'input_email' => 'Email',
+            'input_password' => 'Password',
+            'input_password_confirmation' => 'Confirm Password',
+        ],
+        'edit_header' => 'Edit User Data',
+    ],
+
+    'settings' => [
+        'title' => 'Settings',
+        'application' => 'Application Settings',
+        'update_settings' => 'Update Settings',
+        'app_name' => 'Application Name',
+        'app_email' => 'Application Email',
+        'app_logo' => 'Application Logo',
+        'app_logo_help' => 'Recommended size: 200x50 pixels. Max size: 2MB.',
+        'app_icon_help' => 'Max size: 50KB.',
+        'save_settings' => 'Save Settings',
+        'swal' => [
+            'text' => 'Are you sure you want to save the settings?',
+            'default' => 'Drag and drop files here or click',
+            'replace' => 'Drag and drop or click to replace',
+            'remove' => 'Delete',
+            'error' => 'An error occurred.',
+        ],
+    ],
+
+    'button' => [
+        'save' => 'Save',
+        'save_changes' => 'Save Changes',
+        'close' => 'Close',
+        'cancel' => 'Cancel',
+        'forward' => 'Next',
+        'delete' => 'Delete',
+        'edit' => 'Edit',
+        'add' => 'Add',
     ],
 ];

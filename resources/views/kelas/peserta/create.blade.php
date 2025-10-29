@@ -7,15 +7,15 @@
         <input type="hidden" name="kelas_id" value="{{ $kelas->id }}">
 
         <div class="modal-header bg-primary text-white">
-          <h5 class="modal-title" id="createModalLabel">Tambah Peserta Kelas</h5>
+          <h5 class="modal-title" id="createModalLabel">{{__('admin.kelas.peserta.create.header')}}</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
         </div>
 
         <div class="modal-body">
           <div class="form-group mb-3">
-            <label for="user_id" class="form-label">Pilih Peserta</label>
+            <label for="user_id" class="form-label">{{__('admin.kelas.peserta.create.choose_participant')}}</label>
             <select class="form-control select2" name="user_id" id="user_id" required style="width: 100%">
-              <option value="">-- Pilih Peserta --</option>
+              <option value="">-- {{__('admin.kelas.peserta.create.choose_participant')}} --</option>
               @foreach($siswa as $s)
                 <option value="{{ $s->id }}" {{ (int)old('user_id') === $s->id ? 'selected' : '' }}>
                   {{ $s->name }}
@@ -26,8 +26,8 @@
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-          <button type="button" id="btnCreate" class="btn btn-primary">Simpan</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{__('admin.button.cancel')}}</button>
+          <button type="button" id="btnCreate" class="btn btn-primary">{{__('admin.button.save')}}</button>
         </div>
       </form>
     </div>
