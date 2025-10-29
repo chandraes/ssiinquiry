@@ -123,7 +123,7 @@ class KelasController extends Controller
                 ]);
             }
             
-            dd($request-> all(), $request->modul_id);
+            // dd($request-> all(), $request->modul_id);
 
             // ... (Logika kodeJoin Anda tidak berubah, sudah bagus) ...
             $kodeJoin = (function() {
