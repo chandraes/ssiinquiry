@@ -29,7 +29,7 @@ return [
         'en' => 'English',
     ],
 
-    'profile' => [
+    'sidebar_profile' => [
         'alt' => 'Foto Profil',
         'title' => 'Profil',
         'settings' => 'Pengaturan',
@@ -99,6 +99,30 @@ return [
             'confirm' => 'Lanjutkan',
             'cancel' => 'Batal',    
         ],
+        'upload' => [
+            'title' => 'Konfirmasi Upload',
+            'text' => 'Apakah Anda yakin ingin mengunggah file ini?',
+            'confirm' => 'Ya, Upload',
+        ],
+        'save_answer' => [
+            'title' => 'Simpan Jawaban?',
+            'text' => 'Apakah Anda yakin ingin menyimpan jawaban ini?',
+            'confirm' => 'Ya, Simpan',
+            'status' => 'Menyimpan...',
+        ],
+        'success' => [
+            'title' => 'Berhasil!',
+            'text' => 'Data Berhasil Disimpan!',
+            'confirm' => 'Oke',
+        ],
+        'failed' => [
+            'title' => 'Gagal!',
+            'text' => 'Data Berhasil Disimpan!',
+            'confirm' => 'Oke',
+        ],
+        'failed_get_instruction' => 'Gagal mengambil data petunjuk.',
+        'failed_get_slot' => 'Gagal mengambil data slot.',
+        'failed_get_reflection' => 'Gagal mengambil data pertanyaan.',
     ],
 
     'kelas_modal' => [
@@ -245,7 +269,10 @@ return [
             'input_title' => 'Judul Modul',
             'input_description' => 'Deskripsi',
         ],
-        'edit_header' => 'Ubah Data Modul',
+        'edit' => [
+            'header' => 'Ubah Data Modul',
+            'image_instruction' => 'Kosongkan jika tidak ingin mengubah gambar',
+        ],
     ],
 
    'material_modal' => [
@@ -254,16 +281,20 @@ return [
         'add_infographic' => 'Add Infographic (Image)',
         'edit_title' => 'Ubah Materi',
         'add_regulation' => 'Add Regulation (PDF)',
+        'add_video' => 'Tambah Materi Video',
 
         // New generic key
         'url_label' => 'Material URL',
         'url_placeholder' => 'https://example.com/...',
+        'url_instruction' => 'Masukkan URL langsung ke gambar infografis (misal: .../gambar.jpg)',
 
         'add_rich_text' => 'Tambah Materi Teks (Rich Text)', // <-- BARU
 
         // ... (key url_label)
         'rich_text_content_id' => 'Konten Teks (ID)', // <-- BARU
         'rich_text_content_en' => 'Text Content (EN)',
+
+        'url_video_label' => 'URL Video (YouTube/Vimeo)',
     ],
 
     'reflection_modal' => [
@@ -285,7 +316,25 @@ return [
         'add_slot' => 'Tambah Slot Unggahan',
         'slot_label' => 'Label Slot',
         'slot_desc' => 'Deskripsi/Nama File',
+        'slot_tool' => 'Tipe Data Phyphox',
         'slot_group' => 'Grup Eksperimen',
+        'choose_data' => 'Pilih Tipe Data',
+        'amplitude' => 'Audio Amplitude (Amplitudo vs Waktu)',
+        'spectrum' => 'Audio Spectrum (Spektrum vs Frekuensi)',
+        'tool_instruction' => 'Ini akan menentukan bagaimana grafik ditampilkan',
+        'placeholder_group' => 'Contoh : Eksperimen 1',
+        'edit_slot' => 'Ubah Slot Unggahan',
+        'no_practicum_instruction' => 'Belum ada petunjuk praktikum yang dibuat',
+        'no_slot' => 'Belum ada slot unggahan yang dibuat',
+    ],
+
+    'reflection' => [
+        'title' => 'Pertanyaan Refleksi',
+        'header' => 'Daftar Pertanyaan Refleksi',
+        'add_reflection' => 'Tambah Pertanyaan',
+        'no_reflection' => 'Belum ada pertanyaan refleksi untuk sub modul ini',
+        'student_answer' => 'Jawaban Siswa',
+        'student_answer_instruction' => 'Tampilan untuk jawaban siswa per kelas akan muncul di sini.',
     ],
 
     'forum' => [ 
@@ -299,7 +348,6 @@ return [
     ],
 
     'forum_settings' => [
-        // 'title' => 'Pengaturan Forum Debat',
         'title' => 'Atur Tim : ',
         'setting_team_for_class' => 'Anda sedang mengatur tim untuk Kelas: ',
         'back_text' => 'Kembali ke Daftar Forum',
@@ -349,6 +397,49 @@ return [
         'edit_header' => 'Ubah Data Pengguna',
     ],
 
+    //SISWA
+    'siswa' => [
+        'no_materi' => 'Belum ada materi pembelajaran untuk sub modul ini',
+        'no_practicum_instruction' => 'Belum ada petunjuk praktikum yang dibuat',
+        'upload_csv' => 'Unggah CSV',
+        'no_slot' => 'Belum ada slot unggahan yang dibuat',
+        'no_reflection' => 'Belum ada pertanyaan refleksi untuk sub modul ini',
+        'reflection' => [
+            'your_answer' => 'Jawaban Anda',
+            'fill_answer' => 'Mohon isi jawaban Anda',
+            'saved' => 'Tersimpan',
+            'wait_answer' => 'Menunggu Jawaban',
+            'save_answer' => 'Simpan Jawaban',
+        ]
+
+    ],
+    
+    'profile' => [
+        'title' => 'Profil Saya',
+        'edit_profile' => 'Edit Profile',
+        'information' => 'Informasi Pribadi',
+        'alt_image' => 'Foto Profil',
+        'name' => 'Nama Lengkap',
+        'school' => 'Asal Sekolah',
+        'hp' => 'Nomer HP',
+        'email' => 'Email',
+        'edit' => [
+            'title' => 'Ubah Profil Saya',
+            'header' => 'Ubah Profil',
+            'change_image' => 'Ganti Foto',
+            'delete_image' => 'Hapus Foto',
+            'max_image' => 'Format: .jpg, .jpeg, atau .png. Ukuran maks: 2MB',
+            'school_placeholder' => 'Masukkan asal sekolah',
+            'hp_placeholder' => 'Masukkan nomor HP',
+            'change_password' => 'Ubah Password (Opsional)',
+            'password_instruction' => 'Kosongkan jika Anda tidak ingin mengubah password',
+            'new_password' => 'Kata Sandi Baru',
+            'new_password_placeholder' => 'Masukkan password baru',
+            'password_confirmation' => 'Konfirmasi Kata Sandi',
+            'confirmation_password_placeholder' => 'Ulangi password baru',
+            ]
+    ],
+
     'settings' => [
         'title' => 'Pengaturan',
         'application' => 'Pengaturan Aplikasi',
@@ -377,5 +468,7 @@ return [
         'delete'=>'Hapus',
         'edit'=>'Ubah',
         'add'=>'Tambah',
+        'ok' => 'Oke',
+        'back'=> 'Kembali',
     ]
 ];

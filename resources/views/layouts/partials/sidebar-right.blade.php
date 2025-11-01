@@ -47,7 +47,7 @@
                                 $fotoPath = auth()->user()->profile?->foto ? 'storage/'. auth()->user()->profile?->foto : 'assets/images/users/default.jpg' ;
                             @endphp
                             {{-- [DIUBAH] alt text --}}
-                            <img src="{{asset($fotoPath)}}" alt="{{ __('admin.profile.alt') }}"
+                            <img src="{{asset($fotoPath)}}" alt="{{ __('admin.sidebar_profile.alt') }}"
                                 class="avatar  profile-user brround cover-image">
                         </span>
                     </a>
@@ -61,20 +61,20 @@
                         <div class="dropdown-divider m-0"></div>
                         <a class="dropdown-item" href="{{route('profile.index')}}">
                             {{-- [DIUBAH] --}}
-                            <i class="dropdown-icon fe fe-user"></i> {{ __('admin.profile.title') }}
+                            <i class="dropdown-icon fe fe-user"></i> {{ __('admin.sidebar_profile.title') }}
                         </a>
 
                         @role(['admin'])
                         <a class="dropdown-item" href="{{route('admin.settings.index')}}">
                             {{-- [DIUBAH] --}}
-                            <i class="dropdown-icon fe fe-settings"></i> {{ __('admin.profile.settings') }}
+                            <i class="dropdown-icon fe fe-settings"></i> {{ __('admin.sidebar_profile.settings') }}
                         </a>
                         @endrole
 
                         <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                             {{-- [DIUBAH] --}}
-                            <i class="dropdown-icon fe fe-alert-circle"></i> {{ __('admin.profile.sign_out') }}
+                            <i class="dropdown-icon fe fe-alert-circle"></i> {{ __('admin.sidebar_profile.sign_out') }}
                         </a>
 
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

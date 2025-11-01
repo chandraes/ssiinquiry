@@ -6,18 +6,18 @@
             <input type="hidden" name="type" value="video">
 
             <div class="modal-content">
-                <div class="modal-header"><h5 class="modal-title">Tambah Materi Video</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-header"><h5 class="modal-title">{{__('admin.material_modal.add_video') }}</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
                 <div class="modal-body">
                     @include('learning_material.partials.title_tabs')
 
                     <div class="col-md-12 mb-3">
-                        <label for="content_url" class="form-label">URL Video (YouTube/Vimeo)</label>
+                        <label for="content_url" class="form-label">{{__('admin.material_modal.url_video_label') }}</label>
                         <input type="url" name="content_url" class="form-control" required>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{__('admin.submodul_modal.close') }}</button>
+                    <button type="submit" class="btn btn-primary">{{__('admin.submodul_modal.save') }}</button>
                 </div>
             </div>
         </form>

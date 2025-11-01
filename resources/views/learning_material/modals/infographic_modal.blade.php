@@ -23,7 +23,7 @@
                         <label for="infographic_url" class="form-label">{{ __('admin.material_modal.url_label') }}</label>
                         {{-- Nama input: "content_url", sesuai controller --}}
                         <input type="url" name="content_url" id="infographic_url" class="form-control" placeholder="{{ __('admin.material_modal.url_placeholder') }}" required>
-                        <small class="text-muted">Masukkan URL langsung ke gambar infografis (misal: .../gambar.jpg)</small>
+                        <small class="text-muted">{{ __('admin.material_modal.url_instruction') }}</small>
                     </div>
 
                 </div>

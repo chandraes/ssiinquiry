@@ -92,12 +92,12 @@
         tinymce.triggerSave();
 
         Swal.fire({
-            title: '{{ __("admin.swal.update_title") }}',
-            text: "Yakin ingin menyimpan pengaturan forum ini?",
+            title: '{{ __("admin.swal.edit.title") }}',
+            text: '{{__("admin.swal.edit.text"}}',
             icon: 'question',
             showCancelButton: true,
-            confirmButtonText: '{{ __("admin.swal.update_confirm") }}',
-            cancelButtonText: '{{ __("admin.swal.cancel") }}',
+            confirmButtonText: '{{ __("admin.swal.edit.confirm") }}',
+            cancelButtonText: '{{ __("admin.swal.edit.cancel") }}',
         }).then((result) => {
             if (result.isConfirmed) {
                 form.submit();

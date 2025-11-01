@@ -54,7 +54,7 @@
                 </div>
             @empty
                 <div class="alert alert-info text-center">
-                    Belum ada materi pembelajaran untuk sub modul ini.
+                    {{__('admin.siswa.no_materi')}}.
                 </div>
             @endforelse
         </div>

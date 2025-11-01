@@ -4,12 +4,12 @@ return [
     'loader_alt' => 'Loader',
     'logo_alt' => 'Logo',
 
-    'footer_copyright' => 'Copyright © :year by <a href="javascript:void(0);"> SSI Inquiry </a> All rights reserved',
+    'footer_copyright' => 'Copyright © :year by <a href="javascript:void(0);">SSI Inquiry</a> All rights reserved.',
 
     'sidebar' => [
         'main' => 'Main',
         'management' => 'Management',
-        'account' => 'Account',
+        'akun' => 'Account',
         'settings' => 'Settings',
         'dashboard' => 'Dashboard',
         'management_class' => 'Class Management',
@@ -17,56 +17,56 @@ return [
         'user' => 'User',
         'my_profile' => 'My Profile',
         'application' => 'Application',
-        'students' =>[
-            'learning' => 'Learning',
-            'my_class' => 'My Class'
+        'students'=>[
+            'learning'=>'Learning',
+            'my_class'=>'My Classes'
         ]
     ],
 
     'lang' => [
         'title' => 'Language',
-        'id' => 'Indonesia',
+        'id' => 'Indonesian',
         'en' => 'English',
     ],
 
-    'profile' => [
-        'alt' => 'Profile Picture',
+    'sidebar_profile' => [
+        'alt' => 'Profile Photo',
         'title' => 'Profile',
         'settings' => 'Settings',
-        'sign_out' => 'Sign out',
+        'sign_out' => 'Sign Out',
     ],
 
     'dashboard' => [
         'title' => 'Dashboard',
         'header' => 'Modules and Classes',
         'module_title' => 'Modules',
-        'add_modules' => 'Add Modules',
-        'no_modules' => 'No modules available. Please add a new module.',
+        'add_modules' => 'Add Module',
+        'no_modules' => 'No modules available. Please add a new one.',
         'add_class' => 'Add Class',
         'description' => 'Description',
         'tools' => 'Tools',
-        'no_phyphox' => 'No associated Phyphox tools',
-        'no_classes' => 'There are no classes for this module yet',
-        'list_class' => 'List of Classes',
+        'no_phyphox' => 'No related Phyphox tool',
+        'no_classes' => 'No classes created for this module yet.',
+        'list_class' => 'Class List',
         'total_participants' => 'Total Participants',
-        'students' => [
+        'students'=>[
             'title' => 'Student Dashboard',
             'header' => 'Dashboard',
             'welcome' => 'Welcome',
             'choose_class' => 'Choose a class below to start learning',
-            'my_class' => 'My Class',
+            'my_class' => 'My Classes',
             'class_name' => 'Class Name',
             'enter_class' => 'Enter Class',
             'join_class' => 'Join Class',
-            'unregistered_student' => 'You are not yet enrolled in any classes',
+            'unregistered_student' => 'You are not enrolled in any class.',
             'explore_modules' => 'Explore Other Modules',
-            'no_modules_available' => 'No other modules are currently available',
+            'no_modules_available' => 'No other modules available at the moment.',
         ]
     ],
 
     'placeholders' => [
         'select_phyphox' => 'Select Measuring Tool...',
-        'select_owner' => 'Select owner...',
+        'select_owner' => 'Select Owner...',
         'select_teacher' => 'Select Teacher...',
     ],
 
@@ -99,17 +99,40 @@ return [
             'confirm' => 'Continue',
             'cancel' => 'Cancel',    
         ],
+        'upload' => [
+            'title' => 'Confirm Upload',
+            'text' => 'Are you sure you want to upload this file?',
+            'confirm' => 'Yes, Upload',
+        ],
+        'save_answer' => [
+            'title' => 'Save Answer?',
+            'text' => 'Are you sure you want to save this answer?',
+            'confirm' => 'Yes, Save',
+            'status' => 'Saving...',
+        ],
+        'success' => [
+            'title' => 'Success!',
+            'text' => 'Data has been successfully saved!',
+            'confirm' => 'OK',
+        ],
+        'failed' => [
+            'title' => 'Failed!',
+            'text' => 'Failed to save data!',
+            'confirm' => 'OK',
+        ],
+        'failed_get_instruction' => 'Failed to fetch instruction data.',
+        'failed_get_slot' => 'Failed to fetch slot data.',
+        'failed_get_reflection' => 'Failed to fetch reflection question.',
     ],
 
-
     'kelas_modal' => [
-        'add_title' => 'Add Class Data',
-        'edit_title' => 'Edit Class Data',
+        'add_title' => 'Add New Class',
+        'edit_title' => 'Edit Class',
         'select_module' => 'Select Module',
         'module_placeholder' => '-- Select Module --',
-        'class_name_label' => 'Class Name', // General label
-        'class_name_id' => 'Class Name (ID)', // Label in tab
-        'class_name_en' => 'Class Name (EN)', // Label in tab
+        'class_name_label' => 'Class Name',
+        'class_name_id' => 'Class Name (ID)',
+        'class_name_en' => 'Class Name (EN)',
         'select_teacher' => 'Select Teacher',
         'close' => 'Close',
         'save' => 'Save',
@@ -124,7 +147,7 @@ return [
         'table_module' => 'Module',
         'table_class' => 'Class',
         'table_participants' => 'Participants',
-        'table_teacher' => 'Instructor',
+        'table_teacher' => 'Teacher',
         'table_action' => 'Action',
         'add_participant_title' => 'Add Participant',
         'add_participant_text' => 'Add Participant',
@@ -139,38 +162,39 @@ return [
             'resume_management' => 'Summary & Management',
             'gradebook' => 'Gradebook',
             'join_code' => 'Class Join Code',
-            'instruction_join_code' => 'Share this code with students to join this class.',
+            'instruction_join_code' => 'Share this code with students to let them join this class.',
             'copy' => 'Copy',
-
-            //PARTICIPANT MANAGEMENT
-            'manage_participants' => 'Participant Management',
+            
+            //PARTICIPANT MANAGEMENT            
+            'manage_participants' => 'Manage Participants',
             'add_delete_participants' => 'Add/Delete Participants',
             'button_manage_participant' => 'Manage Participants',
-
+            
             //FORUM MANAGEMENT
-            'manage_forum' => 'Forum Management',
-            'setup_teams' => 'Manage Pro and Con Teams for This Class',
+            'manage_forum' => 'Manage Forum',
+            'setup_teams' => 'Manage Pro and Con Teams for this Class',
             'button_manage_forum' => 'Manage Forum',
+            
             //TABLE
             'participant_table_name' => 'Participant Name',
             'participant_table_score' => 'Total Score',
-            'participant_table_point' => 'Points',
-            'participant_table_grade' => 'Give Grade',
-            'participant_table_finish' => 'Finish',
-            'no_participants' => 'There are no participants in this class yet.',
+            'participant_table_point' => 'Point',
+            'participant_table_grade' => 'Grade',
+            'participant_table_finish' => 'Completed',
+            'no_participants' => 'No participants in this class yet.',
         ],
-        'create' => [
+        'create'=>[
             'header' => 'Add New Class',
             'module' => 'Module',
             'choose_module' => 'Select Module',
             'class_name' => 'Class Name',
-            'teacher' => 'Instructor',
+            'teacher' => 'Teacher',
         ],
         'peserta' => [
             'title' => 'Class Participants',
-            'header' => 'Class Participant List',
+            'header' => 'Participant List',
             'add_participant' => 'Add Participant',
-            'no_participants' => 'No participants have joined this class yet.',
+            'no_participants' => 'No participants in this class yet.',
             'join_class' => 'Join Class',
             'table_name' => 'Participant Name',
             'table_action' => 'Action',
@@ -179,17 +203,17 @@ return [
                 'header' => 'Add Class Participant',
                 'choose_participant' => 'Select Participant',
             ],
-            'join' => [
-                'header' => 'Join Class',
-                'class' => 'You are about to join the class',
-                'instruction' => 'Enter Class Code (Join Code)',
-                'placeholder' => 'Example: CLS1234',
-                'join_button' => 'Join Class',
+            'join'=>[
+                'header'=>'Join Class',
+                'class' => 'You will join Class',
+                'instruction'=>'Enter Class Code (Join Code)',
+                'placeholder'=>'Example: CLS1234',
+                'join_button'=>'Join Class',
             ],
             'swal' => [
                 'create' => [
                     'title' => 'Save Data?',
-                    'text' => 'Make sure the participant data is correct!',
+                    'text' => 'Make sure participant data is correct!',
                     'confirm' => 'Yes, Save!',
                     'cancel' => 'Cancel',
                 ],
@@ -200,20 +224,20 @@ return [
                     'cancel' => 'Cancel',
                 ],
             ],
-        ],
+        ]
     ],
 
     'submodul_modal' => [
-        'add_title' => 'Add New Sub Module',
-        'edit_title' => 'Edit Sub Module',
-        'tab_id' => 'Indonesia (ID)',
+        'add_title' => 'Add New Submodule',
+        'edit_title' => 'Edit Submodule',
+        'tab_id' => 'Indonesian (ID)',
         'tab_en' => 'English (EN)',
-        'title_id_label' => 'Sub Module Title (ID)',
-        'title_en_label' => 'Sub Module Title (EN)',
+        'title_id_label' => 'Submodule Title (ID)',
+        'title_en_label' => 'Submodule Title (EN)',
         'desc_id_label' => 'Description (ID)',
         'desc_en_label' => 'Description (EN)',
         'order_label' => 'Order Number',
-        'order_help' => 'To sort the sub modules.',
+        'order_help' => 'Used to order submodules.',
         'close' => 'Close',
         'save' => 'Save',
         'save_changes' => 'Save Changes',
@@ -230,41 +254,41 @@ return [
             'module_info' => 'Module Information',
             'tools' => 'Phyphox Measuring Tools',
             'owner' => 'Module Owner',
-            'dropdown_materi' => 'Submodule: Material (Video, Text, etc.)',
-            'dropdown_question' => 'Submodule: Reflection Questions',
-            'dropdown_practicum' => 'Submodule: Phyphox Practicum',
-            'dropdown_forum' => 'Submodule: Debate Forum',
+            'dropdown_materi' => 'Material Submodule (Video, Text, etc)',
+            'dropdown_question' => 'Reflection Question Submodule',
+            'dropdown_practicum' => 'Phyphox Practicum Submodule',
+            'dropdown_forum' => 'Debate Forum Submodule',
             'submodule_list' => 'Submodule List',
             'add_submodule' => 'Add Submodule',
-            'no_submodule' => 'No submodules available for this module.',
+            'no_submodule' => 'No submodules created for this module yet.',
         ],
         'create' => [
-            'header' => 'Add New Module',
+            'header' => 'Add Module Data',
             'input_tool_phyphox' => 'Select Phyphox Tool',
-            'instructions_tool' => 'You can select more than one Phyphox Tool.',
+            'instructions_tool' => 'You can select more than one Phyphox tool',
             'input_image' => 'Module Image (Optional)',
             'input_title' => 'Module Title',
             'input_description' => 'Description',
         ],
-        'edit_header' => 'Edit Module Data',
+        'edit' => [
+            'header' => 'Edit Module',
+            'image_instruction' => 'Leave empty if you don’t want to change the image',
+        ],
     ],
 
-   'material_modal' => [
-        'add_video' => 'Tambah Materi Video',
-        'add_article' => 'Tambah Materi Artikel',
-        'add_infographic' => 'Tambah Infografis (Gambar)',
-        'edit_title' => 'Change Material',
-        'add_regulation' => 'Tambah Regulasi (PDF)',
-
-        // Key generik baru
-        'url_label' => 'URL Materi',
+    'material_modal' => [
+        'add_video' => 'Add Video Material',
+        'add_article' => 'Add Article Material',
+        'add_infographic' => 'Add Infographic (Image)',
+        'edit_title' => 'Edit Material',
+        'add_regulation' => 'Add Regulation (PDF)',
+        'url_label' => 'Material URL',
         'url_placeholder' => 'https://example.com/...',
-
-        'add_rich_text' => 'Add Rich Text Material', // <-- NEW
-
-        // ... (key url_label)
-        'rich_text_content_id' => 'Text Content (ID)', // <-- NEW
+        'url_instruction' => 'Enter a direct URL to the infographic image (e.g., .../image.jpg)',
+        'add_rich_text' => 'Add Rich Text Material',
+        'rich_text_content_id' => 'Text Content (ID)',
         'rich_text_content_en' => 'Text Content (EN)',
+        'url_video_label' => 'Video URL (YouTube/Vimeo)',
     ],
 
     'reflection_modal' => [
@@ -276,33 +300,50 @@ return [
     ],
 
     'practicum' => [
-        'title' => 'Practicum Setup',
+        'title' => 'Practicum Settings',
         'instructions' => 'Practicum Instructions',
-        'instructions_desc' => 'These are the instructions students will see (Intro, Objectives, Part A, B, C). You can only have ONE instruction set per sub-module.',
-        'add_instruction' => 'Create Instructions',
-        'edit_instruction' => 'Edit Instructions',
-        'upload_slots' => 'Data Upload Slots (Part D)',
-        'upload_slots_desc' => 'This is the form students will fill. Create one slot for each CSV file they must upload.',
+        'instructions_desc' => 'This is the instruction students will see (Introduction, Objectives, Section A, B, C). You can only have ONE instruction per submodule.',
+        'add_instruction' => 'Create Instruction',
+        'edit_instruction' => 'Edit Instruction',
+        'upload_slots' => 'Data Upload Slots (Section D)',
+        'upload_slots_desc' => 'These are the forms students will fill. Create one slot for each CSV file they need to upload.',
         'add_slot' => 'Add Upload Slot',
         'slot_label' => 'Slot Label',
-        'slot_desc' => 'Description/Filename',
+        'slot_desc' => 'Description/File Name',
+        'slot_tool' => 'Phyphox Data Type',
         'slot_group' => 'Experiment Group',
+        'choose_data' => 'Select Data Type',
+        'amplitude' => 'Audio Amplitude (Amplitude vs Time)',
+        'spectrum' => 'Audio Spectrum (Spectrum vs Frequency)',
+        'tool_instruction' => 'This determines how the graph will be displayed',
+        'placeholder_group' => 'Example: Experiment 1',
+        'edit_slot' => 'Edit Upload Slot',
+        'no_practicum_instruction' => 'No practicum instruction created yet.',
+        'no_slot' => 'No upload slots created yet.',
+    ],
+
+    'reflection' => [
+        'title' => 'Reflection Questions',
+        'header' => 'Reflection Question List',
+        'add_reflection' => 'Add Question',
+        'no_reflection' => 'No reflection questions available for this submodule.',
+        'student_answer' => 'Student Answers',
+        'student_answer_instruction' => 'Student answers per class will be displayed here.',
     ],
 
     'forum' => [ 
         'title' => 'Forum Management',
         'sub_title' => 'Forum Team Management',
         'class' => 'Class',
-        'instruction' => 'Select one of the forum submodules below to start setting up the Pro and Contra teams for this class.',
+        'instruction' => 'Select one of the forum submodules below to start setting up Pro and Con teams for this class.',
         'forum_available' => 'Available Forums from Module:',
         'set_team' => 'Set Team',
         'no_submodul' => 'No forum submodules found for this module.',
     ],
 
     'forum_settings' => [
-        // 'title' => 'Debate Forum Settings',
-        'title' => 'Set Team: ',
-        'setting_team_for_class' => 'You are setting up a team for Class: ',
+        'title' => 'Set Team:',
+        'setting_team_for_class' => 'You are setting up teams for Class:',
         'back_text' => 'Back to Forum List',
         'general_settings' => 'General Forum Settings',
         'update_settings' => 'Save Settings',
@@ -311,7 +352,7 @@ return [
         'start_time' => 'Start Time',
         'end_time' => 'End Time',
         'phase1_end' => 'End of Phase 1 (Opening)',
-        'phase2_end' => 'End of Phase 2 (Rebuttals)',
+        'phase2_end' => 'End of Phase 2 (Rebuttal)',
         'team_management' => 'Team Management',
         'team_pro' => 'Pro Team',
         'team_con' => 'Con Team',
@@ -319,11 +360,11 @@ return [
         'assign_pro' => 'Assign to Pro',
         'assign_con' => 'Assign to Con',
         'remove_from_team' => 'Remove from Team',
-        'no_students_in_class' => 'No students in related classes.', // Adjust message
+        'no_students_in_class' => 'No students found in this class.',
         'no_members' => 'No members yet.',
     ],
 
-    // USER MANAGEMENT
+    //USER MANAGEMENT
     'user' => [
         'title' => 'User Management',
         'card_title' => 'User List',
@@ -337,7 +378,7 @@ return [
         'table_action' => 'Action',
         'edit_title' => 'Edit User',
         'delete_title' => 'Delete User',
-        'create' => [
+        'create'=>[
             'header' => 'Add New User',
             'input_name' => 'Full Name',
             'input_role' => 'Select Role',
@@ -348,6 +389,48 @@ return [
             'input_password_confirmation' => 'Confirm Password',
         ],
         'edit_header' => 'Edit User Data',
+    ],
+
+    //SISWA
+    'siswa' => [
+        'no_materi' => 'No learning materials available for this submodule.',
+        'no_practicum_instruction' => 'No practicum instruction created yet.',
+        'upload_csv' => 'Upload CSV',
+        'no_slot' => 'No upload slots created yet.',
+        'no_reflection' => 'No reflection questions available for this submodule.',
+        'reflection' => [
+            'your_answer' => 'Your Answer',
+            'fill_answer' => 'Please fill in your answer',
+            'saved' => 'Saved',
+            'wait_answer' => 'Waiting for Answer',
+            'save_answer' => 'Save Answer',
+        ]
+    ],
+    
+    'profile' => [
+        'title' => 'My Profile',
+        'edit_profile' => 'Edit Profile',
+        'information' => 'Personal Information',
+        'alt_image' => 'Profile Photo',
+        'name' => 'Full Name',
+        'school' => 'School',
+        'hp' => 'Phone Number',
+        'email' => 'Email',
+        'edit' => [
+            'title' => 'Edit My Profile',
+            'header' => 'Edit Profile',
+            'change_image' => 'Change Photo',
+            'delete_image' => 'Delete Photo',
+            'max_image' => 'Format: .jpg, .jpeg, or .png. Max size: 2MB',
+            'school_placeholder' => 'Enter school name',
+            'hp_placeholder' => 'Enter phone number',
+            'change_password' => 'Change Password (Optional)',
+            'password_instruction' => 'Leave blank if you do not want to change the password',
+            'new_password' => 'New Password',
+            'new_password_placeholder' => 'Enter new password',
+            'password_confirmation' => 'Confirm Password',
+            'confirmation_password_placeholder' => 'Repeat new password',
+        ]
     ],
 
     'settings' => [
@@ -361,22 +444,24 @@ return [
         'app_icon_help' => 'Max size: 50KB.',
         'save_settings' => 'Save Settings',
         'swal' => [
-            'text' => 'Are you sure you want to save the settings?',
+            'text' => 'Are you sure you want to save settings?',
             'default' => 'Drag and drop files here or click',
             'replace' => 'Drag and drop or click to replace',
-            'remove' => 'Delete',
-            'error' => 'An error occurred.',
+            'remove' =>  'Remove',
+            'error' =>   'An error occurred.',
         ],
     ],
 
-    'button' => [
-        'save' => 'Save',
-        'save_changes' => 'Save Changes',
-        'close' => 'Close',
-        'cancel' => 'Cancel',
-        'forward' => 'Next',
-        'delete' => 'Delete',
-        'edit' => 'Edit',
-        'add' => 'Add',
-    ],
+    'button'=>[
+        'save'=>'Save',
+        'save_changes'=>'Save Changes',
+        'close'=>'Close',
+        'cancel'=>'Cancel',
+        'forward'=>'Continue',
+        'delete'=>'Delete',
+        'edit'=>'Edit',
+        'add'=>'Add',
+        'ok' => 'OK',
+        'back'=> 'Back',
+    ]
 ];

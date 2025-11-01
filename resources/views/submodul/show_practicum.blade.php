@@ -6,6 +6,11 @@
 
 @section('content')
 <div class="container-fluid">
+    <div class="col-md-12 mb-5">
+        <a href="{{ route('modul.show', $subModul->modul_id) }}" class="btn btn-secondary btn-sm">
+            <i class="fa fa-arrow-left me-1"></i> {{ __('admin.button.back') }}
+        </a>
+    </div>
 
     <div class="card shadow-sm mb-4">
         <div class="card-body">
@@ -52,7 +57,7 @@
                 </div>
             @else
                 <div class="alert alert-info text-center">
-                    Belum ada petunjuk praktikum yang dibuat.
+                    {{ __('admin.practicum.no_practicum') }}.
                 </div>
             @endif
         </div>
@@ -108,7 +113,7 @@
                     </form>
                 @empty
                     <div class="alert alert-info text-center">
-                        Belum ada slot unggahan yang dibuat.
+                        {{ __('admin.practicum.no_slot') }}.
                     </div>
                 @endforelse
              </div>
@@ -154,7 +159,7 @@
 
             modal.modal('show');
         }).fail(function() {
-            Swal.fire('Error', 'Gagal mengambil data petunjuk.', 'error');
+            Swal.fire('Error', '{{__("admin.swal.failed_get_instruction")}}', 'error');
         });
     }
 
@@ -188,7 +193,7 @@
 
             modal.modal('show');
         }).fail(function() {
-            Swal.fire('Error', 'Gagal mengambil data slot.', 'error');
+            Swal.fire('Error', '{{__("admin.swal.failed_get_slot")}}', 'error');
         });
     }
 
@@ -198,7 +203,7 @@
     function deleteSlot(id) {
         Swal.fire({
             title: '{{ __("admin.swal.delete_title") }}',
-            text: "Anda yakin ingin menghapus slot unggahan ini?", // Teks spesifik
+            text: '{{ __("admin.swal.delete.text") }}', // Teks spesifik
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#d33',
@@ -222,7 +227,7 @@
             var form = this;
             Swal.fire({
                 title: '{{ __("admin.swal.update_title") }}',
-                text: "Yakin ingin menyimpan perubahan petunjuk?",
+                text: '{{ __("admin.swal.edit.text") }}',
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonText: '{{ __("admin.swal.update_confirm") }}',
@@ -236,7 +241,7 @@
             var form = this;
             Swal.fire({
                 title: '{{ __("admin.swal.update_title") }}',
-                text: "Yakin ingin menyimpan perubahan slot?",
+                text: '{{ __("admin.swal.edit.text") }}',
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonText: '{{ __("admin.swal.update_confirm") }}',
