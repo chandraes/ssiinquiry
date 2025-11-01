@@ -3,7 +3,7 @@
 
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Ubah Slot Unggahan</h5>
+                    <h5 class="modal-title">{{__('admin.practicum.edit_slot')}}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -35,15 +35,16 @@
                     </ul>
 
                     <div class="mb-3">
-                        <label for="phyphox_experiment_type" class="form-label">Tipe Data Phyphox</label>
+                        <label for="phyphox_experiment_type" class="form-label">{{__('admin.practicum.slot_tool')}}</label>
                         <select name="phyphox_experiment_type" class="form-control" required>
-                            <option value="">-- Pilih Tipe Data --</option>
-                            <option value="audio_amplitude">Audio Amplitude (Amplitudo vs Waktu)</option>
-                            <option value="audio_spectrum">Audio Spectrum (Spektrum vs Frekuensi)</option>
+                            <option value="">-- {{__('admin.practicum.choose_data')}} --</option>
+                            <option value="audio_amplitude">{{__('admin.practicum.amplitude')}}</option>
+                            <option value="audio_spectrum">{{__('admin.practicum.spectrum')}}</option>
                             {{-- Tambahkan tipe lain di sini nanti --}}
                         </select>
-                        <small class="text-muted">Ini akan menentukan bagaimana grafik ditampilkan.</small>
+                        <small class="text-muted">{{__('admin.practicum.tool_instruction')}}.</small>
                     </div>
+
                     <div class="tab-content">
                         <div class="tab-pane fade show active" id="slot-d-id-pane-e" role="tabpanel">
                             <input id="edit_slot_description_id" name="description[id]" class="form-control">

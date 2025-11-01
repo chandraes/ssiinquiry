@@ -12,6 +12,11 @@ Peserta Kelas
         $isSiswa = $userLogin->roles->contains('name', 'Siswa');
     @endphp
     <div class="row">
+        <div class="col-md-12 mb-5">
+            <a href="{{ route('kelas.show', $kelas->id) }}" class="btn btn-secondary">
+                <i class="fa fa-arrow-left me-1"></i> {{ __('admin.button.back') }}
+            </a>
+        </div>
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
                 {{-- <div class="box-body" style="height: 1200px"> --}}

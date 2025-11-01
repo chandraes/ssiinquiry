@@ -33,7 +33,7 @@
                 </div>
             @else
                 <div class="alert alert-info text-center">
-                    Belum ada petunjuk praktikum yang dibuat.
+                    {{ __('admin.siswa.no_practicum_instruction') }}.
                 </div>
             @endif
         </div>
@@ -64,13 +64,13 @@
                             @csrf
                             <input type="file" name="csv_file" accept=".csv" class="form-control form-control-sm" required>
                             <button type="submit" class="btn btn-success btn-sm pe-3">
-                                <i class="fa fa-upload me-1"></i> Upload CSV
+                                <i class="fa fa-upload me-1"></i> {{ __('admin.siswa.upload_csv') }}
                             </button>
                         </form>
                     </div>
                 @empty
                     <div class="alert alert-info text-center">
-                        Belum ada slot unggahan yang dibuat.
+                        {{__('admin.siswa.no_slot')}}.
                     </div>
                 @endforelse
             </div>
@@ -88,12 +88,12 @@ document.addEventListener('DOMContentLoaded', function () {
         form.addEventListener('submit', function (e) {
             e.preventDefault();
             Swal.fire({
-                title: 'Konfirmasi Upload',
-                text: 'Apakah Anda yakin ingin mengunggah file CSV ini?',
+                title: '{{__("admin.swal.upload.title}}',
+                text: '{{__("admin.swal.upload.text}}',
                 icon: 'question',
                 showCancelButton: true,
-                confirmButtonText: 'Ya, Upload',
-                cancelButtonText: 'Batal'
+                confirmButtonText: '{{__("admin.swal.upload.confirm}}',
+                cancelButtonText: '{{__("admin.button.cancel}}'
             }).then((result) => {
                 if (result.isConfirmed) {
                     form.submit();
@@ -106,9 +106,9 @@ document.addEventListener('DOMContentLoaded', function () {
     @if(session('success'))
         Swal.fire({
             icon: 'success',
-            title: 'Berhasil!',
+            title: '{{__("admin.swal.success.title}}',
             text: "{{ session('success') }}",
-            confirmButtonText: 'OK'
+            confirmButtonText: '{{__("admin.swal.success.confirm}}'
         });
     @endif
 });

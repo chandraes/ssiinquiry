@@ -2,12 +2,14 @@
 @section('title'){{ $subModule->title }}@endsection
 @section('content')
 <div class="container-fluid">
+    <div class="col-md-12 mb-5">
+        <a href="{{ route('student.class.show', $kelas->id) }}" class="btn btn-outline-secondary btn-sm mb-3">
+            <i class="fa fa-arrow-left me-2"></i> {{__('admin.siswa.back_to_curriculum')}}
+        </a>
+    </div>
 
     <div class="card shadow-sm mb-4">
         <div class="card-body">
-            <a href="{{ route('student.class.show', $kelas->id) }}" class="btn btn-outline-secondary btn-sm mb-3">
-                <i class="fa fa-arrow-left me-2"></i> Kembali ke Kurikulum
-            </a>
             <h2 class="card-title"><i class="fa fa-book-open text-primary me-2"></i>{{ $subModule->title }}</h2>
             <p class="text-muted">{{ $subModule->description }}</p>
         </div>
@@ -43,21 +45,21 @@
                             <iframe src="{{ $embedUrl }}" title="{{ $material->title }}" allowfullscreen></iframe>
                         </div>
                     @else
-                        <p>Link video tidak valid: <a href="{{ $url }}" target="_blank">{{ $url }}</a></p>
+                        <p>{{__('admin.siswa.show_learning.not_valid')}}: <a href="{{ $url }}" target="_blank">{{ $url }}</a></p>
                     @endif
 
                 @else
                     {{-- Tampilkan Link (Artikel, Infografis, Regulasi) --}}
                     @php $url = is_array($material->content) ? ($material->content['url'] ?? null) : null; @endphp
                     <p>
-                        Silakan akses materi di link berikut:
+                        {{__('admin.siswa.show_learning.instruction')}}:
                         <a href="{{ $url }}" target="_blank" class="btn btn-info btn-sm">
-                            Buka {{ $material->type }} <i class="fa fa-external-link"></i>
+                            {{__('admin.siswa.show_learning.open')}} {{ $material->type }} <i class="fa fa-external-link"></i>
                         </a>
                     </p>
                 @endif
             @empty
-                <p class="text-muted">Konten untuk materi ini belum tersedia.</p>
+                <p class="text-muted">{{__('admin.siswa.show_learning.no_materi')}}.</p>
             @endforelse
         </div>
     </div>
@@ -70,18 +72,18 @@
 
                 <div class="alert alert-success mb-0">
                     <i class="fa fa-check-circle me-2"></i>
-                    Anda telah menyelesaikan materi ini pada {{ $currentProgress->completed_at->format('d M Y, H:i') }}.
+                    {{__('admin.siswa.show_learning.finish')}} {{ $currentProgress->completed_at->format('d M Y, H:i') }}.
                 </div>
 
             @else
 
-                <p class="lead">Setelah Anda selesai mempelajari semua materi di atas, tandai sebagai selesai untuk melanjutkan.</p>
+                <p class="lead">{{__('admin.siswa.show_learning.finish_instruction')}}.</p>
 
                 {{-- Form untuk "Tandai Selesai" --}}
                 <form action="{{ route('student.submodule.complete', [$kelas->id, $subModule->id]) }}" method="POST">
                     @csrf
                     <button type="submit" class="btn btn-primary btn-lg">
-                        Tandai Selesai & Lanjutkan <i class="fa fa-arrow-right ms-2"></i>
+                        {{__('admin.siswa.show_learning.button_finish')}} <i class="fa fa-arrow-right ms-2"></i>
                     </button>
                 </form>
 

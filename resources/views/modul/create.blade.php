@@ -61,7 +61,7 @@
                         <div class="tab-pane fade show active" id="modul-id-pane" role="tabpanel">
                             <div class="col-md-12 mb-3">
                                 <div class="form-group">
-                                    <label for="judul_id" class="form-label">{{__('admin.modul.create.input_titile')}} (ID)</label>
+                                    <label for="judul_id" class="form-label">{{__('admin.modul.create.input_title')}} (ID)</label>
                                     {{-- Perhatikan name="judul[id]" --}}
                                     <input name="judul[id]" id="judul_id" required class="form-control"
                                         style="border-color:darkgrey">
@@ -69,7 +69,7 @@
                             </div>
                             <div class="col-md-12 mb-3">
                                 <div class="form-group">
-                                    <label for="deskripsi_id" class="form-label">{{__('admin.modul.create.inout_description')}} (ID)</label>
+                                    <label for="deskripsi_id" class="form-label">{{__('admin.modul.create.input_description')}} (ID)</label>
                                     {{-- Perhatikan name="deskripsi[id]" --}}
                                     <textarea name="deskripsi[id]" id="deskripsi_id" class="form-control"
                                         style="border-color:darkgrey"></textarea>
@@ -81,7 +81,7 @@
                         <div class="tab-pane fade" id="modul-en-pane" role="tabpanel">
                             <div class="col-md-12 mb-3">
                                 <div class="form-group">
-                                    <label for="judul_en" class="form-label">{{__('admin.modul.create.input_titile')}} (EN)</label>
+                                    <label for="judul_en" class="form-label">{{__('admin.modul.create.input_title')}} (EN)</label>
                                     {{-- Perhatikan name="judul[en]" --}}
                                     <input type="text" name="judul[en]" id="judul_en" required class="form-control"
                                         style="border-color:darkgrey">
@@ -89,7 +89,7 @@
                             </div>
                             <div class="col-md-12 mb-3">
                                 <div class="form-group">
-                                    <label for="deskripsi_en" class="form-label">{{__('admin.modul.create.inout_description')}} (EN)</label>
+                                    <label for="deskripsi_en" class="form-label">{{__('admin.modul.create.input_description')}} (EN)</label>
                                     {{-- Perhatikan name="deskripsi[en]" --}}
                                     <textarea name="deskripsi[en]" id="deskripsi_en" class="form-control"
                                         style="border-color:darkgrey"></textarea>

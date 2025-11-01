@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-Edit Profile
+{{__('admin.profile.edit.title')}}
 @endsection
 
 @section('content')
@@ -9,10 +9,15 @@ Edit Profile
 
 <section class="main-content mt-0">
     <div class="row">
+        <div class="col-md-12 mb-5">
+            <a href="{{ route('profile.index') }}" class="btn btn-secondary btn-lg">
+                <i class="fa fa-arrow-left me-1"></i> {{ __('admin.button.back') }}
+            </a>
+        </div>
         <div class="col-xl-12 col-md-12 col-sm-12">
             <div class="card">
                 <div class="card-header">
-                    <div class="card-title">Edit Profil</div>
+                    <div class="card-title">{{__('admin.profile.edit.header')}}</div>
                 </div>
 
                 <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" id="profileUpdateForm">
@@ -38,7 +43,7 @@ Edit Profile
                             </div>
                             <div class="col-lg-9 mt-4 mt-lg-0">
                                 <label class="btn btn-primary btn-lg mt-1 mb-1">
-                                    <i class="fe fe-camera me-1"></i> Ganti Foto
+                                    <i class="fe fe-camera me-1"></i> {{__('admin.profile.edit.change_image')}}
                                     <input type="file" name="foto" class="d-none" accept="image/*" onchange="previewImage(event)">
                                 </label>
 
@@ -46,53 +51,53 @@ Edit Profile
                                     <a href="javascript:void(0);"
                                         class="btn btn-danger btn-lg mt-1 mb-1"
                                         id="hapusFotoBtn">
-                                        <i class="fe fe-camera-off me-1"></i> Hapus Foto
+                                        <i class="fe fe-camera-off me-1"></i> {{__('admin.profile.edit.delete_image')}}
                                     </a>
                                 @endif
-                                <p class="text-muted mt-2">Format: JPG, JPEG, atau PNG. Ukuran maks: 2MB.</p>
+                                <p class="text-muted mt-2">{{__('admin.profile.edit.max_image')}}.</p>
                             </div>
                         </div>
 
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="name" value="{{ $user->name }}" disabled>
-                            <label for="name">Nama Lengkap</label>
+                            <label for="name">{{__('admin.profile.name')}}</label>
                         </div>
 
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="asal_sekolah"
                                 name="asal_sekolah"
                                 value="{{ old('asal_sekolah', $user->profile->asal_sekolah ?? '') }}"
-                                placeholder="Masukkan asal sekolah">
-                            <label for="asal_sekolah">Asal Sekolah</label>
+                                placeholder="{{__('admin.profile.edit.school_placeholder')}}">
+                            <label for="asal_sekolah">{{__('admin.profile.school')}}</label>
                         </div>
 
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="nomor_hp"
                                 name="nomor_hp"
                                 value="{{ old('nomor_hp', $user->profile->nomor_hp ?? '') }}"
-                                placeholder="Masukkan nomor HP">
-                            <label for="nomor_hp">Nomor HP</label>
+                                placeholder="{{__('admin.profile.edit.hp_placeholder')}}">
+                            <label for="nomor_hp">{{__('admin.profile.hp')}}</label>
                         </div>
 
                         <hr class="my-4">
 
-                        <h5 class="mb-3">Ubah Password (Opsional)</h5>
-                        <p class="text-muted">Kosongkan jika Anda tidak ingin mengubah password.</p>
+                        <h5 class="mb-3">{{__('admin.profile.edit.change_password')}}</h5>
+                        <p class="text-muted">{{__('admin.profile.edit.password_instruction')}}.</p>
 
                         <div class="form-floating mb-3">
-                            <input type="password" name="password" class="form-control" id="password" placeholder="Masukkan password baru">
-                            <label for="password">Password Baru</label>
+                            <input type="password" name="password" class="form-control" id="password" placeholder="{__('admin.profile.edit.new_password_placeholder')}}">
+                            <label for="password">{{__('admin.profile.edit.new_password')}}</label>
                         </div>
 
                         <div class="form-floating mb-3">
-                            <input type="password" name="password_confirmation" class="form-control" id="password_confirmation" placeholder="Ulangi password baru">
-                            <label for="password_confirmation">Konfirmasi Password Baru</label>
+                            <input type="password" name="password_confirmation" class="form-control" id="password_confirmation" placeholder="{{__('admin.profile.edit.confirmation_password_placeholder')}}">
+                            <label for="password_confirmation">{{__('admin.profile.edit.password_confirmation')}}</label>
                         </div>
                     </div>
 
                     <div class="card-footer text-end">
-                        <a href="{{ url()->previous() }}" class="btn btn-lg btn-danger">Batal</a>
-                        <button type="submit" class="btn btn-lg btn-primary">Simpan Perubahan</button>
+                        <a href="{{ url()->previous() }}" class="btn btn-lg btn-danger">{{__('admin.button.cancel')}}</a>
+                        <button type="submit" class="btn btn-lg btn-primary">{{__('admin.button.save_changes')}}</button>
                     </div>
                 </form>
             </div>

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-    Kelas: {{ $kelas->nama_kelas }}
+    {{__('admin.siswa.class_show.title')}}: {{ $kelas->nama_kelas }}
 @endsection
 
 @section('content')
@@ -10,61 +10,56 @@
     <div class="card shadow-sm mb-4">
         <div class="card-body">
             <a href="{{ route('home') }}" class="btn btn-outline-secondary btn-sm mb-3">
-                <i class="fa fa-arrow-left me-2"></i> Kembali ke Dashboard
+                <i class="fa fa-arrow-left me-2"></i> {{__('admin.siswa.class_show.back')}}
             </a>
 
             <h2 class="card-title">{{ $modul->judul }}</h2>
-            <p class="text-muted h5 mb-2">Selamat datang di kelas: <strong>{{ $kelas->nama_kelas }}</strong></p>
+            <p class="text-muted h5 mb-2">{{__('admin.siswa.class_show.welcome')}}: <strong>{{ $kelas->nama_kelas }}</strong></p>
             <p class="card-text">{{ $modul->deskripsi }}</p>
         </div>
     </div>
 
     <div class="card shadow-sm">
         <div class="card-header">
-            <h5 class="mb-0">Kurikulum Pembelajaran</h5>
+            <h5 class="mb-0">{{__('admin.siswa.class_show.header')}}</h5>
         </div>
         <div class="card-body">
             <div class="list-group">
-                @php $previousCompleted = true; // Anggap sub-modul pertama selalu bisa diakses @endphp
+                @php $previousCompleted = true; @endphp
                 @forelse($subModules as $subModule)
                     @php
-                        // Cek status progress untuk sub-modul ini
-                        $progress = $progressData->get($subModule->id); // Ambil progress dari data yg dikirim controller
-                        $isCompleted = $progress && $progress->completed_at; // Apakah sudah selesai?
-                        $isAvailable = $previousCompleted; // Apakah bisa diakses (sebelumnya selesai)?
-                        $isLocked = !$isAvailable; // Apakah terkunci?
+                        $progress = $progressData->get($subModule->id);
+                        $isCompleted = $progress && $progress->completed_at;
+                        $isAvailable = $previousCompleted;
+                        $isLocked = !$isAvailable;
 
-                        // Siapkan kelas CSS dan link
                         $linkClass = 'list-group-item list-group-item-action p-3 mb-2 border';
-                        $linkHref = '#'; // Default tidak ada link
+                        $linkHref = '#';
                         $statusIcon = '';
                         $statusTitle = '';
 
                         if ($isCompleted) {
-                            $linkClass .= ' list-group-item-success-light'; // Warna hijau muda
-                            $linkHref = route('student.submodule.show', [$kelas->id, $subModule->id]); // Buat link ini nanti
+                            $linkClass .= ' list-group-item-success-light';
+                            $linkHref = route('student.submodule.show', [$kelas->id, $subModule->id]);
                             $statusIcon = '✅';
-                            $statusTitle = 'Selesai';
+                            $statusTitle = __('admin.siswa.class_show.finish');
                         } elseif ($isAvailable) {
-                            $linkHref = route('student.submodule.show', [$kelas->id, $subModule->id]); // Buat link ini nanti
+                            $linkHref = route('student.submodule.show', [$kelas->id, $subModule->id]);
                             $statusIcon = '➡️';
-                            $statusTitle = 'Tersedia';
-                        } else { // Terkunci
-                            $linkClass .= ' list-group-item-light text-muted disabled'; // Warna abu & non-aktif
+                            $statusTitle = __('admin.siswa.class_show.available');
+                        } else {
+                            $linkClass .= ' list-group-item-light text-muted disabled';
                             $statusIcon = '🔒';
-                            $statusTitle = 'Terkunci';
+                            $statusTitle = __('admin.siswa.class_show.locked');
                         }
                     @endphp
 
-                    {{-- Tampilkan item list group --}}
                     <a href="{{ $linkHref }}"
-                       class="{{ $linkClass }}"
-                       aria-disabled="{{ $isLocked ? 'true' : 'false' }}"
-                       title="{{ $statusTitle }}">
-
+                    class="{{ $linkClass }}"
+                    aria-disabled="{{ $isLocked ? 'true' : 'false' }}"
+                    title="{{ $statusTitle }}">
                         <div class="d-flex w-100 justify-content-between">
                             <h5 class="mb-1">
-                                {{-- Ikon Tipe --}}
                                 @if($subModule->type == 'learning') <i class="fa fa-book-open text-primary me-2"></i>
                                 @elseif($subModule->type == 'reflection') <i class="fa fa-pencil-square text-info me-2"></i>
                                 @elseif($subModule->type == 'practicum') <i class="fa fa-flask text-success me-2"></i>
@@ -73,7 +68,6 @@
 
                                 {{ $subModule->title }}
                             </h5>
-                            {{-- Tampilkan Status --}}
                             <small class="ms-2">{{ $statusIcon }} {{ $statusTitle }}</small>
                         </div>
                         <p class="mb-1 {{ $isLocked ? '' : 'text-muted' }}">
@@ -81,29 +75,24 @@
                         </p>
                     </a>
 
-                    @php
-                        // Update status untuk iterasi berikutnya
-                        // Modul selanjutnya hanya bisa diakses jika modul INI selesai
-                        $previousCompleted = $isCompleted;
-                    @endphp
-
+                    @php $previousCompleted = $isCompleted; @endphp
                 @empty
                     <div class="alert alert-light text-center">
-                        Kurikulum untuk modul ini belum ditambahkan oleh guru.
+                        {{ __('admin.siswa.class_show.no_curriculum') }}.
                     </div>
                 @endforelse
+
                 <div class="card shadow-sm mb-3">
                     <div class="card-body text-center">
-                        <h5 class="card-title">Rangkuman Nilai Anda</h5>
-                        <p class="card-text text-muted">Lihat semua nilai dan umpan balik dari guru Anda di satu tempat.</p>
+                        <h5 class="card-title">{{ __('admin.siswa.class_show.summary_grade') }}</h5>
+                        <p class="card-text text-muted">{{ __('admin.siswa.class_show.card_text') }}.</p>
                         <a href="{{ route('student.class.grades', $kelas->id) }}" class="btn btn-primary">
-                            <i class="fa fa-star me-2"></i> Lihat Transkrip Nilai
+                            <i class="fa fa-star me-2"></i> {{ __('admin.siswa.class_show.transcript') }}
                         </a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 </div>
 @endsection

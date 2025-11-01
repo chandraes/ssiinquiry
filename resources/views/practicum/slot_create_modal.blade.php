@@ -33,14 +33,14 @@
                         <li class="nav-item"><button class="nav-link" id="slot-d-en-tab-c" data-bs-toggle="tab" data-bs-target="#slot-d-en-pane-c" type="button" role="tab">EN</button></li>
                     </ul>
                     <div class="mb-3">
-                        <label for="phyphox_experiment_type" class="form-label">Tipe Data Phyphox</label>
+                        <label for="phyphox_experiment_type" class="form-label">{{__('admin.practicum.slot_tool')}}</label>
                         <select name="phyphox_experiment_type" class="form-control" required>
-                            <option value="">-- Pilih Tipe Data --</option>
-                            <option value="audio_amplitude">Audio Amplitude (Amplitudo vs Waktu)</option>
-                            <option value="audio_spectrum">Audio Spectrum (Spektrum vs Frekuensi)</option>
+                            <option value="">-- {{__('admin.practicum.choose_data')}} --</option>
+                            <option value="audio_amplitude">{{__('admin.practicum.amplitude')}}</option>
+                            <option value="audio_spectrum">{{__('admin.practicum.spectrum')}}</option>
                             {{-- Tambahkan tipe lain di sini nanti --}}
                         </select>
-                        <small class="text-muted">Ini akan menentukan bagaimana grafik ditampilkan.</small>
+                        <small class="text-muted">{{__('admin.practicum.tool_instruction')}}.</small>
                     </div>
                     <div class="tab-content">
                         <div class="tab-pane fade show active" id="slot-d-id-pane-c" role="tabpanel">
@@ -55,7 +55,7 @@
                     <div class="row">
                         <div class="col-md-8">
                             <label class="form-label">{{ __('admin.practicum.slot_group') }}</label>
-                            <input type="text" name="experiment_group" class="form-control" placeholder="Contoh: Eksperimen 1">
+                            <input type="text" name="experiment_group" class="form-control" placeholder="{{ __('admin.practicum.placeholder_group') }}">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">{{ __('admin.reflection_modal.order_label') }}</label>

@@ -6,6 +6,11 @@
 
 @section('content')
 <div class="container-fluid">
+    <div class="col-md-12 mb-5">
+        <a href="{{ route('kelas.show', $kelas->id) }}" class="btn btn-secondary">
+            <i class="fa fa-arrow-left me-1"></i> {{ __('admin.button.back') }}
+        </a>
+    </div>
 
     <div class="card shadow-sm mb-4">
         <div class="card-body">
@@ -19,7 +24,7 @@
 
     <div class="card shadow-sm">
         <div class="card-header">
-            <h5 class="mb-0">{{__('admin.forum.forum_available')}} {{ $kelas->modul->judul }})</h5>
+            <h5 class="mb-0">{{__('admin.forum.forum_available')}} ({{ $kelas->modul->judul }})</h5>
         </div>
         <div class="card-body">
             <div class="list-group">

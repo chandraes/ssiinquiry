@@ -104,6 +104,11 @@
 
 @section('content')
 <div class="container-fluid">
+    <div class="col-md-12 mb-5">
+        <a href="{{ route('kelas') }}" class="btn btn-secondary btn-sm">
+            <i class="fa fa-arrow-left me-1"></i> {{ __('admin.button.back') }}
+        </a>
+    </div>
 
     {{-- Info Kelas Card --}}
     <div class="card shadow-sm mb-4">
