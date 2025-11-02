@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-    Pertanyaan Refleksi: {{ $subModul->title }}
+    {{__('admin.reflection.title')}}: {{ $subModul->title }}
 @endsection
 
 @section('content')
@@ -16,7 +16,7 @@
 
     <div class="card shadow-sm mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Daftar Pertanyaan Refleksi</h5>
+            <h5 class="mb-0">{{__('admin.reflection.header')}}</h5>
         </div>
 
         <div class="card-body">
@@ -31,29 +31,29 @@
                             <strong>{{ $question->order }}. {{ $question->question_text }}</strong>
                         </div>
                         <div class="mt-3">
-                            <label for="answer-{{ $question->id }}" class="form-label text-primary">Jawaban Anda:</label>
+                            <label for="answer-{{ $question->id }}" class="form-label text-primary">{{__('admin.siswa.reflection.your_answer')}}:</label>
                             <textarea name="answer_text" id="answer-{{ $question->id }}" class="form-control" rows="4" placeholder="Tulis jawaban refleksi Anda di sini..." required>{{ $question->answers[0]->answer_text ?? '' }}</textarea>
-                            <div class="invalid-feedback">Mohon isi jawaban Anda.</div>
+                            <div class="invalid-feedback">{{__('admin.siswa.reflection.fill_answer')}}.</div>
                         </div>
                         
                         <div class="d-flex justify-content-end mt-3">
                             {{-- <span id="status-{{ $question->id }}" class="me-3 text-muted align-self-center small">
                                 @if($question->answers)
-                                    <i class="fe fe-check-circle text-success me-1"></i> Tersimpan
+                                    <i class="fe fe-check-circle text-success me-1"></i> {{__('admin.siswa.reflection.saved')}}
                                 @else
-                                    Menunggu Jawaban
+                                    {{__('admin.siswa.reflection.wait_answer')}}
                                 @endif
                             </span> --}}
                             
                             <button type="submit" class="btn btn-primary btn-save" data-question-id="{{ $question->id }}">
-                                <i class="fe fe-save me-1"></i> Simpan Jawaban
+                                <i class="fe fe-save me-1"></i> {{__('admin.siswa.reflection.save_answer')}}
                             </button>
                         </div>
                     </div>
                 </form>
             @empty
                 <div class="alert alert-info text-center">
-                    Belum ada pertanyaan refleksi untuk sub modul ini.
+                    {{__('admin.siswa.no_reflection')}}.
                 </div>
             @endforelse
         </div>
@@ -77,18 +77,18 @@ $(document).ready(function() {
 
         // Tampilkan konfirmasi SweetAlert sebelum menyimpan
         Swal.fire({
-            title: 'Simpan Jawaban?',
-            text: 'Apakah Anda yakin ingin menyimpan jawaban refleksi ini?',
+            title: '{{__("admin.swal.save_answer.title"}}',
+            text: '{{__("admin.swal.save_answer.text"}}',
             icon: 'question',
             showCancelButton: true,
-            cancelButtonText: 'Batal',
-            confirmButtonText: 'Ya, simpan',
+            cancelButtonText: '{{__("admin.button.cancel"}}',
+            confirmButtonText: '{{__("admin.swal.save_answer.confirm"}}',
             reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
                 // Jalankan proses simpan via AJAX
                 saveButton.attr('disabled', true).html('<span class="spinner-border spinner-border-sm me-1" role="status"></span> Menyimpan...');
-                statusSpan.html('Menyimpan...');
+                statusSpan.html('{{__("admin.swal.save_answer.status"}}');
 
                 $.ajax({
                     url: "{{ route('siswa.reflection.store') }}", 
@@ -100,9 +100,9 @@ $(document).ready(function() {
 
                         Swal.fire({
                             icon: 'success',
-                            title: 'Berhasil!',
-                            text: 'Jawaban Anda telah disimpan.',
-                            confirmButtonText: 'OK'
+                            title: '{{__("admin.swal.success.title"}}',
+                            text: '{{__("admin.swal.success.text"}}',
+                            confirmButtonText: '{{__("admin.button.ok"}}'
                         });
                     },
                     error: function(xhr) {
@@ -112,7 +112,7 @@ $(document).ready(function() {
                         const errorMsg = xhr.responseJSON?.message || 'Terjadi kesalahan server.';
                         Swal.fire({
                             icon: 'error',
-                            title: 'Gagal Menyimpan',
+                            title: '{{__("admin.swal.failed.title"}}',
                             text: errorMsg
                         });
                     },

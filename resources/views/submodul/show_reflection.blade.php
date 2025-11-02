@@ -1,11 +1,16 @@
 @extends('layouts.app')
 
 @section('title')
-    Pertanyaan Refleksi: {{ $subModul->title }}
+    {{__('admin.reflection.title')}}: {{ $subModul->title }}
 @endsection
 
 @section('content')
 <div class="container-fluid">
+    <div class="col-md-12 mb-5">
+        <a href="{{ route('modul.show', $subModul->modul_id) }}" class="btn btn-secondary btn-sm">
+            <i class="fa fa-arrow-left me-1"></i> {{ __('admin.button.back') }}
+        </a>
+    </div>
 
     <div class="card shadow-sm mb-4">
         <div class="card-body">
@@ -16,11 +21,11 @@
 
     <div class="card shadow-sm mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Daftar Pertanyaan Refleksi</h5>
+            <h5 class="mb-0">{{__('admin.reflection.header')}}</h5>
 
             {{-- [DIUBAH] Tombol ini sekarang memicu modal --}}
             <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#createQuestionModal">
-                <i class="fa fa-plus me-2"></i>Tambah Pertanyaan
+                <i class="fa fa-plus me-2"></i>{{__('admin.reflection.add_reflection')}}
             </button>
         </div>
 
@@ -58,16 +63,16 @@
 
             @empty
                 <div class="alert alert-info text-center">
-                    Belum ada pertanyaan refleksi untuk sub modul ini.
+                    {{__('admin.reflection.no_reflection')}}.
                 </div>
             @endforelse
         </div>
     </div>
 
     <div class="card shadow-sm">
-         <div class="card-header"><h5 class="mb-0">Jawaban Siswa</h5></div>
+         <div class="card-header"><h5 class="mb-0">{{__('admin.reflection.student_answer')}}</h5></div>
          <div class="card-body">
-             <p class="text-muted">Tampilan untuk jawaban siswa per kelas akan muncul di sini.</p>
+             <p class="text-muted">{{__('admin.reflection.student_answer_instruction')}}.</p>
          </div>
     </div>
 </div>
@@ -108,7 +113,7 @@
             modal.modal('show');
 
         }).fail(function() {
-            Swal.fire('Error', 'Gagal mengambil data pertanyaan.', 'error');
+            Swal.fire('Error', '{{__("admin.swal.failed_get_reflection")}}', 'error');
         });
     }
 
@@ -118,7 +123,7 @@
     function deleteQuestion(id) {
         Swal.fire({
             title: '{{ __("admin.swal.delete_title") }}',
-            text: "{{ __("admin.swal.delete_text") }}",
+            text: '{{ __("admin.swal.delete_text") }}',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#d33',
@@ -142,7 +147,7 @@
             var form = this;
             Swal.fire({
                 title: '{{ __("admin.swal.update_title") }}',
-                text: "{{ __("admin.swal.update_text") }}",
+                text: '{{ __("admin.swal.update_text") }}',
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonText: '{{ __("admin.swal.update_confirm") }}',

@@ -2,6 +2,12 @@
 @section('title'){{ $subModule->title }}@endsection
 @section('content')
 <div class="container-fluid">
+    <div class="col-md-12 mb-5">
+        <a href="{{ route('student.class.show', $kelas->id) }}" class="btn btn-outline-secondary btn-sm mb-3">
+            <i class="fa fa-arrow-left me-2"></i> {{__('admin.siswa.back_to_curriculum')}}
+        </a>
+    </div>
+
     @include('student.partials.grade_feedback_box')
     @php
         $instruction = $subModule->learningMaterials->first();
@@ -10,9 +16,6 @@
     <div class="card shadow-sm mb-4">
         {{-- ... (Kode Header Anda: tombol kembali, judul, deskripsi) ... --}}
         <div class="card-body">
-            <a href="{{ route('student.class.show', $kelas->id) }}" class="btn btn-outline-secondary btn-sm mb-3">
-                <i class="fa fa-arrow-left me-2"></i> Kembali ke Kurikulum
-            </a>
             <h2 class="card-title"><i class="fa fa-flask text-success me-2"></i>{{ $subModule->title }}</h2>
             <p class="text-muted">{{ $subModule->description }}</p>
         </div>
@@ -38,10 +41,10 @@
 
             {{-- [BAGIAN BARU] Kontrol Grafik Perbandingan --}}
             <div class="border p-3 rounded mb-4">
-                <h5 class="mb-3">Grafik Perbandingan</h5>
-                <p class="text-muted">Centang file yang sudah diunggah di bawah ini, lalu klik tombol untuk membandingkannya dalam satu grafik.</p>
+                <h5 class="mb-3">{{__('admin.siswa.show_practicum.chart')}}</h5>
+                <p class="text-muted">{{__('admin.siswa.show_practicum.instruction_checklist')}}.</p>
                 <button id="compare-charts-btn" class="btn btn-info">
-                    <i class="fa fa-bar-chart me-2"></i> Bandingkan Grafik yang Dipilih
+                    <i class="fa fa-bar-chart me-2"></i> {{__('admin.siswa.show_practicum.compare_button')}}
                 </button>
 
                 {{-- Canvas Master untuk Perbandingan --}}
@@ -52,7 +55,7 @@
             {{-- [AKHIR BAGIAN BARU] --}}
 
 
-            <p class="lead">Unggahlah file data CSV Anda pada slot yang sesuai di bawah ini.</p>
+            <p class="lead">{{__('admin.siswa.show_practicum.instruction_upload')}}.</p>
 
             @if (session('success'))
                 <div class="alert alert-success">{{ session('success') }}</div>
@@ -83,7 +86,7 @@
                                 </div>
                                 <div class="col-md-3 text-end">
                                     <button type="submit" class="btn btn-primary">
-                                        <i class="fa fa-upload me-2"></i> Unggah
+                                        <i class="fa fa-upload me-2"></i> {{__('admin.siswa.show_practicum.upload')}}
                                     </button>
                                 </div>
                             </div>
@@ -96,7 +99,7 @@
                         @if($submission)
                             <div class="alert alert-success mt-3 mb-0">
                                 <i class="fa fa-check-circle me-2"></i>
-                                Terunggah: <strong>{{ $submission->original_filename }}</strong>
+                                {{__('admin.siswa.show_practicum.uploaded')}}: <strong>{{ $submission->original_filename }}</strong>
                                 {{-- ... (Info ukuran file) ... --}}
                             </div>
 
@@ -110,7 +113,7 @@
                                        data-type="{{ $slot->phyphox_experiment_type }}"
                                        data-label="{{ $slot->label }} ({{ $submission->original_filename }})">
                                 <label class="form-check-label" for="compare-check-{{ $slot->id }}">
-                                    Sertakan dalam grafik perbandingan
+                                    {{__('admin.siswa.show_practicum.label')}}
                                 </label>
                             </div>
 
@@ -121,7 +124,7 @@
                 </div>
             @empty
                 <div class="alert alert-light text-center">
-                    Belum ada slot unggahan yang dikonfigurasi oleh guru.
+                    {{__('admin.siswa.show_practicum.no_slot')}}.
                 </div>
             @endforelse
         </div>
@@ -131,7 +134,7 @@
             @if($currentProgress && $currentProgress->completed_at)
                 {{-- ... (Info "Sudah Selesai") ... --}}
             @else
-                <p class="text-muted mb-0">Sub-modul ini akan ditandai selesai secara otomatis...</p>
+                <p class="text-muted mb-0">{{__('admin.siswa.show_practicum.finish_submodule')}}</p>
             @endif
         </div>
     </div>
@@ -163,7 +166,7 @@
 
         // 2. Validasi Input
         if (checkedBoxes.length === 0) {
-            alert('Silakan centang minimal satu file untuk dibandingkan.');
+            alert('{{__("admin.siswa.show_practicum.alert_ceklist")}}.');
             container.slideUp();
             return;
         }
@@ -178,7 +181,7 @@
         });
 
         if (!allSameType) {
-            alert('Perbandingan gagal: Pastikan semua file yang dicentang memiliki "Tipe Data Phyphox" yang sama (Contoh: hanya bandingkan "Audio Amplitude" dengan "Audio Amplitude").');
+            alert('{{__("admin.siswa.show_practicum.alert_file")}}.');
             container.slideUp();
             return;
         }

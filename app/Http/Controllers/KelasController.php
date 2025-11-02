@@ -543,6 +543,7 @@ class KelasController extends Controller
                                 ->orderBy('order')
                                 ->get();
 
+                                // dd($kelas, $forumSubModules);
         // 3. Kirim data ke view hub
         return view('kelas.show_forums', compact('kelas', 'forumSubModules'));
     }

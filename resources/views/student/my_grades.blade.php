@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-    Rangkuman Nilai: {{ $kelas->nama_kelas }}
+    {{__('admin.siswa.my_grades.title')}}: {{ $kelas->nama_kelas }}
 @endsection
 
 {{-- [BARU] CSS Khusus untuk Mencetak (Print) --}}
@@ -59,9 +59,14 @@
 
     {{-- [BARU] Tombol Cetak --}}
     <div class="row mb-3" id="print-button-wrapper">
+        <div class="col text-start">
+            <a href="{{ route('student.class.show', $kelas->id) }}" class="btn btn-outline-secondary btn-sm mb-3">
+                <i class="fa fa-arrow-left me-2"></i> {{__('admin.siswa.my_grades.back')}}
+            </a>
+        </div>
         <div class="col text-end">
             <button id="downloadPdfBtn" class="btn btn-primary">
-                <i class="fa fa-print me-2"></i> Cetak / Simpan sebagai PDF
+                <i class="fa fa-print me-2"></i> {{__('admin.siswa.my_grades.download')}}
             </button>
         </div>
     </div>
@@ -72,17 +77,17 @@
         {{-- 1. Kartu Judul --}}
         <div class="card shadow-sm mb-4">
             <div class="card-body">
-                <h1 class="card-title">Transkrip Nilai</h1>
+                <h1 class="card-title">{{__('admin.siswa.my_grades.card_title')}}</h1>
                 <h4 class="card-subtitle mb-2 text-muted">{{ $kelas->modul->judul }}</h4>
-                <p class="mb-0">Kelas: <strong>{{ $kelas->nama_kelas }}</strong></p>
-                <p class="mb-0">Siswa: <strong>{{ Auth::user()->name }}</strong></p>
+                <p class="mb-0">{{__('admin.siswa.my_grades.class')}}: <strong>{{ $kelas->nama_kelas }}</strong></p>
+                <p class="mb-0">{{__('admin.siswa.my_grades.student')}}: <strong>{{ Auth::user()->name }}</strong></p>
             </div>
         </div>
 
         {{-- 2. Kartu Total Skor --}}
         <div class="card shadow-sm mb-4 grade-card">
             <div class="card-body text-center">
-                <h6 class="text-muted mb-1">NILAI AKHIR (BERDASARKAN TUGAS DINILAI)</h6>
+                <h6 class="text-muted mb-1">{{__('admin.siswa.my_grades.final_score')}}</h6>
 
                 {{-- Hanya tampilkan jika ada nilai --}}
                 @if($totalMaxPoints > 0)
@@ -93,14 +98,14 @@
 
                     {{-- Opsi: Tampilkan nilai akhir (skala 100) --}}
                     <h4 class="fw-normal text-muted">
-                        (Skor Akhir: {{ round(($totalScore / $totalMaxPoints) * 100, 1) }} / 100)
+                        ({{__('admin.siswa.my_grades.score')}}: {{ round(($totalScore / $totalMaxPoints) * 100, 1) }} / 100)
                     </h4>
                 @else
-                    <h4 class="text-muted p-4">Belum ada tugas yang dinilai oleh guru.</h4>
+                    <h4 class="text-muted p-4">{{__('admin.siswa.my_grades.no_score')}}.</h4>
                 @endif
 
                 <small class="text-muted">
-                    *Total nilai ini hanya dihitung dari sub-modul yang telah selesai dinilai oleh guru Anda.
+                    {{__('admin.siswa.my_grades.information')}}.
                 </small>
             </div>
         </div>
@@ -108,7 +113,7 @@
         {{-- 3. Kartu Rincian Nilai --}}
         <div class="card shadow-sm">
             <div class="card-header">
-                <h5 class="mb-0">Rincian Nilai</h5>
+                <h5 class="mb-0">{{__('admin.siswa.my_grades.header_grade')}}</h5>
             </div>
 
             {{-- Tampilkan daftar hanya jika ada nilai --}}
@@ -151,7 +156,7 @@
                                 {{-- Umpan Balik (jika ada) --}}
                                 @if (!empty($progress->feedback))
                                     <div class="text-muted border-start border-2 ps-2 grade-feedback">
-                                        <strong>Umpan Balik:</strong> {{ $progress->feedback }}
+                                        <strong>{{__('admin.siswa.my_grades.feedback')}}:</strong> {{ $progress->feedback }}
                                     </div>
                                 @endif
                             </li>
@@ -161,7 +166,7 @@
                 </ul>
             @else
                 <div class="card-body text-center p-5">
-                    <p class="text-muted">Guru Anda belum memberikan nilai untuk tugas apa pun.</p>
+                    <p class="text-muted">{{__('admin.siswa.my_grades.no_grade')}}.</p>
                 </div>
             @endif
         </div>

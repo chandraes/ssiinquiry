@@ -29,7 +29,7 @@ return [
         'en' => 'English',
     ],
 
-    'profile' => [
+    'sidebar_profile' => [
         'alt' => 'Foto Profil',
         'title' => 'Profil',
         'settings' => 'Pengaturan',
@@ -99,6 +99,30 @@ return [
             'confirm' => 'Lanjutkan',
             'cancel' => 'Batal',    
         ],
+        'upload' => [
+            'title' => 'Konfirmasi Upload',
+            'text' => 'Apakah Anda yakin ingin mengunggah file ini?',
+            'confirm' => 'Ya, Upload',
+        ],
+        'save_answer' => [
+            'title' => 'Simpan Jawaban?',
+            'text' => 'Apakah Anda yakin ingin menyimpan jawaban ini?',
+            'confirm' => 'Ya, Simpan',
+            'status' => 'Menyimpan...',
+        ],
+        'success' => [
+            'title' => 'Berhasil!',
+            'text' => 'Data Berhasil Disimpan!',
+            'confirm' => 'Oke',
+        ],
+        'failed' => [
+            'title' => 'Gagal!',
+            'text' => 'Data Berhasil Disimpan!',
+            'confirm' => 'Oke',
+        ],
+        'failed_get_instruction' => 'Gagal mengambil data petunjuk.',
+        'failed_get_slot' => 'Gagal mengambil data slot.',
+        'failed_get_reflection' => 'Gagal mengambil data pertanyaan.',
     ],
 
     'kelas_modal' => [
@@ -245,7 +269,10 @@ return [
             'input_title' => 'Judul Modul',
             'input_description' => 'Deskripsi',
         ],
-        'edit_header' => 'Ubah Data Modul',
+        'edit' => [
+            'header' => 'Ubah Data Modul',
+            'image_instruction' => 'Kosongkan jika tidak ingin mengubah gambar',
+        ],
     ],
 
    'material_modal' => [
@@ -254,16 +281,20 @@ return [
         'add_infographic' => 'Add Infographic (Image)',
         'edit_title' => 'Ubah Materi',
         'add_regulation' => 'Add Regulation (PDF)',
+        'add_video' => 'Tambah Materi Video',
 
         // New generic key
         'url_label' => 'Material URL',
         'url_placeholder' => 'https://example.com/...',
+        'url_instruction' => 'Masukkan URL langsung ke gambar infografis (misal: .../gambar.jpg)',
 
         'add_rich_text' => 'Tambah Materi Teks (Rich Text)', // <-- BARU
 
         // ... (key url_label)
         'rich_text_content_id' => 'Konten Teks (ID)', // <-- BARU
         'rich_text_content_en' => 'Text Content (EN)',
+
+        'url_video_label' => 'URL Video (YouTube/Vimeo)',
     ],
 
     'reflection_modal' => [
@@ -285,7 +316,25 @@ return [
         'add_slot' => 'Tambah Slot Unggahan',
         'slot_label' => 'Label Slot',
         'slot_desc' => 'Deskripsi/Nama File',
+        'slot_tool' => 'Tipe Data Phyphox',
         'slot_group' => 'Grup Eksperimen',
+        'choose_data' => 'Pilih Tipe Data',
+        'amplitude' => 'Audio Amplitude (Amplitudo vs Waktu)',
+        'spectrum' => 'Audio Spectrum (Spektrum vs Frekuensi)',
+        'tool_instruction' => 'Ini akan menentukan bagaimana grafik ditampilkan',
+        'placeholder_group' => 'Contoh : Eksperimen 1',
+        'edit_slot' => 'Ubah Slot Unggahan',
+        'no_practicum_instruction' => 'Belum ada petunjuk praktikum yang dibuat',
+        'no_slot' => 'Belum ada slot unggahan yang dibuat',
+    ],
+
+    'reflection' => [
+        'title' => 'Pertanyaan Refleksi',
+        'header' => 'Daftar Pertanyaan Refleksi',
+        'add_reflection' => 'Tambah Pertanyaan',
+        'no_reflection' => 'Belum ada pertanyaan refleksi untuk sub modul ini',
+        'student_answer' => 'Jawaban Siswa',
+        'student_answer_instruction' => 'Tampilan untuk jawaban siswa per kelas akan muncul di sini.',
     ],
 
     'forum' => [ 
@@ -299,7 +348,6 @@ return [
     ],
 
     'forum_settings' => [
-        // 'title' => 'Pengaturan Forum Debat',
         'title' => 'Atur Tim : ',
         'setting_team_for_class' => 'Anda sedang mengatur tim untuk Kelas: ',
         'back_text' => 'Kembali ke Daftar Forum',
@@ -349,6 +397,171 @@ return [
         'edit_header' => 'Ubah Data Pengguna',
     ],
 
+    //SISWA
+    'siswa' => [
+        'no_materi' => 'Belum ada materi pembelajaran untuk sub modul ini',
+        'no_practicum_instruction' => 'Belum ada petunjuk praktikum yang dibuat',
+        'upload_csv' => 'Unggah CSV',
+        'no_slot' => 'Belum ada slot unggahan yang dibuat',
+        'no_reflection' => 'Belum ada pertanyaan refleksi untuk sub modul ini',
+        'reflection' => [
+            'your_answer' => 'Jawaban Anda',
+            'fill_answer' => 'Mohon isi jawaban Anda',
+            'saved' => 'Tersimpan',
+            'wait_answer' => 'Menunggu Jawaban',
+            'save_answer' => 'Simpan Jawaban',
+        ],
+        'class_show' => [
+            'title' => 'Kelas',
+            'back' => 'Kembali ke Dasbor',
+            'welcome' => 'Selamat datang di kelas',
+            'header' => 'Kurikulum Pembelajaran',
+            'no_curriculum' => 'Kurikulum untuk modul ini belum ditambahkan oleh guru',
+            'summary_grade' => 'Rangkuman Nilai Anda',
+            'card_text' => 'Lihat semua nilai dan umpan balik dari guru Anda di satu tempat',
+            'transcript' => 'lihat Transkrip Nilai',
+            'finish' => 'Selesai',
+            'available' => 'Tersedia',
+            'locked' => 'Terkunci',
+        ],
+        'my_grades' => [
+            'title' => 'Rangkuma Nilai',
+            'back' => 'Kembali ke Kelas',
+            'download' => 'Cetak / Simpan sebagai PDF',
+            'card_title' => 'Transkrip Nilai',
+            'class' => 'Kelas',
+            'student' => 'Siswa',
+            //TOTAL SKOR
+            'final_score' => 'NILAI AKHIR (BERDASARKAN TUGAS DINILAI)',
+            'score' => 'Skor Akhir',
+            'no_score' => 'Belum ada tugas yang dinilai oleh guru',
+            'information' => '*Total nilai ini hanya dihitung dari sub-modul yang telah selesai dinilai oleh guru Anda',
+            //RINCIAN NILAI
+            'header_grade' => 'Rincian Nilai',
+            'feedback' => 'Umpan balik',
+            'no_grade' => 'Guru Anda belum memberikan nilai untuk tugas apa pun',
+        ],
+        'show_learning' => [
+            'back' => 'Kembali ke Kurikulum',
+            'not_valid' => 'Link video tidak valid',
+            'instruction' => 'Silakan akses materi di link berikut',
+            'open' => 'Buka',
+            'no_materi' => 'Konten untuk materi ini belum tersedia',
+            'finish' => 'Anda telah menyelesaikan materi ini pada',
+            'finish_instruction' => 'Setelah Anda selesai mempelajari semua materi di atas, tandai sebagai selesai untuk melanjutkan',
+            'button_finish' => 'Tandai Selesai & Lanjutkan',
+        ],
+        'show_practicum' => [
+            'chart' => 'Grafik Perbadingan',
+            'instruction_ceklist' => 'Centang file yang sudah diunggah di bawah ini, lalu klik tombol untuk membandingkannya dalam satu grafik',
+            'compare_button' => 'Bandingkan Grafik yang Dipilih',
+            'instruction_upload' => 'Unggahlah file data CSV Anda pada slot yang sesuai di bawah ini',
+            'upload' => 'Unggah',
+            'uploaded'=> 'Terunggah',
+            'label' => 'Sertakan dalam grafik perbandingan',
+            'no_slot' => 'Belum ada slot unggahan yang dikonfigurasi oleh guru',
+            'finish_submodul' => 'Sub-modul ini akan ditandai selesai secara otomatis...',
+            'alert_ceklist' => 'Silakan centang minimal satu file untuk dibandingkan',
+            'alert_file' => 'Perbandingan gagal: Pastikan semua file yang dicentang memiliki "Tipe Data Phyphox" yang sama (Contoh: hanya bandingkan "Audio Amplitude" dengan "Audio Amplitude")',
+        ],
+        'show_reflection' => [
+            'lead' => 'Jawablah pertanyaan-pertanyaan refleksi berikut berdasarkan pemahaman Anda',
+            'answer_instruction' => 'Seluruh pertanyaan harus dijawab sebelum melanjutkan',
+            'answer_placeholder' => 'Tuliskan jawaban Anda di sini...',
+            'no_reflection' => 'Belum ada pertanyaan refleksi yang ditambahkan oleh guru',
+            'save_draft' => 'Simpan Draf',
+            'save_next' => 'Simpan & Lanjutkan',
+            'draft_text' => 'Draf jawaban Anda akan disimpan dan Anda bisa kembali lagi nanti',
+            'save_text' => 'Aksi ini akan mengirimkan jawaban Anda dan menandai materi selesai. Pastikan semua jawaban sudah terisi',
+            'forward' => 'Ya, Lanjutkan',
+        ],
+        'show_forum' => [
+            'your_team' => 'Anda berada di',
+            'team' => 'Tim',
+            'pro' => 'Pro',
+            'contra' => 'Kontra',
+            'unlisted' => 'Anda tidak terdaftar di tim',
+            'debate_topic' => 'Topik Debat',
+            'no_topic' => 'Topik belum diatur',
+            'debate_rule' => 'Aturan Debat',
+            'no_rule' => 'Aturan belum diatur',
+            'add_post' => 'Buat Postingan Baru',
+            'send_failed' => 'Postingan Anda gagal dikirim',
+            'your_argumen' => 'Argumen Anda',
+            'attach' => 'Lampirkan Bukti (dari Praktikum Anda)',
+            'from_slot' => 'dari Slot',
+            'not_upload' => 'Anda belum mengunggah file praktikum apapun',
+            'send_new_post' => 'Kirim Postingan Baru',
+            'debate_arena' => 'Arena Debat',
+            'no_post' => 'Belum ada postingan. Jadilah yang pertama!',
+            'complete_forum' => 'Anda telah menyelesaikan forum ini pada',
+            'debate_lead' => 'Setelah Anda merasa cukup berpartisipasi dalam debat, tandai sebagai selesai',
+            'complete_button' => 'Tandai Selesai & Lanjutkan',
+            'your_reply' => 'Balasan Anda',
+            'attach_post' => 'Lampirkan Bukti',
+            'no_file' => 'Anda tidak memiliki file praktikum untuk dilampirkan',
+            'reply_failed' => 'Gagal mengirim balasan',
+            'send' => 'Kirim balasan',
+            //SWAL
+            'send_post' => 'Kirim Postingan',
+            'send_reply' => 'Kirim Balasan',
+            'send_text' => 'Postingan Anda akan terlihat oleh seluruh kelas',
+            'send_confirmation' => 'Ya, Kirim',
+            'debate_title' => 'Selesai Berdebat',
+            'dabate_text' => 'Pastikan Anda sudah berpartisipasi aktif',
+            'debate_confirmation' => 'Ya, Selesai',
+            'attach_alert' => 'Tidak ada data bukti untuk ditampilkan',
+            'load_chart' => 'Memuat Grafik...',
+            'show_attach' => 'Tampilkan Grafik Bukti',
+            'error' => 'Terjadi error',
+            'file' => 'File',
+            'load_failed' => 'gagal dimuat',
+            'parse_failed' => 'Gagal mem-parsing',
+        ],
+        'forum_post' => [
+            'team' => 'Tim',
+            'reply' => 'membalas',
+            'post' => 'post',
+            'attach_evidence' => 'Bukti Terlampir',
+            'evidence_file' => 'File Bukti',
+            'show_chart' => 'Tampilkan Grafik Bukti',
+            'reply_button' => 'Balas',
+        ],
+        'grade_feedback'=>[
+            'header' => 'Nilai & Umpan Balik Anda',
+            'grade' => 'SKOR ANDA',
+            'feedback' => 'UMPAN BALIK DARI GURU',
+            'alert' => 'Guru tidak memberikan umpan balik tambahan',
+        ],
+        'back_to_curriculum' => 'Kembali ke Kurikulum',
+    ],
+    
+    'profile' => [
+        'title' => 'Profil Saya',
+        'edit_profile' => 'Edit Profile',
+        'information' => 'Informasi Pribadi',
+        'alt_image' => 'Foto Profil',
+        'name' => 'Nama Lengkap',
+        'school' => 'Asal Sekolah',
+        'hp' => 'Nomer HP',
+        'email' => 'Email',
+        'edit' => [
+            'title' => 'Ubah Profil Saya',
+            'header' => 'Ubah Profil',
+            'change_image' => 'Ganti Foto',
+            'delete_image' => 'Hapus Foto',
+            'max_image' => 'Format: .jpg, .jpeg, atau .png. Ukuran maks: 2MB',
+            'school_placeholder' => 'Masukkan asal sekolah',
+            'hp_placeholder' => 'Masukkan nomor HP',
+            'change_password' => 'Ubah Password (Opsional)',
+            'password_instruction' => 'Kosongkan jika Anda tidak ingin mengubah password',
+            'new_password' => 'Kata Sandi Baru',
+            'new_password_placeholder' => 'Masukkan password baru',
+            'password_confirmation' => 'Konfirmasi Kata Sandi',
+            'confirmation_password_placeholder' => 'Ulangi password baru',
+            ]
+    ],
+
     'settings' => [
         'title' => 'Pengaturan',
         'application' => 'Pengaturan Aplikasi',
@@ -377,5 +590,7 @@ return [
         'delete'=>'Hapus',
         'edit'=>'Ubah',
         'add'=>'Tambah',
+        'ok' => 'Oke',
+        'back'=> 'Kembali',
     ]
 ];

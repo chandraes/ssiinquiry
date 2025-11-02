@@ -95,35 +95,54 @@
 @section('content')
 @include('student.partials.grade_feedback_box')
 <div class="container-fluid">
-
+    <div class="col-md-12 mb-5">
+        <a href="{{ route('student.class.show', $kelas->id) }}" class="btn btn-outline-secondary btn-sm mb-3">
+            <i class="fa fa-arrow-left me-2"></i> {{__('admin.siswa.back_to_curriculum')}}
+        </a>
+    </div>
     <div class="card shadow-sm mb-4">
         <div class="card-body">
-            <a href="{{ route('student.class.show', $kelas->id) }}" class="btn btn-outline-secondary btn-sm mb-3">
-                <i class="fa fa-arrow-left me-2"></i> Kembali ke Kurikulum
-            </a>
-            <h2 class="card-title"><i class="fa fa-comments text-danger me-2"></i>{{ $subModule->title }}</h2>
+            <h2 class="card-title">
+                <i class="fa fa-comments text-danger me-2"></i>{{ $subModule->title }}
+            </h2>
 
             @if($teamInfo)
                 <div class="alert alert-{{ $teamInfo->team == 'pro' ? 'success' : 'danger' }} fs-5">
                     <i class="fa fa-users me-2"></i>
-                    Anda berada di <strong>Tim {{ $teamInfo->team == 'pro' ? 'Pro' : 'Kontra' }}</strong>.
+                    {{ __('admin.siswa.show_forum.your_team') }}
+                    <strong>
+                        {{ __('admin.siswa.show_forum.team') }}
+                        {{ $teamInfo->team == 'pro'
+                            ? __('admin.siswa.show_forum.pro')
+                            : __('admin.siswa.show_forum.contra') }}
+                    </strong>.
                 </div>
             @else
-                <div class="alert alert-warning">Anda tidak terdaftar di tim.</div>
+                <div class="alert alert-warning">
+                    {{ __('admin.siswa.show_forum.unlisted') }}.
+                </div>
             @endif
 
             <hr>
-            <h4>Topik Debat:</h4>
-            <p class="lead">{{ $subModule->getTranslation('debate_topic', 'id') ?? 'Topik belum diatur.' }}</p>
-            <h4>Aturan Debat:</h4>
-            <div class="rich-text-content p-2">{!! $subModule->getTranslation('debate_rules', 'id') ?? '<p>Aturan belum diatur.</p>' !!}</div>
+
+            <h4>{{ __('admin.siswa.show_forum.debate_topic') }}:</h4>
+            <p class="lead">
+                {{ $subModule->getTranslation('debate_topic', 'id') ?? __('admin.siswa.show_forum.no_topic') }}
+            </p>
+
+            <h4>{{ __('admin.siswa.show_forum.debate_rule') }}:</h4>
+            <div class="rich-text-content p-2">
+                {!! $subModule->getTranslation('debate_rules', 'id')
+                    ?? '<p>' . __('admin.siswa.show_forum.no_rule') . '.</p>' !!}
+            </div>
         </div>
     </div>
+
 
     @if($teamInfo)
     <div class="card shadow-sm mb-4">
         <div class="card-header">
-            <h5 class="mb-0">Buat Postingan Baru</h5>
+            <h5 class="mb-0">{{__('admin.siswa.show_forum.add_post')}}</h5>
         </div>
         <form action="{{ route('student.forum.store', [$kelas->id, $subModule->id]) }}" method="POST" id="main-post-form">
             @csrf
@@ -132,33 +151,33 @@
                 @if (session('error'))<div class="alert alert-danger">{{ session('error') }}</div>@endif
                 @if ($errors->hasBag('mainPost'))
                     <div class="alert alert-danger">
-                        Postingan Anda gagal dikirim: {{ $errors->mainPost->first('content') }}
+                        {{__('admin.siswa.show_forum.send_failed')}}: {{ $errors->mainPost->first('content') }}
                     </div>
                 @endif
 
                 <div class="mb-3">
-                    <label for="forum-editor" class="form-label">Argumen Anda:</label>
+                    <label for="forum-editor" class="form-label">{{__('admin.siswa.show_forum.your_argumen')}}:</label>
                     <textarea name="content" id="forum-editor" rows="8">{{ old('content') }}</textarea>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Lampirkan Bukti (dari Praktikum Anda):</label>
+                    <label class="form-label">{{__('admin.siswa.show_forum.attach')}}:</label>
                     @forelse($mySubmissions as $submission)
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" name="evidence_ids[]"
                                value="{{ $submission->id }}" id="main-evidence-{{ $submission->id }}">
                         <label class="form-check-label" for="main-evidence-{{ $submission->id }}">
                             {{ $submission->original_filename }}
-                            <small class="text-muted">(dari Slot: {{ $submission->slot->label }})</small>
+                            <small class="text-muted">({{__('admin.siswa.show_forum.from_slot')}}: {{ $submission->slot->label }})</small>
                         </label>
                     </div>
                     @empty
-                    <p class="text-muted small">Anda belum mengunggah file praktikum apapun.</p>
+                    <p class="text-muted small">{{__('admin.siswa.show_forum.not_upload')}}.</p>
                     @endforelse
                 </div>
             </div>
             <div class="card-footer text-end">
-                <button type="submit" class="btn btn-primary btn-lg">Kirim Postingan Baru</button>
+                <button type="submit" class="btn btn-primary btn-lg">{{__('admin.siswa.show_forum.send_new_post')}}</button>
             </div>
         </form>
     </div>
@@ -166,7 +185,7 @@
 
     <div class="card shadow-sm">
         <div class="card-header">
-            <h5 class="mb-0">Arena Debat</h5>
+            <h5 class="mb-0">{{__('admin.siswa.show_forum.debate_arena')}}</h5>
         </div>
         <div class="card-body">
             @forelse($posts as $post)
@@ -174,7 +193,7 @@
                 @include('student.partials.forum_post', ['post' => $post, 'is_reply' => false, 'mySubmissions' => $mySubmissions])
             @empty
                 <div class="alert alert-light text-center">
-                    Belum ada postingan. Jadilah yang pertama!
+                    {{__('admin.siswa.show_forum.no_post')}}
                 </div>
             @endforelse
         </div>
@@ -185,14 +204,14 @@
             @if($currentProgress && $currentProgress->completed_at)
                 <div class="alert alert-success mb-0">
                     <i class="fa fa-check-circle me-2"></i>
-                    Anda telah menyelesaikan forum ini pada {{ $currentProgress->completed_at->format('d M Y, H:i') }}.
+                    {{__('admin.siswa.show_forum.complete_forum')}} {{ $currentProgress->completed_at->format('d M Y, H:i') }}.
                 </div>
             @else
-                <p class="lead">Setelah Anda merasa cukup berpartisipasi dalam debat, tandai sebagai selesai.</p>
+                <p class="lead">{{__('admin.siswa.show_forum.debate_lead')}}.</p>
                 <form action="{{ route('student.submodule.complete', [$kelas->id, $subModule->id]) }}" method="POST" id="complete-forum-form">
                     @csrf
                     <button type="submit" class="btn btn-primary btn-lg">
-                        Tandai Selesai & Lanjutkan <i class="fa fa-arrow-right ms-2"></i>
+                        {{__('admin.siswa.show_forum.complete_button')}}<i class="fa fa-arrow-right ms-2"></i>
                     </button>
                 </form>
             @endif
@@ -209,12 +228,12 @@
             <input type="hidden" name="parent_post_id" class="parent-post-id-input" value="">
 
             <div class="mb-3">
-                <label for="reply-editor-{{ $subModule->id }}" class="form-label">Balasan Anda:</label>
+                <label for="reply-editor-{{ $subModule->id }}" class="form-label">{{__('admin.siswa.show_forum.your_reply')}}:</label>
                 <textarea name="content" id="reply-editor-{{ $subModule->id }}" class="reply-editor" rows="6"></textarea>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Lampirkan Bukti:</label>
+                <label class="form-label">{{__('admin.siswa.show_forum.attach_post')}}:</label>
                 @forelse($mySubmissions as $submission)
                 <div class="form-check form-check-sm">
                     <input class="form-check-input" type="checkbox" name="evidence_ids[]"
@@ -224,19 +243,19 @@
                     </label>
                 </div>
                 @empty
-                <p class="text-muted small">Anda tidak memiliki file praktikum untuk dilampirkan.</p>
+                <p class="text-muted small">{{__('admin.siswa.show_forum.no_file')}}.</p>
                 @endforelse
             </div>
 
             @if ($errors->hasBag('replyPost'))
                 <div class="alert alert-danger small p-2">
-                    Gagal mengirim balasan: {{ $errors->replyPost->first('content') }}
+                    {{__('admin.siswa.show_forum.reply_failed')}}: {{ $errors->replyPost->first('content') }}
                 </div>
             @endif
 
             <div class="d-flex justify-content-end gap-2">
-                <button type="button" class="btn btn-sm btn-secondary cancel-reply-btn">Batal</button>
-                <button type="submit" class="btn btn-sm btn-primary">Kirim Balasan</button>
+                <button type="button" class="btn btn-sm btn-secondary cancel-reply-btn">{{__('admin.button.cancel')}}</button>
+                <button type="submit" class="btn btn-sm btn-primary">{{__('admin.siswa.show_forum.send')}}</button>
             </div>
         </form>
     </div>
@@ -297,10 +316,10 @@ jQuery(document).ready(function($) {
         if (editorInstance) { editorInstance.save(); } else { return; }
 
         Swal.fire({
-            title: isReply ? 'Kirim Balasan?' : 'Kirim Postingan?',
-            text: "Postingan Anda akan terlihat oleh seluruh kelas.",
+            title: isReply ? '{{__("admin.siswa.show_forum.send_reply")}}?' : '{{__("admin.siswa.show_forum.send_post")}}?',
+            text: '{{__("admin.siswa.show_forum.send_text")}}.',
             icon: 'question', showCancelButton: true,
-            confirmButtonText: 'Ya, Kirim', cancelButtonText: 'Batal',
+            confirmButtonText: '{{__("admin.siswa.show_forum.send_confirmation")}}', cancelButtonText: '{{__("admin.button.cancel")}}',
         }).then((result) => { if (result.isConfirmed) { form.submit(); } });
     });
 
@@ -308,9 +327,9 @@ jQuery(document).ready(function($) {
         e.preventDefault();
         var form = this;
         Swal.fire({
-            title: 'Selesai Berdebat?', text: "Pastikan Anda sudah berpartisipasi aktif.",
+            title: '{{__("admin.siswa.show_forum.debate_title")}}?', text: '{{__("admin.siswa.show_forum.dabate_text")}}.',
             icon: 'warning', showCancelButton: true,
-            confirmButtonText: 'Ya, Selesai', cancelButtonText: 'Batal',
+            confirmButtonText: '{{__("admin.siswa.show_forum.debate_confirmation")}}', cancelButtonText: '{{__("admin.button.cancel")}}.',
         }).then((result) => { if (result.isConfirmed) { form.submit(); } });
     });
 
@@ -339,7 +358,7 @@ jQuery(document).ready(function($) {
         }
 
         if (!evidenceJson || evidenceJson.length === 0) {
-            alert('Tidak ada data bukti untuk ditampilkan.');
+            alert('{{__("admin.siswa.show_forum.attach_alert")}}.');
             return;
         }
 
@@ -347,7 +366,7 @@ jQuery(document).ready(function($) {
         var chartType = 'line';
 
         var ctx = document.getElementById(canvasId).getContext('2d');
-        $button.html('<i class="fa fa-spinner fa-spin me-2"></i> Memuat Grafik...');
+        $button.html('<i class="fa fa-spinner fa-spin me-2"></i> {{__("admin.siswa.show_forum.load_chart")}}');
 
         var fetchPromises = [];
         evidenceJson.forEach(function(evidence) {
@@ -362,11 +381,11 @@ jQuery(document).ready(function($) {
                 // Panggil helper 'drawComparisonChart' (didefinisikan di bawah)
                 // Kita berikan 'ctx' agar ia tahu di mana harus menggambar
                 evidenceCharts[canvasId] = drawComparisonChart(ctx, allParsedData, chartType);
-                $button.html('<i class="fa fa-bar-chart me-2"></i> Tampilkan Grafik Bukti');
+                $button.html('<i class="fa fa-bar-chart me-2"></i> {{__("admin.siswa.show_forum.show_attach")}}');
             })
             .catch(error => {
-                alert('Terjadi error: ' + error.message);
-                $button.html('<i class="fa fa-bar-chart me-2"></i> Tampilkan Grafik Bukti');
+                alert('{{__("admin.siswa.show_forum.error")}}: ' + error.message);
+                $button.html('<i class="fa fa-bar-chart me-2"></i> {{__("admin.siswa.show_forum.show_attach")}}');
             });
     });
 
@@ -379,7 +398,7 @@ jQuery(document).ready(function($) {
         return new Promise((resolve, reject) => {
             fetch(url)
                 .then(response => {
-                    if (!response.ok) throw new Error('File ' + label + ' gagal dimuat.');
+                    if (!response.ok) throw new Error('{{__("admin.siswa.show_forum.file")}} ' + label + ' {{__("admin.siswa.show_forum.load_failed")}}.');
                     return response.text();
                 })
                 .then(csvText => {
@@ -389,7 +408,7 @@ jQuery(document).ready(function($) {
                         complete: function(results) {
                             resolve({ label: label, csvData: results.data });
                         },
-                        error: (err) => reject(new Error('Gagal mem-parsing ' + label + ': ' + err.message))
+                        error: (err) => reject(new Error('{{__("admin.siswa.show_forum.parse_failed")}} ' + label + ': ' + err.message))
                     });
                 })
                 .catch(err => reject(err));
