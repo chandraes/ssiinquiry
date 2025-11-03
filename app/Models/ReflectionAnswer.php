@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ReflectionAnswer extends Model
 {
-    protected $fillable = ['reflection_question_id', 'student_id', 'course_class_id', 'answer_text'];
+    protected $fillable = ['reflection_question_id', 'student_id', 'course_class_id', 'answer_text', 'reflection_question_option_id',];
 
     public function question()
     {
@@ -21,5 +21,11 @@ class ReflectionAnswer extends Model
     public function courseClass()
     {
         return $this->belongsTo(Kelas::class, 'course_class_id');
+    }
+
+    public function option()
+    {
+        // Relasi ini membaca 'reflection_question_option_id'
+        return $this->belongsTo(ReflectionQuestionOption::class, 'reflection_question_option_id');
     }
 }

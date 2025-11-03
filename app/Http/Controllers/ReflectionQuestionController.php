@@ -6,65 +6,145 @@ use Exception;
 use App\Models\Kelas;
 use Illuminate\Http\Request;
 use App\Models\ReflectionAnswer;
+use Illuminate\Support\Facades\DB; // <-- [BARU] Untuk transaction
 use App\Models\ReflectionQuestion;
+use Illuminate\Support\Facades\Auth; // <-- [BARU] Untuk keamanan
+use App\Models\SubModuleProgress;     // <-- [BARU] Untuk keamanan
+use App\Models\ReflectionQuestionOption; // <-- [BARU]
 use App\Http\Controllers\Controller;
 
 class ReflectionQuestionController extends Controller
 {
     /**
-     * Menyimpan pertanyaan refleksi baru.
+     * [DIPERBARUI] Menyimpan pertanyaan refleksi baru (Esai atau PG).
      */
     public function store(Request $request)
     {
+
+
         $request->validate([
             'sub_module_id' => 'required|exists:sub_modules,id',
+            'type' => 'required|in:essay,multiple_choice', // <-- [BARU] Validasi tipe
             'question_text.id' => 'required|string',
             'question_text.en' => 'required|string',
             'order' => 'nullable|integer',
+
+            // [BARU] Validasi untuk Pilihan Ganda
+            // 'options' harus ada jika tipenya multiple_choice, dan harus array
+            'options' => 'required_if:type,multiple_choice|array|min:2',
+            'options.*.id' => 'required|string', // Validasi teks ID setiap opsi
+            'options.*.en' => 'required|string', // Validasi teks EN setiap opsi
+            // 'correct_option' adalah index dari array 'options'
+            'correct_option_index' => 'required_if:type,multiple_choice|integer',
         ]);
 
+        // Gunakan DB Transaction untuk memastikan data konsisten
+        // Jika gagal simpan opsi, pertanyaan juga akan di-rollback
+        DB::beginTransaction();
         try {
-            ReflectionQuestion::create($request->all());
+            // 1. Buat Pertanyaannya dulu
+            $question = ReflectionQuestion::create([
+                'sub_module_id' => $request->sub_module_id,
+                'question_text' => $request->question_text,
+                'order' => $request->order ?? 1,
+                'type' => $request->type, // <-- [BARU] Simpan tipenya
+            ]);
+
+            // 2. Jika tipenya Pilihan Ganda, simpan opsinya
+            if ($request->type == 'multiple_choice' && $request->has('options')) {
+                foreach ($request->options as $index => $optionText) {
+                    // Cek apakah ini adalah index kunci jawaban
+                    $isCorrect = ($index == $request->correct_option_index);
+
+                    // Buat opsi baru yang terhubung ke pertanyaan
+                    $question->options()->create([
+                        'option_text' => $optionText, // Spatie translatable akan menangani array [id, en]
+                        'is_correct' => $isCorrect,
+                    ]);
+                }
+            }
+
+            // Jika semua berhasil, commit
+            DB::commit();
             return redirect()->back()->with('success', 'Pertanyaan berhasil ditambahkan!');
         } catch (Exception $e) {
+            // Jika ada error, rollback
+            DB::rollBack();
             return redirect()->back()->with('error', 'Gagal menambahkan pertanyaan: ' . $e->getMessage());
         }
     }
 
     /**
-     * Mengambil data satu pertanyaan sebagai JSON untuk modal edit.
+     * [DIPERBARUI] Mengambil data satu pertanyaan sebagai JSON untuk modal edit.
+     * Sekarang juga menyertakan 'type' dan 'options'.
      */
     public function edit(ReflectionQuestion $question)
     {
-        // $question sudah otomatis di-resolve oleh Route Model Binding
+        // $question sudah otomatis di-resolve
+
+        // [BARU] Muat relasi 'options' jika ada
+        $question->load('options');
+
+        // Kirim data yang lebih lengkap
         return response()->json([
             'id' => $question->id,
-            'question_text' => $question->getTranslations('question_text'), // {"id": "...", "en": "..."}
+            'question_text' => $question->getTranslations('question_text'),
             'order' => $question->order,
+            'type' => $question->type, // <-- [BARU] Kirim tipe
+            'options' => $question->options, // <-- [BARU] Kirim semua opsi
         ]);
     }
 
     /**
-     * Update data pertanyaan refleksi.
+     * [DIPERBARUI] Update data pertanyaan refleksi (Esai atau PG).
      */
     public function update(Request $request, ReflectionQuestion $question)
     {
-         $request->validate([
+        $request->validate([
+            'type' => 'required|in:essay,multiple_choice',
             'question_text.id' => 'required|string',
             'question_text.en' => 'required|string',
             'order' => 'nullable|integer',
+            'options' => 'required_if:type,multiple_choice|array|min:2',
+            'options.*.id' => 'required|string',
+            'options.*.en' => 'required|string',
+            'correct_option_index' => 'required_if:type,multiple_choice|integer',
         ]);
 
+        DB::beginTransaction();
         try {
-            $question->update($request->all());
+            // 1. Update data pertanyaan utamanya
+            $question->update([
+                'question_text' => $request->question_text,
+                'order' => $request->order ?? 1,
+                'type' => $request->type,
+            ]);
+
+            // 2. Hapus semua opsi lama (cara termudah untuk sinkronisasi)
+            $question->options()->delete();
+
+            // 3. Jika tipenya Pilihan Ganda, buat ulang opsinya
+            if ($request->type == 'multiple_choice' && $request->has('options')) {
+                foreach ($request->options as $index => $optionText) {
+                    $isCorrect = ($index == $request->correct_option_index);
+                    $question->options()->create([
+                        'option_text' => $optionText,
+                        'is_correct' => $isCorrect,
+                    ]);
+                }
+            }
+
+            DB::commit();
             return redirect()->back()->with('success', 'Pertanyaan berhasil diperbarui!');
         } catch (Exception $e) {
+            DB::rollBack();
             return redirect()->back()->with('error', 'Gagal memperbarui pertanyaan: ' . $e->getMessage());
         }
     }
 
     /**
-     * Menghapus pertanyaan refleksi.
+     * Hapus pertanyaan refleksi.
+     * (TIDAK BERUBAH. onDelete('cascade') di migration akan menghapus opsi)
      */
     public function destroy(ReflectionQuestion $question)
     {
@@ -76,49 +156,79 @@ class ReflectionQuestionController extends Controller
         }
     }
 
-    public function storeAnswer(Request $request)
+
+    // ===================================================================
+    // == BAGIAN SISWA (DIPERBARUI UNTUK KEAMANAN & PG)
+    // ===================================================================
+
+    /**
+     * [DIPERBARUI TOTAL] Menyimpan jawaban esai ATAU pilihan ganda dari siswa.
+     */
+    public function saveAnswer(Request $request)
     {
-        // 1. Validasi Request
+        // 1. Validasi Input
         $request->validate([
-            // question_id di Blade menggunakan name="question_{{ $question->id }}"
             'question_id' => 'required|exists:reflection_questions,id',
-            
-            // answer_text adalah inputan textarea
-            'answer_text' => 'required|string|max:5000',
-            
-            // [PENTING] Validasi course_class_id
-            // Nilai ini harus dikirimkan dari Blade (misalnya dari SubModul atau Kelas yang sedang aktif)
-            // 'class_id' => 'nullable|exists:kelas_users,kelas_id', 
+            'class_id' => 'required|exists:kelas,id',
+
+            // [INI PERBAIKANNYA] 'answer_text' hanya wajib jika 'option_id' tidak ada
+            'answer_text' => 'required_without:option_id|nullable|string|max:5000',
+
+            // [INI PERBAIKANNYA] 'option_id' hanya wajib jika 'answer_text' tidak ada
+            'option_id' => 'required_without:answer_text|nullable|exists:reflection_question_options,id',
         ]);
 
-        $userId = auth()->user()->id;
+        $student = Auth::user();
+        $question = ReflectionQuestion::find($request->question_id);
+        $class_id = $request->class_id;
 
-        // Prefer provided class_id, otherwise try to find a class the user is enrolled in
-        
-        $class = Kelas::whereHas('peserta', function ($q) use ($userId) {
-                $q->where('user_id', $userId);
-                })->first();
+        // 2. [KEAMANAN PENGUNCIAN]
+        $progress = SubModuleProgress::where('user_id', $student->id)
+            ->where('sub_module_id', $question->sub_module_id)
+            ->where('kelas_id', $class_id)
+            ->first();
 
-        $class_id = $class ? $class->id : null;
+        if ($progress && $progress->completed_at) {
+            return response()->json([
+                'error' => 'Gagal menyimpan. Anda sudah menyelesaikan sub-modul ini.'
+            ], 403); // 403 Forbidden
+        }
 
-        // 2. Simpan atau Update Jawaban (berdasarkan 3 kunci unik)
+        // 3. Tentukan data yang akan disimpan
+        $dataToSave = [];
+        $is_correct = null; // Status jawaban (null untuk esai)
+
+        if ($request->has('option_id') && $request->option_id) {
+            // Siswa menjawab Pilihan Ganda
+            $dataToSave['reflection_question_option_id'] = $request->option_id;
+            // [PERBAIKAN] Kirim string kosong agar tidak 'null'
+            $dataToSave['answer_text'] = '';
+
+            // 4. [KEAMANAN KUNCI JAWABAN]
+            $selectedOption = ReflectionQuestionOption::find($request->option_id);
+            $is_correct = $selectedOption->is_correct;
+        } else if ($request->has('answer_text')) {
+            // Siswa menjawab Esai
+            $dataToSave['answer_text'] = $request->answer_text;
+            $dataToSave['reflection_question_option_id'] = null;
+        } else {
+            return response()->json(['error' => 'Tidak ada jawaban yang dikirim.'], 422);
+        }
+
+        // 5. Simpan atau Update Jawaban
         $answer = ReflectionAnswer::updateOrCreate(
-            // Kunci Pencarian (untuk menentukan apakah jawaban sudah ada)
             [
-                'student_id' => $userId, // User ID yang sedang login
+                'student_id' => $student->id,
                 'reflection_question_id' => $request->question_id,
-                'course_class_id' => $class_id, // Kunci baru dari request
+                'course_class_id' => $class_id,
             ],
-            // Data yang akan disimpan/diperbarui
-            [
-                'answer_text' => $request->answer_text,
-            ]
+            $dataToSave
         );
 
-        // 3. Return Response JSON untuk AJAX
+        // 6. Return Response JSON
         return response()->json([
             'message' => 'Jawaban berhasil disimpan.',
-            'answer' => $answer
-        ], 200);
+            'is_correct' => $is_correct,
+        ]);
     }
 }

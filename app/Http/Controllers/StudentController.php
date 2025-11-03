@@ -58,12 +58,8 @@ class StudentController extends Controller
     {
         $student = Auth::user();
 
+        // (Logika $progress awal Anda dihapus karena $currentProgress nanti akan mengambilnya)
 
-        // Ambil data progress (yang berisi nilai dan feedback)
-        $progress = SubModuleProgress::where('user_id', $student->id)
-                        ->where('sub_module_id', $subModule->id)
-                        ->where('kelas_id', $kelas->id)
-                        ->first();
         // ==========================================================
         // 1. [KEAMANAN] Pastikan siswa terdaftar di kelas ini
         // ==========================================================
@@ -76,32 +72,22 @@ class StudentController extends Controller
         // 2. [KEAMANAN PRASYARAT] Cek apakah sub-modul ini terkunci
         // ==========================================================
         $isLocked = false;
-
-        // Cek hanya jika ini BUKAN sub-modul pertama (order > 1)
         if ($subModule->order > 1) {
-
-            // Cari sub-modul sebelumnya berdasarkan 'order'
             $previousSubModule = SubModule::where('modul_id', $subModule->modul_id)
                                         ->where('order', '<', $subModule->order)
-                                        ->orderBy('order', 'desc') // Ambil yang paling dekat
+                                        ->orderBy('order', 'desc')
                                         ->first();
-
             if ($previousSubModule) {
-                // Cek apakah progress untuk sub-modul sebelumnya sudah "completed_at"
                 $previousProgress = SubModuleProgress::where('user_id', $student->id)
                                     ->where('kelas_id', $kelas->id)
                                     ->where('sub_module_id', $previousSubModule->id)
-                                    ->whereNotNull('completed_at') // Kuncinya di sini
+                                    ->whereNotNull('completed_at')
                                     ->first();
-
                 if (!$previousProgress) {
-                    // Jika tidak ada progress selesai, modul ini TERKUNCI
                     $isLocked = true;
                 }
             }
         }
-
-        // Jika terkunci, tendang kembali ke kurikulum
         if ($isLocked) {
             return redirect()->route('student.class.show', $kelas->id)
                              ->with('error', 'Anda harus menyelesaikan sub-modul sebelumnya terlebih dahulu.');
@@ -110,16 +96,19 @@ class StudentController extends Controller
         // ==========================================================
         // 3. [PENGAMBILAN DATA] Ambil progress untuk sub-modul SAAT INI
         // ==========================================================
-        $currentProgress = SubModuleProgress::where('user_id', $student->id)
-                                ->where('kelas_id', $kelas->id)
-                                ->where('sub_module_id', $subModule->id)
-                                ->first();
+        // [PERBAIKAN] Gunakan firstOrCreate untuk membuat progress jika belum ada
+        $currentProgress = SubModuleProgress::firstOrCreate(
+            [
+                'user_id' => $student->id,
+                'sub_module_id' => $subModule->id,
+                'kelas_id' => $kelas->id
+            ]
+        );
 
-        // Siapkan data dasar untuk dikirim ke semua view
         $viewData = [
             'kelas' => $kelas,
             'subModule' => $subModule,
-            'currentProgress' => $currentProgress, // Untuk tombol "Tandai Selesai"
+            'currentProgress' => $currentProgress,
         ];
 
         // ==========================================================
@@ -127,83 +116,64 @@ class StudentController extends Controller
         // ==========================================================
 
         if ($subModule->type == 'learning') {
-            // Tipe: Materi (Video, Teks, dll)
-            $subModule->load('learningMaterials'); // Muat relasi materi
+            $subModule->load('learningMaterials');
             return view('student.show_learning', $viewData);
 
         } elseif ($subModule->type == 'reflection') {
-            // Tipe: Pertanyaan Refleksi
 
-            // [PERIKSA DI SINI] Pastikan Anda memuat relasi ini
-            $subModule->load('reflectionQuestions');
+            $subModule->load('reflectionQuestions.options'); // Muat pertanyaan & opsinya
 
-            // Ambil jawaban yang sudah ada untuk siswa & kelas ini
             $existingAnswers = ReflectionAnswer::where('student_id', $student->id)
                 ->where('course_class_id', $kelas->id)
-                // [PENTING] Kita butuh ->reflectionQuestions yang sudah diload untuk baris ini
                 ->whereIn('reflection_question_id', $subModule->reflectionQuestions->pluck('id'))
                 ->get()
                 ->keyBy('reflection_question_id');
 
-            $viewData['existingAnswers'] = $existingAnswers; // Kirim ke view
+            // [PERBAIKAN ERROR] Ganti nama 'existingAnswers' menjadi 'myAnswers'
+            $viewData['myAnswers'] = $existingAnswers; // <-- INI PERBAIKANNYA
 
             return view('student.show_reflection', $viewData);
-        } elseif ($subModule->type == 'practicum') {
-        // Tipe: Praktikum Phyphox
-            $subModule->load('learningMaterials', 'practicumUploadSlots');
 
-            // [DIUBAH] Gunakan student_id dan course_class_id
+        } elseif ($subModule->type == 'practicum') {
+            $subModule->load('learningMaterials', 'practicumUploadSlots');
             $existingSubmissions = PracticumSubmission::where('student_id', $student->id)
-                ->where('course_class_id', $kelas->id) // <-- BENAR
+                ->where('course_class_id', $kelas->id)
                 ->whereIn('practicum_upload_slot_id', $subModule->practicumUploadSlots->pluck('id'))
                 ->get()
                 ->keyBy('practicum_upload_slot_id');
-
-            $viewData['existingSubmissions'] = $existingSubmissions;
+                
+            $viewData['submissions'] = $existingSubmissions; // Ganti nama agar konsisten
 
             return view('student.show_practicum', $viewData);
 
         } elseif ($subModule->type == 'forum') {
-            // Tipe: Forum Debat
-            // Ambil info tim siswa (kode ini sudah Anda miliki)
             $teamInfo = $student->forumTeams()
                                 ->where('sub_module_id', $subModule->id)
                                 ->where('kelas_id', $kelas->id)
                                 ->first();
-
             $viewData['teamInfo'] = $teamInfo;
-
-            // [BARU] Ambil semua postingan untuk forum & kelas ini
-            // Kita hanya ambil postingan level atas (parent_post_id = null)
-            // Lalu kita eager load balasan, user, dan buktinya.
             $posts = ForumPost::where('sub_module_id', $subModule->id)
                 ->where('kelas_id', $kelas->id)
-                ->whereNull('parent_post_id') // Hanya ambil postingan utama
+                ->whereNull('parent_post_id')
                 ->with([
-                    'user', // User pembuat postingan
-                    'evidence.slot', // Bukti & file submission-nya
+                    'user',
+                    'evidence.slot',
                     'replies' => function ($query) {
-                        // Muat juga balasan, user, dan bukti dari balasan
                         $query->with(['user', 'evidence.slot'])->orderBy('created_at', 'asc');
                     }
                 ])
-                ->orderBy('created_at', 'desc') // Postingan utama terbaru di atas
+                ->orderBy('created_at', 'desc')
                 ->get();
-
             $viewData['posts'] = $posts;
-
-            // [BARU] Ambil semua file praktikum siswa di kelas ini
             $mySubmissions = PracticumSubmission::where('student_id', $student->id)
                 ->where('course_class_id', $kelas->id)
                 ->get();
-
             $viewData['mySubmissions'] = $mySubmissions;
-
             return view('student.show_forum', $viewData);
         }
 
         // ==========================================================
-        // 5. [FALLBACK] Jika tipe tidak dikenal
+        // 5. [FALLBACK]
         // ==========================================================
         return redirect()->route('student.class.show', $kelas->id)
                          ->with('error', 'Tipe sub-modul tidak dikenali.');
@@ -258,82 +228,87 @@ class StudentController extends Controller
     public function storeReflection(Request $request, Kelas $kelas, SubModule $subModule)
     {
         $student = Auth::user();
-        $action = $request->input('action', 'save_draft');
+        $action = $request->input('action'); // 'complete' or 'save_and_next'
 
         try {
-            // 1. Validasi berdasarkan Aksi
+            // 1. Validasi HANYA jika aksinya "complete"
             if ($action == 'complete') {
-                // =========================
-                // AKSI: SELESAI & LANJUTKAN
-                // =========================
 
-                // [KEMBALI KE VALIDATE] Validasi ini akan gagal jika ada yg kosong
-                // Ini akan otomatis redirect-back dengan 'old()' dan '$errors'
-                $request->validate([
-                    'answers' => 'required|array',
-                    'answers.*' => 'required|string',
-                ], [
-                    // Kita tidak akan menampilkan pesan ini,
-                    // tapi ini yang akan memicu error highlighting
-                    'answers.*.required' => 'Wajib diisi.',
-                ]);
+                // === [VALIDASI BARU DIMULAI] ===
 
-            } else {
-                // =========================
-                // AKSI: SIMPAN DRAF
-                // =========================
+                // 1. Dapatkan semua pertanyaan (ID dan Tipe) untuk sub-modul ini
+                $allQuestions = $subModule->reflectionQuestions()
+                                        ->select('id', 'type')
+                                        ->get();
+                $totalQuestions = $allQuestions->count();
 
-                // Validasi longgar, boleh kosong
-                $request->validate([
-                    'answers' => 'required|array',
-                    'answers.*' => 'nullable|string',
-                ]);
-            }
+                // 2. Hanya validasi jika ada pertanyaan
+                if ($totalQuestions > 0) {
 
-            // 2. SELALU Simpan Jawaban
-            // Kode ini hanya berjalan jika validasi (di atas) lolos
-            foreach ($request->answers as $questionId => $answerText) {
-                ReflectionAnswer::updateOrCreate(
-                    [
-                        'reflection_question_id' => $questionId,
-                        'student_id' => $student->id,
-                        'course_class_id' => $kelas->id,
-                    ],
-                    [
-                        'answer_text' => $answerText ?? ''
-                    ]
+                    // 3. Dapatkan semua jawaban siswa yang valid untuk pertanyaan tsb
+                    $allAnswers = ReflectionAnswer::where('student_id', $student->id)
+                        ->where('course_class_id', $kelas->id)
+                        ->whereIn('reflection_question_id', $allQuestions->pluck('id'))
+                        ->get();
+
+                    // 4. Hitung jawaban yang valid
+                    $validAnswersCount = 0;
+                    foreach($allQuestions as $question) {
+                        // Cari jawaban untuk pertanyaan ini
+                        $answer = $allAnswers->firstWhere('reflection_question_id', $question->id);
+
+                        if ($answer) { // Jika jawaban ada
+                            if ($question->type == 'essay') {
+                                // Untuk esai, cek answer_text tidak kosong
+                                if (!empty(trim($answer->answer_text))) {
+                                    $validAnswersCount++;
+                                }
+                            } elseif ($question->type == 'multiple_choice') {
+                                // Untuk PG, cek option_id tidak null
+                                if ($answer->reflection_question_option_id !== null) {
+                                    $validAnswersCount++;
+                                }
+                            }
+                        }
+                    } // akhir loop foreach
+
+                    // 5. Bandingkan jumlahnya
+                    if ($validAnswersCount < $totalQuestions) {
+                        // Jika jumlah jawaban valid < jumlah pertanyaan
+                        $missingCount = $totalQuestions - $validAnswersCount;
+                        return redirect()->back()
+                                         ->with('error', "Anda harus menjawab semua {$totalQuestions} pertanyaan terlebih dahulu. {$missingCount} pertanyaan belum terjawab.");
+                    }
+                }
+
+                // === [VALIDASI BARU SELESAI] ===
+
+                // 6. Tandai sub-modul sebagai selesai (HANYA jika validasi lolos)
+                SubModuleProgress::updateOrCreate(
+                    [ 'user_id' => $student->id, 'kelas_id' => $kelas->id, 'sub_module_id' => $subModule->id ],
+                    [ 'completed_at' => now() ] // Kunci jawaban siswa
                 );
             }
 
-            // 3. Tentukan Redirect (hanya jika lolos)
-            if ($action == 'save_draft') {
-                return redirect()->back()->with('success', 'Draf jawaban Anda telah disimpan.');
-            }
+            // 7. Tentukan Redirect (Berlaku untuk 'complete' DAN 'save_and_next')
 
-            // --- Jika action == 'complete' dan validasi lolos ---
-
-            // Tandai sub-modul sebagai selesai
-            SubModuleProgress::updateOrCreate(
-                [ 'user_id' => $student->id, 'kelas_id' => $kelas->id, 'sub_module_id' => $subModule->id ],
-                [ 'completed_at' => now() ]
-            );
-
-            // Cari sub-modul berikutnya
             $nextSubModule = SubModule::where('modul_id', $subModule->modul_id)
                                     ->where('order', '>', $subModule->order)
                                     ->orderBy('order', 'asc')
                                     ->first();
 
             if ($nextSubModule) {
-                return redirect()->route('student.submodule.show', [$kelas->id, $nextSubModule->id])
-                                 ->with('success', 'Jawaban refleksi tersimpan! Lanjut ke materi berikutnya.');
+                $pesan = ($action == 'complete') ? 'Refleksi selesai! Lanjut ke materi berikutnya.' : 'Progres disimpan, lanjut ke materi berikutnya.';
+                return redirect()->route('siswa.submodul.show', [$kelas->id, $nextSubModule->id])
+                                 ->with('success', $pesan);
             } else {
+                $pesan = ($action == 'complete') ? 'Selamat! Anda telah menyelesaikan modul ini.' : 'Progres disimpan.';
                 return redirect()->route('student.class.show', $kelas->id)
-                                 ->with('success', 'Selamat! Jawaban refleksi tersimpan dan Anda telah menyelesaikan modul ini.');
+                                 ->with('success', $pesan);
             }
 
         } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Gagal menyimpan jawaban: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 

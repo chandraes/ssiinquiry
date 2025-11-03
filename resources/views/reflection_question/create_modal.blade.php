@@ -10,6 +10,17 @@
                 <form action="{{ route('reflection_question.store') }}" method="POST" id="reflectionQuestionStore">
                     @csrf
                     <input type="hidden" name="sub_module_id" value="{{ $subModul->id }}">
+
+                    {{-- [BARU] Tipe Pertanyaan --}}
+                    <div class="mb-3">
+                        <label for="create_question_type" class="form-label">Tipe Pertanyaan</label>
+                        <select name="type" id="create_question_type" class="form-select">
+                            <option value="essay" selected>Esai (Jawaban Teks)</option>
+                            <option value="multiple_choice">Pilihan Ganda</option>
+                        </select>
+                    </div>
+
+                    {{-- Tabs Bahasa (Tidak Berubah) --}}
                     <ul class="nav nav-tabs mb-3" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" id="q-id-tab-create" data-bs-toggle="tab"
@@ -36,6 +47,23 @@
                     </div>
 
                     <hr>
+
+                    {{-- [BARU] Container Pilihan Ganda (Dikelola JS) --}}
+                    <div id="create_mc_options_container" style="display: none;">
+                        <h6 class="text-primary">Opsi Pilihan Ganda</h6>
+                        <p class="text-muted small">Tulis opsi jawaban di bawah ini dan pilih satu jawaban yang benar.</p>
+
+                        {{-- Template untuk opsi akan ditambahkan di sini oleh JS --}}
+                        <div id="create_options_list">
+                            {{-- Contoh (opsi pertama akan ditambah JS) --}}
+                        </div>
+
+                        <button type="button" id="create_add_option_btn" class="btn btn-outline-primary btn-sm mt-2">
+                            <i class="fa fa-plus"></i> Tambah Opsi
+                        </button>
+                    </div>
+
+                    <hr>
                     <div class="col-md-4">
                         <label class="form-label">{{ __('admin.reflection_modal.order_label') }}</label>
                         <input type="number" name="order" class="form-control" value="1">
@@ -51,6 +79,3 @@
         </div>
     </div>
 </div>
-</div>
-
-

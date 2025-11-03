@@ -43,6 +43,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/my-class/{kelas}/sub-module/{subModule}/practicum/{slot}', [StudentController::class, 'storePracticum'])->name('student.practicum.store');
         Route::post('/my-class/{kelas}/sub-module/{subModule}/forum', [StudentController::class, 'storeForumPost'])->name('student.forum.store');
         Route::get('/my-class/{kelas}/grades', [StudentController::class, 'showMyGrades'])->name('student.class.grades');
+
+        Route::post('/reflection/save-answer', [ReflectionQuestionController::class, 'saveAnswer'])
+             ->name('reflection_question.save_answer');
     });
 
     Route::group(['prefix' => 'admin', 'middleware' => ['role:admin']], function () {
@@ -91,9 +94,15 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     Route::group(['prefix' => 'reflection-question', 'middleware' => ['role:admin,guru']], function () {
-        Route::post('/', [ReflectionQuestionController::class, 'store'])->name('reflection_question.store');
-        Route::get('/{question}/edit', [ReflectionQuestionController::class, 'edit'])->name('reflection_question.edit.json');
+        Route::get('/{subModul}', [SubModulController::class, 'show_reflection'])->name('reflection_question.show');
+        Route::post('/store', [ReflectionQuestionController::class, 'store'])->name('reflection_question.store');
+
+        // [TAMBAHKAN INI] Route untuk mengambil data JSON (dipanggil oleh JS)
+        Route::get('/{question}/edit', [ReflectionQuestionController::class, 'edit'])->name('reflection_question.edit');
+
+        // [TAMBAHKAN INI] Route untuk menyimpan perubahan (dipanggil oleh form edit)
         Route::put('/{question}', [ReflectionQuestionController::class, 'update'])->name('reflection_question.update');
+
         Route::delete('/{question}', [ReflectionQuestionController::class, 'destroy'])->name('reflection_question.destroy');
     });
 

@@ -66,8 +66,11 @@
 
             @forelse($subModule->practicumUploadSlots as $slot)
                 @php
-                    $submission = $existingSubmissions->get($slot->id);
-                @endphp
+                // [PERBAIKAN] Gunakan '$submissions' (dari controller)
+                $submission = $submissions->get($slot->id);
+                $isSubmitted = $submission && $submission->file_path;
+                $isDisabled = $currentProgress && $currentProgress->completed_at;
+            @endphp
 
                 <div class="card mb-3 {{ $submission ? 'border-success' : 'border-light' }}">
                     <div class="card-body">

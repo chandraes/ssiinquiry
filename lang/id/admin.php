@@ -97,7 +97,7 @@ return [
             'title' => 'Hapus Data?',
             'text' => 'Apakah anda yakin ingin menghapus data ini?',
             'confirm' => 'Lanjutkan',
-            'cancel' => 'Batal',    
+            'cancel' => 'Batal',
         ],
         'upload' => [
             'title' => 'Konfirmasi Upload',
@@ -164,7 +164,7 @@ return [
             'join_code' => 'Kode Gabung Kelas',
             'instruction_join_code' => 'Bagikan kode ini kepada siswa untuk bergabung ke kelas ini.',
             'copy' => 'Salin',
-            
+
             //PARTICIPANT MANAGEMENT
             'manage_participants' => 'Manajemen Peserta',
             'add_delete_participants' => 'Tambah/Hapus Peserta',
@@ -337,7 +337,7 @@ return [
         'student_answer_instruction' => 'Tampilan untuk jawaban siswa per kelas akan muncul di sini.',
     ],
 
-    'forum' => [ 
+    'forum' => [
         'title' => 'Manajemen Forum',
         'sub_title' => 'Manajemen Tim Forum',
         'class' => 'Kelas',
@@ -474,6 +474,8 @@ return [
             'draft_text' => 'Draf jawaban Anda akan disimpan dan Anda bisa kembali lagi nanti',
             'save_text' => 'Aksi ini akan mengirimkan jawaban Anda dan menandai materi selesai. Pastikan semua jawaban sudah terisi',
             'forward' => 'Ya, Lanjutkan',
+            'next_submodule' => 'Lanjutkan Submodule berikutnya',
+            'complete' => 'Selesaikan'
         ],
         'show_forum' => [
             'your_team' => 'Anda berada di',
@@ -535,7 +537,7 @@ return [
         ],
         'back_to_curriculum' => 'Kembali ke Kurikulum',
     ],
-    
+
     'profile' => [
         'title' => 'Profil Saya',
         'edit_profile' => 'Edit Profile',

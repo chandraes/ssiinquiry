@@ -97,7 +97,7 @@ return [
             'title' => 'Delete Data?',
             'text' => 'Are you sure you want to delete this data?',
             'confirm' => 'Continue',
-            'cancel' => 'Cancel',    
+            'cancel' => 'Cancel',
         ],
         'upload' => [
             'title' => 'Confirm Upload',
@@ -164,17 +164,17 @@ return [
             'join_code' => 'Class Join Code',
             'instruction_join_code' => 'Share this code with students to let them join this class.',
             'copy' => 'Copy',
-            
-            //PARTICIPANT MANAGEMENT            
+
+            //PARTICIPANT MANAGEMENT
             'manage_participants' => 'Manage Participants',
             'add_delete_participants' => 'Add/Delete Participants',
             'button_manage_participant' => 'Manage Participants',
-            
+
             //FORUM MANAGEMENT
             'manage_forum' => 'Manage Forum',
             'setup_teams' => 'Manage Pro and Con Teams for this Class',
             'button_manage_forum' => 'Manage Forum',
-            
+
             //TABLE
             'participant_table_name' => 'Participant Name',
             'participant_table_score' => 'Total Score',
@@ -331,7 +331,7 @@ return [
         'student_answer_instruction' => 'Student answers per class will be displayed here.',
     ],
 
-    'forum' => [ 
+    'forum' => [
         'title' => 'Forum Management',
         'sub_title' => 'Forum Team Management',
         'class' => 'Class',
@@ -454,7 +454,7 @@ return [
             'label' => 'Include in comparison chart',
             'no_slot' => 'No upload slots configured by the teacher',
             'finish_submodule' => 'This submodule will be marked complete automatically...',
-            'alert_checklist' => 'Please check at least one file to compare',
+            'alert_ceklist' => 'Please check at least one file to compare',
             'alert_file' => 'Comparison failed: Ensure all checked files have The same "Phyphox Data Type" (Example: only compare "Audio Amplitude" with "Audio Amplitude")',
         ],
         'show_reflection' => [
@@ -467,6 +467,9 @@ return [
             'draft_text' => 'Your draft answer will be saved and you can return to it later',
             'save_text' => 'This action will submit your answer and mark the material as complete. Make sure all answers are filled in',
             'forward' => 'Yes, Continue',
+            'next_submodule' => 'Next Submodule',
+            'complete' => 'Complete'
+
         ],
         'show_forum' => [
             'your_team' => 'You are in',
@@ -529,7 +532,7 @@ return [
         ],
         'back_to_curriculum' => 'Back to Curriculum',
     ],
-    
+
     'profile' => [
         'title' => 'My Profile',
         'edit_profile' => 'Edit Profile',
