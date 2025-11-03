@@ -15,7 +15,6 @@ use App\Models\ReflectionAnswer;
 use App\Models\ReflectionQuestion;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ForumTeam;
@@ -122,7 +121,7 @@ class KelasController extends Controller
                     'guru_id' => 'required|exists:users,id',
                 ]);
             }
-            
+
             // dd($request-> all(), $request->modul_id);
 
             // ... (Logika kodeJoin Anda tidak berubah, sudah bagus) ...
@@ -378,7 +377,7 @@ class KelasController extends Controller
      * [DIPERBAIKI] Mengambil detail submission siswa untuk ditampilkan di modal Gradebook.
      * Menggunakan kolom 'user_id' yang benar untuk ForumPost.
      */
-    public function getSubmissionDetails(Request $request)
+    public function get_submission(Request $request)
     {
         $request->validate([
             'student_id' => 'required|exists:users,id',
@@ -396,24 +395,31 @@ class KelasController extends Controller
         try {
             switch ($subModule->type) {
 
-                case 'reflection':
-                    // ... (Logika refleksi Anda sudah benar) ...
-                    $questionIds = ReflectionQuestion::where('sub_module_id', $subModuleId)->pluck('id');
+               case 'reflection':
+                    // ===================================
+                    // [LOGIKA BARU] UNTUK REFLEKSI (ESAI & PG)
+                    // ===================================
+
+                    // 1. Ambil semua pertanyaan & opsinya (Eager Load)
+                    $questions = ReflectionQuestion::where('sub_module_id', $subModuleId)
+                                        ->with('options')
+                                        ->orderBy('order', 'asc')
+                                        ->get();
+
+                    // 2. Ambil semua jawaban siswa untuk pertanyaan tsb
                     $answers = ReflectionAnswer::where('student_id', $studentId)
-                               ->whereIn('reflection_question_id', $questionIds)
-                               ->with('question')->get();
-                    if ($answers->isNotEmpty()) {
-                        $html = '<h5>Jawaban Refleksi Siswa:</h5><ul class="list-group list-group-flush">';
-                        foreach ($answers as $answer) {
-                            $html .= '<li class="list-group-item p-2" style="font-size: 0.9em;">';
-                            $html .= '<strong>' . e($answer->question->question_text ?? 'Pertanyaan') . ':</strong>';
-                            $html .= '<div class="rich-text-content border-start ps-2 mt-1">' . $answer->answer_text . '</div>';
-                            $html .= '</li>';
-                        }
-                        $html .= '</ul>';
-                    } else {
-                        $html = '<p class="text-muted text-center">Siswa belum mengirimkan refleksi.</p>';
-                    }
+                                        ->where('course_class_id', $kelasId)
+                                        ->whereIn('reflection_question_id', $questions->pluck('id'))
+                                        ->get()
+                                        ->keyBy('reflection_question_id'); // Kunci pakai ID pertanyaan
+
+                    // 3. Render view partial (pastikan file ini ada)
+                    // (Lokasi: resources/views/kelas/partials/_submission_reflection.blade.php)
+                    $html = view('kelas.partials._submission_reflection', [
+                        'questions' => $questions,
+                        'answers' => $answers,
+                        'subModule' => $subModule,
+                    ])->render();
                     break;
 
                 case 'practicum':

@@ -134,7 +134,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/guru/search', [App\Http\Controllers\KelasController::class, 'search_guru_pengajar'])->name('search-pengajar');
 
         Route::post('/save-grade', [KelasController::class, 'saveGrade'])->name('kelas.save_grade');
-        Route::get('/get-submission-details', [KelasController::class, 'getSubmissionDetails'])->name('kelas.get_submission');
+        Route::get('/get-submission-details', [KelasController::class, 'get_submission'])->name('kelas.get_submission');
 
         Route::get('/{kelas}/forums', [KelasController::class, 'showForums'])->name('kelas.forums');
         Route::get('/{kelas}', [KelasController::class, 'show'])->name('kelas.show');
