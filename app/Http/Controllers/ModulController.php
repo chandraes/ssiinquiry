@@ -229,6 +229,24 @@ class ModulController extends Controller
         }
     }
 
+    public function uploadRPS(Request $request, $id)
+    {
+        $request->validate([
+            'rps_file' => 'required|mimes:pdf,doc,docx|max:5120', // max 5MB
+        ]);
+
+        $modul = Modul::findOrFail($id);
+
+        // Simpan file ke storage/app/public/rps/
+        $path = $request->file('rps_file')->store('rps', 'public');
+
+        // Update path di database
+        $modul->update(['rps_file' => $path]);
+
+        return back()->with('success', 'Rencana Pembelajaran berhasil diunggah!');
+    }
+
+
 
 
     /**

@@ -59,11 +59,6 @@
 
     {{-- [BARU] Tombol Cetak --}}
     <div class="row mb-3" id="print-button-wrapper">
-        <div class="col text-start">
-            <a href="{{ route('student.class.show', $kelas->id) }}" class="btn btn-outline-secondary btn-sm mb-3">
-                <i class="fa fa-arrow-left me-2"></i> {{__('admin.siswa.my_grades.back')}}
-            </a>
-        </div>
         <div class="col text-end">
             <button id="downloadPdfBtn" class="btn btn-primary">
                 <i class="fa fa-print me-2"></i> {{__('admin.siswa.my_grades.download')}}
@@ -172,6 +167,15 @@
         </div>
 
     </div> {{-- Penutup #transcript-content --}}
+    <div class="card">
+        <div class="card-footer">
+            <div class="col text-start">
+                <a href="{{ route('student.class.show', $kelas->id) }}" class="btn btn-outline-secondary">
+                    <i class="fa fa-arrow-left me-2"></i> {{__('admin.siswa.my_grades.back')}}
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
 

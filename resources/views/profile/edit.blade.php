@@ -9,11 +9,6 @@
 
 <section class="main-content mt-0">
     <div class="row">
-        <div class="col-md-12 mb-5">
-            <a href="{{ route('profile.index') }}" class="btn btn-secondary btn-lg">
-                <i class="fa fa-arrow-left me-1"></i> {{ __('admin.button.back') }}
-            </a>
-        </div>
         <div class="col-xl-12 col-md-12 col-sm-12">
             <div class="card">
                 <div class="card-header">
@@ -95,9 +90,15 @@
                         </div>
                     </div>
 
-                    <div class="card-footer text-end">
-                        <a href="{{ url()->previous() }}" class="btn btn-lg btn-danger">{{__('admin.button.cancel')}}</a>
-                        <button type="submit" class="btn btn-lg btn-primary">{{__('admin.button.save_changes')}}</button>
+                    <div class="card-footer d-flex justify-content-between">
+                        <div class="justify-content-start">
+                            <a href="{{ route('profile.index') }}" class="btn btn-secondary btn-lg">
+                                <i class="fa fa-arrow-left me-1"></i> {{ __('admin.button.back') }}
+                            </a>
+                        </div>
+                        <div class="justify-content-end">
+                            <button type="submit" class="btn btn-lg btn-primary">{{__('admin.button.save_changes')}}</button>
+                        </div>
                     </div>
                 </form>
             </div>

@@ -2,12 +2,6 @@
 @section('title'){{ $subModule->title }}@endsection
 @section('content')
 <div class="container-fluid">
-    <div class="col-md-12 mb-5">
-        <a href="{{ route('student.class.show', $kelas->id) }}" class="btn btn-outline-secondary btn-sm mb-3">
-            <i class="fa fa-arrow-left me-2"></i> {{__('admin.siswa.back_to_curriculum')}}
-        </a>
-    </div>
-
     @include('student.partials.grade_feedback_box')
     @php
         $instruction = $subModule->learningMaterials->first();
@@ -40,7 +34,7 @@
         <div class="card-body">
 
             {{-- [BAGIAN BARU] Kontrol Grafik Perbandingan --}}
-            <div class="border p-3 rounded mb-4">
+            <div class="border p-3 mb-4">
                 <h5 class="mb-3">{{__('admin.siswa.show_practicum.chart')}}</h5>
                 <p class="text-muted">{{__('admin.siswa.show_practicum.instruction_checklist')}}.</p>
                 <button id="compare-charts-btn" class="btn btn-info">
@@ -137,6 +131,11 @@
                 <p class="text-muted mb-0">{{__('admin.siswa.show_practicum.finish_submodule')}}</p>
             @endif
         </div>
+        <div class="card-footer text-center">
+            <a href="{{ route('student.class.show', $kelas->id) }}" class="btn btn-outline-secondary">
+                <i class="fa fa-arrow-left me-2"></i> {{__('admin.siswa.back_to_curriculum')}}
+            </a>
+        </div>
     </div>
 </div>
 @endsection
@@ -215,11 +214,11 @@
                 // Gambar chart dengan semua data
                 drawComparisonChart(ctx, allParsedData, chartType);
 
-                $button.prop('disabled', false).html('<i class="fa fa-bar-chart me-2"></i> Bandingkan Grafik yang Dipilih');
+                $button.prop('disabled', false).html('<i class="fa fa-bar-chart me-2"></i> {{__("admin.siswa.show_practicum.compare_button")}}');
             })
             .catch(error => {
                 alert('Terjadi error: ' + error.message);
-                $button.prop('disabled', false).html('<i class="fa fa-bar-chart me-2"></i> Bandingkan Grafik yang Dipilih');
+                $button.prop('disabled', false).html('<i class="fa fa-bar-chart me-2"></i> {{__("admin.siswa.show_practicum.compare_button")}}');
             });
     });
 

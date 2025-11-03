@@ -6,12 +6,6 @@
 
 @section('content')
 <div class="container-fluid">
-    <div class="col-md-12 mb-5">
-        <a href="{{ route('modul.show', $subModul->modul_id) }}" class="btn btn-secondary btn-sm">
-            <i class="fa fa-arrow-left me-1"></i> {{ __('admin.button.back') }}
-        </a>
-    </div>
-
     <div class="card shadow-sm mb-4">
         <div class="card-body">
             <h2 class="card-title">{{ $subModul->title }}</h2>
@@ -74,6 +68,13 @@
          <div class="card-body">
              <p class="text-muted">{{__('admin.reflection.student_answer_instruction')}}.</p>
          </div>
+         <div class="card-footer">
+            <div class="col-md-12">
+                <a href="{{ route('modul.show', $subModul->modul_id) }}" class="btn btn-secondary">
+                    <i class="fa fa-arrow-left me-1"></i> {{ __('admin.button.back') }}
+                </a>
+            </div>
+        </div>
     </div>
 </div>
 

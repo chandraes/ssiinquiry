@@ -7,35 +7,55 @@
 @section('content')
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-12 mb-5">
-            <a href="{{ route('modul') }}" class="btn btn-secondary btn-sm">
-                <i class="fa fa-arrow-left me-1"></i> {{ __('admin.button.back') }}
-            </a>
-        </div>
-        
         <div class="col-lg-4">
             <div class="card shadow-sm mb-4">
                 <div class="card-header">
                     <h5 class="mb-0">{{ __('admin.modul.detail.module_info') }}</h5>
                 </div>
                 <div class="card-body">
-                    {{-- Spatie otomatis menampilkan bahasa yang aktif --}}
                     <h4>{{ $modul->judul }}</h4>
-                    <p class="text-muted">
-                        {{ $modul->deskripsi }}
-                    </p>
+                    <p class="text-muted">{{ $modul->deskripsi }}</p>
                     <hr>
+
                     <p>
-                        <strong>{{__('admin.modul.detail.tools')}} :</strong>
-                        {{-- Asumsi phyphox_id adalah array ID --}}
+                        <strong>{{ __('admin.modul.detail.tools') }} :</strong>
                         <span class="badge bg-info">{{ count($modul->phyphox_id ?? []) }} Alat</span>
                     </p>
                     <p>
-                        <strong>{{__('admin.modul.detail.owner')}} : {{ $modul->owner->name ?? 'N/A' }} </strong>
-                        {{-- Baris ini dari kode Anda sebelumnya --}}
+                        <strong>{{ __('admin.modul.detail.owner') }} :</strong> {{ $modul->owner->name ?? 'N/A' }}
                     </p>
+
+                    <hr>
+
+                    {{-- 🔹 Form Upload Rencana Pembelajaran --}}
+                    <form action="{{ route('modul.uploadRPS', $modul->id) }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="rps_file" class="form-label fw-bold">
+                                <i class="fa fa-upload me-1"></i> {{__('admin.modul.detail.rps')}}
+                            </label>
+                            <input type="file" name="rps_file" id="rps_file" class="form-control"
+                                accept=".pdf,.doc,.docx" required>
+                            <small class="text-muted">{{__('admin.modul.detail.rps_instruction')}}</small>
+                        </div>
+
+                        {{-- Tombol di kanan bawah --}}
+                        <div class="d-flex justify-content-end mt-4">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fa fa-save me-1"></i> {{__('admin.modul.detail.upload')}}
+                            </button>
+
+                            @if($modul->rps_file)
+                                <a href="{{ asset('storage/'.$modul->rps_file) }}" target="_blank"
+                                class="btn btn-info ms-2">
+                                    <i class="fa fa-file me-1"></i> {{__('admin.modul.detail.view')}}
+                                </a>
+                            @endif
+                        </div>
+                    </form>
                 </div>
             </div>
+
         </div>
 
         <div class="col-lg-8">
@@ -128,9 +148,15 @@
                                 @endforelse
                     </div>
                 </div>
+                <div class="card-footer">
+                    <div class="col-md-12 mb-5">
+                        <a href="{{ route('modul') }}" class="btn btn-secondary">
+                            <i class="fa fa-arrow-left me-1"></i> {{ __('admin.button.back') }}
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
-
     </div>
 </div>
 

@@ -65,7 +65,7 @@
                         {{ Str::limit(strip_tags($kelas->modul->deskripsi ?? ''), 100, '...') }}
                     </p>
                     <a href="{{ route('student.class.show', $kelas->id) }}" class="btn btn-primary mt-auto">
-                        {{ __('admin.dashboard.students.join_class') }} <i class="fa fa-arrow-right ms-2"></i>
+                        {{ __('admin.dashboard.students.enter_class') }} <i class="fa fa-arrow-right ms-2"></i>
                     </a>
                 </div>
             </div>
@@ -107,7 +107,10 @@
                     <p class="card-text flex-grow-1">
                         {{ Str::limit(strip_tags($modul->deskripsi ?? ''), 100, '...') }}
                     </p>
-                    <a href="#" class="btn btn-outline-secondary mt-auto">
+                    <a href="#" 
+                        class="btn btn-outline-secondary mt-auto btn-open-join-modal"
+                        data-modul-id="{{ $modul->id }}"
+                        data-modul-nama="{{ $modul->judul }}">
                         {{ __('admin.dashboard.students.join_class') }}
                     </a>
                 </div>
@@ -120,6 +123,21 @@
             </div>
         </div>
         @endforelse
+        <!-- Modal Join Kelas -->
+        <div class="modal fade" id="joinClassModal" tabindex="-1" aria-labelledby="joinClassLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                <div class="modal-header bg-light">
+                    <h5 class="modal-title" id="joinClassLabel">Pilih Kelas untuk Bergabung</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="modulTitle" class="fw-bold mb-3"></p>
+                    <div id="kelasList" class="list-group"></div>
+                </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     {{-- =================================================================== --}}
@@ -247,6 +265,100 @@
 @endsection
 
 @push('js')
+@role('siswa')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Klik tombol Join: sudah benar ✅
+    $('.btn-open-join-modal').on('click', function(e) {
+        e.preventDefault();
+        const modulId = $(this).data('modul-id');
+        const modulNama = $(this).data('modul-nama');
+        $('#modulTitle').text(modulNama);
+        $('#kelasList').html('<div class="text-center py-3">Memuat daftar kelas...</div>');
+        $('#joinClassModal').modal('show');
+
+        $.get(`/my-class/${modulId}/available`, function(response) {
+            if (response.success && response.kelas.length > 0) {
+                let html = '';
+                console.log(response)
+                response.kelas.forEach(k => {
+                    html += `
+                        <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>${k.nama_kelas}</strong><br>
+                            </div>
+                            <button 
+                                class="btn btn-sm btn-primary btn-join-now"
+                                data-kelas-id="${k.id}" 
+                                data-kode-join="${k.kode_join}">
+                                Join
+                            </button>
+                        </a>`;
+                });
+                $('#kelasList').html(html);
+            } else {
+                $('#kelasList').html('<div class="alert alert-warning">Tidak ada kelas tersedia.</div>');
+            }
+        });
+    });
+
+    // Klik tombol Join → MINTA INPUT KODE JOIN
+    $(document).on('click', '.btn-join-now', function(e) {
+    e.preventDefault();
+    const kelasId = $(this).data('kelas-id');
+
+    // Tutup modal Bootstrap dulu biar SweetAlert tidak terganggu
+    $('#joinClassModal').modal('hide');
+
+    // Tunggu modal tertutup baru munculkan SweetAlert
+    $('#joinClassModal').on('hidden.bs.modal', function() {
+
+        Swal.fire({
+            title: 'Masukkan Kode Join',
+            input: 'text',
+            inputLabel: 'Kode Join Kelas',
+            inputPlaceholder: 'Contoh: ABC123',
+            showCancelButton: true,
+            confirmButtonText: 'Gabung',
+            cancelButtonText: 'Batal',
+            inputAttributes: {
+                autocapitalize: 'off',
+                autocomplete: 'off'
+            },
+            didOpen: () => {
+                // Pastikan input SweetAlert mendapat fokus
+                Swal.getInput().focus();
+            },
+            inputValidator: (value) => {
+                if (!value) return 'Kode join tidak boleh kosong!';
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.post('{{ route("student.class.join") }}', {
+                    _token: '{{ csrf_token() }}',
+                    kelas_id: kelasId,
+                    kode_join: result.value
+                }, function(response) {
+                    if (response.success) {
+                        Swal.fire('Berhasil!', response.message, 'success')
+                            .then(() => location.reload());
+                    } else {
+                        Swal.fire('Gagal', response.message, 'error');
+                    }
+                });
+            }
+        });
+
+        // Hapus event listener agar tidak menumpuk
+        $(this).off('hidden.bs.modal');
+    });
+});
+
+
+});
+</script>
+@endrole
+
 {{-- [PERBAIKAN] Gunakan @role(['admin', 'guru']) --}}
 @role(['admin', 'guru'])
 <script>

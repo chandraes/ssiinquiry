@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\App;
 use App\Models\ForumPost;
 use App\Models\ForumTeam;
 use App\Models\Kelas;
@@ -17,6 +18,77 @@ use Mews\Purifier\Facades\Purifier;
 
 class StudentController extends Controller
 {
+
+    // Ambil daftar kelas berdasarkan modul
+    public function getAvailableClasses($modulId)
+    {
+        $locale = App::getLocale(); // Bahasa aktif, contoh: "id" atau "en"
+
+        $kelasList = Kelas::where('modul_id', $modulId)
+            ->get()
+            ->map(function ($kelas) use ($locale) {
+                return [
+                    'id' => $kelas->id,
+                    'kode_join' => $kelas->kode_join,
+                    'nama_kelas' => $kelas->getTranslation('nama_kelas', $locale), // ✅ ambil sesuai locale
+                    'translations' => $kelas->getTranslations('nama_kelas'),       // ✅ tampilkan semua bahasa
+                    'created_at' => $kelas->created_at,
+                    'updated_at' => $kelas->updated_at,
+                ];
+            });
+
+        return response()->json([
+            'success' => true,
+            'kelas' => $kelasList,
+        ]);
+    }
+
+    public function joinClass(Request $request)
+    {
+        $request->validate([
+            'kelas_id' => 'required|exists:kelas,id',
+            'kode_join' => 'required|string',
+        ]);
+
+        $user = Auth::user();
+        $kelasId = $request->kelas_id;
+        $inputKode = trim($request->kode_join);
+
+        // Ambil data kelas
+        $kelas = Kelas::find($kelasId);
+
+        if (!$kelas) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Kelas tidak ditemukan.'
+            ]);
+        }
+
+        // ✅ Validasi kode join
+        if ($kelas->kode_join !== $inputKode) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Kode join yang Anda masukkan salah.'
+            ]);
+        }
+
+        // ✅ Cek apakah sudah bergabung sebelumnya
+        if ($user->kelas()->where('kelas_id', $kelasId)->exists()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Anda sudah tergabung di kelas ini.'
+            ]);
+        }
+
+        // ✅ Join kelas (pivot table: kelas_user)
+        $user->kelas()->attach($kelasId);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Berhasil bergabung ke kelas!'
+        ]);
+    }
+
     /**
      * Menampilkan halaman detail kelas (kurikulum) untuk seorang siswa.
      */
@@ -45,6 +117,7 @@ class StudentController extends Controller
                             ->get()
                             ->keyBy('sub_module_id'); // Hasilnya: [sub_module_id => ProgressObject, ...]
 
+                            // dd($kelas,$subModules);
         // 4. Kirim data ke view
         return view('student.class_show', [
             'kelas' => $kelas,

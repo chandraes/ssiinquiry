@@ -48,10 +48,14 @@ class HomeController extends Controller
             // 3. Ambil ID modul yang sudah diikuti siswa
             $myModuleIds = $data['myClasses']->pluck('modul.id');
 
-            // 4. Ambil modul lain (DI SINILAH $allOtherModules DIBUAT)
-            $data['allOtherModules'] = Modul::whereNotIn('id', $myModuleIds)
-                                         ->get();
+            
 
+            // 4. Ambil modul lain (DI SINILAH $allOtherModules DIBUAT)
+            $data['allOtherModules'] = Modul::with('kelas')
+                                    ->whereNotIn('id', $myModuleIds)
+                                    ->get();
+
+                                        //  dd($data['allOtherModules']);
         } else {
             // ==================
             // DATA UNTUK ADMIN & GURU
