@@ -143,6 +143,8 @@ Route::group(['middleware' => 'auth'], function () {
         // [BARU] Halaman "manajemen tim" untuk 1 forum spesifik di 1 kelas spesifik
         Route::get('/{kelas}/forum/{subModule}/teams', [ForumTeamController::class, 'index'])->name('kelas.forum.teams');
 
+        Route::get('/{kelas}/forum-viewer', [KelasController::class, 'showForumViewer'])
+             ->name('kelas.forum.viewer');
 
 
         Route::group(['prefix' => 'peserta', 'middleware' => ['role:admin,guru']], function () {

@@ -197,6 +197,21 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-sm-6 col-lg-4 mb-3">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center d-flex flex-column justify-content-between">
+                                    <div>
+                                        <i class="fa fa-eye fa-3x text-info mb-3"></i>
+                                        <h5 class="card-title">Tinjau Forum Debat</h5>
+                                        <p class="card-text text-muted small">Lihat progres debat siswa.</p>
+                                    </div>
+                                    {{-- Kita akan membuat route 'kelas.forum.viewer' di langkah berikutnya --}}
+                                    <a href="{{ route('kelas.forum.viewer', $kelas->id) }}" class="btn btn-info mt-3">
+                                        Tinjau Forum
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                         {{-- Add other management cards here if needed --}}
                     </div>
                 </div>

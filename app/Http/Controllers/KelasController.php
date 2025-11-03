@@ -553,4 +553,56 @@ class KelasController extends Controller
         // 3. Kirim data ke view hub
         return view('kelas.show_forums', compact('kelas', 'forumSubModules'));
     }
+
+  public function showForumViewer(Request $request, Kelas $kelas)
+    {
+        // 1. Muat relasi modul dan sub-modul
+        $kelas->load('modul.subModules');
+
+        // 2. Ambil SEMUA sub-modul yang tipenya 'forum' untuk dropdown
+        $forumSubModules = $kelas->modul->subModules
+                                ->where('type', 'forum')
+                                ->sortBy('order');
+
+        // 3. Inisialisasi variabel
+        $selectedSubModule = null;
+        $allPosts = collect(); // Hanya satu koleksi untuk semua post
+
+        // 4. Cek apakah guru memilih sub-modul dari dropdown
+        $viewSubModuleId = $request->query('view_submodule');
+
+        if ($viewSubModuleId) {
+            $selectedSubModule = $forumSubModules->firstWhere('id', $viewSubModuleId);
+
+            if ($selectedSubModule) {
+
+                // [PERBAIKAN] Ambil SEMUA postingan utama (parent_post_id null)
+                // dari kelas dan sub-modul ini, urutkan berdasarkan tanggal.
+                $allPosts = ForumPost::where('sub_module_id', $selectedSubModule->id)
+                                ->where('kelas_id', $kelas->id)
+                                ->whereNull('parent_post_id') // Hanya post utama
+                                ->with([
+                                    'user',
+                                    'evidence.slot', // Eager load untuk post utama
+                                    'replies' => function ($query) {
+                                        // [PERBAIKAN ERROR] Eager load untuk balasan
+                                        $query->with('user', 'evidence.slot')
+                                              ->orderBy('created_at', 'asc');
+                                    }
+                                ])
+                                ->orderBy('created_at', 'asc') // Urutkan secara kronologis
+                                ->get();
+            }
+        }
+
+        // 5. Kirim data ke view
+        return view('kelas.forum_viewer', [
+            'kelas' => $kelas,
+            'forumSubModules' => $forumSubModules,
+            'selectedSubModule' => $selectedSubModule,
+            'allPosts' => $allPosts, // Kirim satu variabel $allPosts
+            'mySubmissions' => collect(), // Admin tidak punya submission
+            'isAdminView' => true, // Flag untuk menyembunyikan tombol "Balas"
+        ]);
+    }
 }
