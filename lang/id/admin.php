@@ -97,7 +97,7 @@ return [
             'title' => 'Hapus Data?',
             'text' => 'Apakah anda yakin ingin menghapus data ini?',
             'confirm' => 'Lanjutkan',
-            'cancel' => 'Batal',
+            'cancel' => 'Batal',    
         ],
         'upload' => [
             'title' => 'Konfirmasi Upload',
@@ -164,7 +164,7 @@ return [
             'join_code' => 'Kode Gabung Kelas',
             'instruction_join_code' => 'Bagikan kode ini kepada siswa untuk bergabung ke kelas ini.',
             'copy' => 'Salin',
-
+            
             //PARTICIPANT MANAGEMENT
             'manage_participants' => 'Manajemen Peserta',
             'add_delete_participants' => 'Tambah/Hapus Peserta',
@@ -174,6 +174,12 @@ return [
             'manage_forum' => 'Manajemen Forum',
             'setup_teams' => 'Kelola Tim Pro dan Kontra untuk Kelas Ini',
             'button_manage_forum' => 'Kelola Forum',
+
+            //PREVIEW FORUM
+            'review_forum' => 'Tinjau Forum Debat',
+            'view_progress' => 'Lihat progres debat Siswa',
+            'review_forum_button' => 'Tinjau Forum',
+            
             //TABLE
             'participant_table_name' => 'Nama Peserta',
             'participant_table_score' => 'Total Skor',
@@ -253,6 +259,10 @@ return [
             'module_info' => 'Informasi Modul',
             'tools' => 'Alat Ukur Phyphox',
             'owner' => 'Pemilik Modul',
+            'rps' => 'Upload Rencana Pembelajaran (Word / PDF)',
+            'rps_instruction' => 'Format yang diterima: .pdf, .doc, .docx (maks 5MB)',
+            'upload' => 'Unggah',
+            'view' => 'Lihat File',
             'dropdown_materi' => 'Sub Modul Materi (Video, Teks, dll)',
             'dropdown_question' => 'Sub Modul Pertanyaan Refleksi',
             'dropdown_practicum' => 'Sub Modul Praktikum Phyphox',
@@ -275,7 +285,7 @@ return [
         ],
     ],
 
-   'material_modal' => [
+    'material_modal' => [
         'add_video' => 'Add Video Material',
         'add_article' => 'Add Article Material',
         'add_infographic' => 'Add Infographic (Image)',
@@ -295,7 +305,7 @@ return [
         'rich_text_content_en' => 'Text Content (EN)',
 
         'url_video_label' => 'URL Video (YouTube/Vimeo)',
-    ],
+    ],  
 
     'reflection_modal' => [
         'add_title' => 'Tambah Pertanyaan Refleksi',
@@ -337,7 +347,7 @@ return [
         'student_answer_instruction' => 'Tampilan untuk jawaban siswa per kelas akan muncul di sini.',
     ],
 
-    'forum' => [
+    'forum' => [ 
         'title' => 'Manajemen Forum',
         'sub_title' => 'Manajemen Tim Forum',
         'class' => 'Kelas',
@@ -345,6 +355,14 @@ return [
         'forum_available' => 'Forum Tersedia dari Modul:',
         'set_team' => 'Atur Tim',
         'no_submodul' => 'Tidak ada sub-modul forum yang ditemukan untuk modul ini.',
+    ],
+
+    'review_forum' => [
+        'title' => 'Peninjau Forum',
+        'header' => 'Peninjau Forum Debat',
+        'choose_forum' => 'Pilih Forum Debat',
+        'instruction' => 'Silakan pilih sub-modul debat dari daftar di atas untuk meninjaunya',
+        'no_post' => 'Belum ada postingan di forum ini',
     ],
 
     'forum_settings' => [
@@ -416,6 +434,9 @@ return [
             'back' => 'Kembali ke Dasbor',
             'welcome' => 'Selamat datang di kelas',
             'header' => 'Kurikulum Pembelajaran',
+            'learning_plan' => 'Rencana Pembelajaran',
+            'learning_plan_title' => 'Lihat Rencana Pembelajaran',
+            'no_learning_plan_file' => 'Tidak ada file Rencana Pembelajaran',
             'no_curriculum' => 'Kurikulum untuk modul ini belum ditambahkan oleh guru',
             'summary_grade' => 'Rangkuman Nilai Anda',
             'card_text' => 'Lihat semua nilai dan umpan balik dari guru Anda di satu tempat',
@@ -474,8 +495,6 @@ return [
             'draft_text' => 'Draf jawaban Anda akan disimpan dan Anda bisa kembali lagi nanti',
             'save_text' => 'Aksi ini akan mengirimkan jawaban Anda dan menandai materi selesai. Pastikan semua jawaban sudah terisi',
             'forward' => 'Ya, Lanjutkan',
-            'next_submodule' => 'Lanjutkan Submodule berikutnya',
-            'complete' => 'Selesaikan'
         ],
         'show_forum' => [
             'your_team' => 'Anda berada di',
@@ -537,7 +556,7 @@ return [
         ],
         'back_to_curriculum' => 'Kembali ke Kurikulum',
     ],
-
+    
     'profile' => [
         'title' => 'Profil Saya',
         'edit_profile' => 'Edit Profile',
@@ -594,5 +613,7 @@ return [
         'add'=>'Tambah',
         'ok' => 'Oke',
         'back'=> 'Kembali',
+        'back_to'=> 'Kembali ke ',
+        'show' => 'Tampilkan',
     ]
 ];

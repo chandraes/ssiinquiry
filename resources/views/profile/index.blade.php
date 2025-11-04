@@ -38,7 +38,7 @@
                         </div>
                     </div>
                 </div>
-                </div>
+            </div>
 
             <div class="card">
                 <div class="card-body">
@@ -56,7 +56,7 @@
                             <span class="text-end">{{ $user->profile?->asal_sekolah ?? '-' }}</span>
                         </div>
                         <div class="list-group-item d-flex justify-content-between align-items-center px-0">
-                            <span class="fw-bold text-muted">{{__('admin.profile.ho')}}/span>
+                            <span class="fw-bold text-muted">{{__('admin.profile.hp')}}</span>
                             <span class="text-end">{{ $user->profile?->nomor_hp ?? '-' }}</span>
                         </div>
                         <div class="list-group-item d-flex justify-content-between align-items-center px-0">
