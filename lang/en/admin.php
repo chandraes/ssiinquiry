@@ -487,6 +487,9 @@ return [
             'draft_text' => 'Your draft answer will be saved and you can return to it later',
             'save_text' => 'This action will submit your answer and mark the material as complete. Make sure all answers are filled in',
             'forward' => 'Yes, Continue',
+            'next_submodule' => 'Next Submodule',
+            'complete' => 'Complete'
+
         ],
         'show_forum' => [
             'your_team' => 'You are in',

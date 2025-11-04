@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\App;
 use App\Models\ForumPost;
 use App\Models\ForumTeam;
 use App\Models\Kelas;

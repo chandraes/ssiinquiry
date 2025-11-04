@@ -45,11 +45,11 @@
 
 <div class="container-fluid">
     {{-- 2. Tombol Navigasi (Tidak Berubah) --}}
-    <div class="col-md-12 mb-5">
+    <!-- <div class="col-md-12 mb-5">
         <a href="{{ route('student.class.show', $kelas->id) }}" class="btn btn-outline-secondary btn-sm mb-3">
             <i class="fa fa-arrow-left me-2"></i> {{__('admin.siswa.back_to_curriculum')}}
         </a>
-    </div>
+    </div> -->
 
     {{-- 3. Header Sub-Modul (Tidak Berubah) --}}
     <div class="card shadow-sm mb-4">
@@ -93,7 +93,7 @@
                     // Ambil jawaban siswa yang tersimpan
                     $answer = $myAnswers->get($question->id);
                 @endphp
-                <div class="mb-4 p-3 border rounded shadow-sm reflection-question-item">
+                <div class="mb-4 p-3 border shadow-sm reflection-question-item">
                     {{-- Pertanyaan --}}
                     <div class="mb-3">
                         <span class="badge bg-primary me-2">Pertanyaan {{ $loop->iteration }}</span>
@@ -177,7 +177,7 @@
         </div>
 
         {{-- Tombol Navigasi Bawah (Selesai/Lanjut) --}}
-        <div class="card-footer d-flex justify-content-between">
+        <!-- <div class="card-footer d-flex justify-content-between">
             {{-- Form untuk Tombol 'Selesai' (sekarang terpisah) --}}
             <form action="{{ route('student.reflection.store', [$kelas->id, $subModule->id]) }}" method="POST" id="reflectionForm">
                 @csrf
@@ -191,7 +191,7 @@
                     </button>
                 @else
                     {{-- Tampilkan pesan jika sudah selesai --}}
-                    <span class="badge bg-success p-3 fs-6">
+                    <span class="badge bg-success p-3 fs-16">
                         <i class="fa fa-check-circle me-2"></i> Anda sudah menyelesaikan sub-modul ini.
                     </span>
                 @endif
@@ -203,6 +203,13 @@
                     {{__('admin.siswa.show_reflection.next_submodule')}} <i class="fa fa-arrow-right ms-2"></i>
                 </button>
             </form>
+        </div> -->
+        <div class="card shadow-sm">
+            <div class="card-footer text-center">
+                <a href="{{ route('student.class.show', $kelas->id) }}" class="btn btn-outline-secondary">
+                    <i class="fa fa-arrow-left me-2"></i> {{__('admin.siswa.back_to_curriculum')}}
+                </a>
+            </div>
         </div>
 
     </div>

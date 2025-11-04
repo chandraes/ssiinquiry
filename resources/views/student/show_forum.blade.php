@@ -95,11 +95,6 @@
 @section('content')
 @include('student.partials.grade_feedback_box')
 <div class="container-fluid">
-    <div class="col-md-12 mb-5">
-        <a href="{{ route('student.class.show', $kelas->id) }}" class="btn btn-outline-secondary btn-sm mb-3">
-            <i class="fa fa-arrow-left me-2"></i> {{__('admin.siswa.back_to_curriculum')}}
-        </a>
-    </div>
     <div class="card shadow-sm mb-4">
         <div class="card-body">
             <h2 class="card-title">
@@ -215,6 +210,13 @@
                     </button>
                 </form>
             @endif
+        </div>
+        <div class="card shadow-sm">
+            <div class="card-footer text-center">
+                <a href="{{ route('student.class.show', $kelas->id) }}" class="btn btn-outline-secondary">
+                    <i class="fa fa-arrow-left me-2"></i> {{__('admin.siswa.back_to_curriculum')}}
+                </a>
+            </div>
         </div>
     </div>
 

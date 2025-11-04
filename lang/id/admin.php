@@ -495,6 +495,8 @@ return [
             'draft_text' => 'Draf jawaban Anda akan disimpan dan Anda bisa kembali lagi nanti',
             'save_text' => 'Aksi ini akan mengirimkan jawaban Anda dan menandai materi selesai. Pastikan semua jawaban sudah terisi',
             'forward' => 'Ya, Lanjutkan',
+            'next_submodule' => 'Submodul Selanjutnya',
+            'complete' => 'Selesai'
         ],
         'show_forum' => [
             'your_team' => 'Anda berada di',
