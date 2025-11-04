@@ -30,7 +30,7 @@ class KelasUserController extends Controller
             ->where('kelas_id', $id)
             ->get();
 
-        return view('kelas.peserta.index', compact('userLogin','kelas', 'peserta', 'siswa'));
+        return view('kelas.show_participants', compact('userLogin','kelas', 'peserta', 'siswa'));
     }
 
 

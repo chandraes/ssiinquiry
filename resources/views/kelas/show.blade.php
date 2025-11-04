@@ -104,12 +104,6 @@
 
 @section('content')
 <div class="container-fluid">
-    <div class="col-md-12 mb-5">
-        <a href="{{ route('kelas') }}" class="btn btn-secondary btn-sm">
-            <i class="fa fa-arrow-left me-1"></i> {{ __('admin.button.back') }}
-        </a>
-    </div>
-
     {{-- Info Kelas Card --}}
     <div class="card shadow-sm mb-4">
         <div class="card-body">
@@ -202,12 +196,12 @@
                                 <div class="card-body text-center d-flex flex-column justify-content-between">
                                     <div>
                                         <i class="fa fa-eye fa-3x text-info mb-3"></i>
-                                        <h5 class="card-title">Tinjau Forum Debat</h5>
-                                        <p class="card-text text-muted small">Lihat progres debat siswa.</p>
+                                        <h5 class="card-title">{{__('admin.kelas.show.review_forum')}}</h5>
+                                        <p class="card-text text-muted small">{{__('admin.kelas.show.view_progress')}}.</p>
                                     </div>
                                     {{-- Kita akan membuat route 'kelas.forum.viewer' di langkah berikutnya --}}
                                     <a href="{{ route('kelas.forum.viewer', $kelas->id) }}" class="btn btn-info mt-3">
-                                        Tinjau Forum
+                                        {{__('admin.kelas.show.review_forum_button')}}
                                     </a>
                                 </div>
                             </div>
@@ -295,6 +289,15 @@
                             </tbody>
                         </table>
                     </div>
+                </div>
+            </div>
+        </div>
+        <div class="card shadow-sm mb-4">
+            <div class="card-footer">
+                <div class="col-md-12">
+                    <a href="{{ route('kelas') }}" class="btn btn-outline-secondary">
+                        <i class="fa fa-arrow-left me-1"></i> {{ __('admin.button.back_to') }} {{ __('admin.kelas.list_title') }}
+                    </a>
                 </div>
             </div>
         </div>

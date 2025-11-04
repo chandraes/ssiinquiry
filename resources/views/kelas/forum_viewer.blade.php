@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title')Peninjau Forum: {{ $kelas->nama_kelas }}@endsection
+@section('title'){{__('admin.review_forum.title')}} : {{ $kelas->nama_kelas }}@endsection
 
 {{-- Salin CSS dari student/show_forum.blade.php --}}
 @push('css')
@@ -38,11 +38,8 @@
     {{-- Header Halaman Admin --}}
     <div class="card shadow-sm mb-4">
         <div class="card-body">
-             <a href="{{ route('kelas.show', $kelas->id) }}" class="btn btn-outline-secondary btn-sm mb-3">
-                <i class="fa fa-arrow-left me-2"></i> Kembali ke Detail Kelas
-            </a>
-            <h2 class="card-title">Peninjau Forum Debat</h2>
-            <p class="text-muted mb-0">Kelas: <strong>{{ $kelas->nama_kelas }}</strong></p>
+            <h2 class="card-title">{{__('admin.review_forum.header')}}</h2>
+            <p class="text-muted mb-0">{{__('admin.forum.class')}} : <strong>{{ $kelas->nama_kelas }}</strong></p>
         </div>
     </div>
 
@@ -52,9 +49,9 @@
             {{-- Dropdown Pilihan Sub-Modul (Dengan Tombol) --}}
             <form action="{{ route('kelas.forum.viewer', $kelas->id) }}" method="GET">
                 <div class="input-group mb-4">
-                    <label class="input-group-text" for="view_submodule">Pilih Forum Debat:</label>
+                    <label class="input-group-text" for="view_submodule">{{__('admin.review_forum.choose_forum')}}:</label>
                     <select class="form-select" name="view_submodule" id="view_submodule">
-                        <option value="">-- Pilih Sub-Modul Debat --</option>
+                        <option value="">-- {{__('admin.review_forum.choose_forum')}} --</option>
                         @foreach($forumSubModules as $subModule)
                             <option value="{{ $subModule->id }}"
                                     {{ $selectedSubModule && $selectedSubModule->id == $subModule->id ? 'selected' : '' }}>
@@ -63,14 +60,14 @@
                         @endforeach
                     </select>
                     <button type="submit" class="btn btn-primary">
-                        <i class="fa fa-eye me-1"></i> Tampilkan
+                        <i class="fa fa-eye me-1"></i> {{__('admin.button.show')}}
                     </button>
                 </div>
             </form>
 
             @if(!$selectedSubModule)
                 <div class="alert alert-info text-center">
-                    Silakan pilih sub-modul debat dari daftar di atas untuk meninjaunya.
+                    {{__('admin.review_forum.instruction')}}.
                 </div>
             @else
                 {{-- [PERBAIKAN] Tampilkan Tampilan Satu Kolom --}}
@@ -84,11 +81,18 @@
                                 'isAdminView' => $isAdminView
                             ])
                         @empty
-                            <p class="text-muted text-center">Belum ada postingan di forum ini.</p>
+                            <p class="text-muted text-center">{{__('admin.review_forum.no_post')}}.</p>
                         @endforelse
                     </div>
                 </div>
             @endif
+        </div>
+        <div class="card-footer">
+            <div class="col-md-12">
+                <a href="{{ route('kelas.show', $kelas->id) }}" class="btn btn-outline-secondary">
+                    <i class="fa fa-arrow-left me-1"></i> {{ __('admin.button.back_to') }} {{ __('admin.kelas.show.header') }}
+                </a>
+            </div>
         </div>
     </div>
 </div>

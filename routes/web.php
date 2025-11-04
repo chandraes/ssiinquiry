@@ -36,6 +36,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
     Route::middleware(['role:siswa'])->group(function () {
+        Route::get('/my-class/{modul}/available', [StudentController::class, 'getAvailableClasses'])->name('student.class.available');
+        Route::post('/my-class/join', [StudentController::class, 'joinClass'])->name('student.class.join');
         Route::get('/my-class/{kelas}', [StudentController::class, 'showClass'])->name('student.class.show');
         Route::get('/my-class/{kelas}/sub-module/{subModule}', [StudentController::class, 'showSubModule'])->name('student.submodule.show');
         Route::post('/my-class/{kelas}/sub-module/{subModule}/complete', [StudentController::class, 'markAsComplete'])->name('student.submodule.complete');
@@ -81,8 +83,7 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::get('/{modul}/json', [ModulController::class, 'showJson'])->name('modul.json');
         Route::get('/{modul}', [ModulController::class, 'show'])->name('modul.show');
-
-
+        Route::post('/{modul}/upload-rps', [ModulController::class, 'uploadRPS'])->name('modul.uploadRPS');
     });
 
     Route::group(['prefix' => 'learning-material', 'middleware' => ['role:admin,guru']], function () {

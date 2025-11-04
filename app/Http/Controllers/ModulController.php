@@ -85,8 +85,6 @@ class ModulController extends Controller
         }
     }
 
-
-
     public function search(Request $request)
     {
         $userLogin = auth()->user(); // ambil user login
@@ -178,7 +176,7 @@ class ModulController extends Controller
     /**
      * Update the specified resource in storage.
      */
-   public function update(Request $request, $id)
+    public function update(Request $request, $id)
     {
         $request->validate([
             'judul.id'      => 'required|string|max:255',
@@ -229,7 +227,22 @@ class ModulController extends Controller
         }
     }
 
+    public function uploadRPS(Request $request, $id)
+    {
+        $request->validate([
+            'rps_file' => 'required|mimes:pdf,doc,docx|max:5120', // max 5MB
+        ]);
 
+        $modul = Modul::findOrFail($id);
+
+        // Simpan file ke storage/app/public/rps/
+        $path = $request->file('rps_file')->store('rps', 'public');
+
+        // Update path di database
+        $modul->update(['rps_file' => $path]);
+
+        return back()->with('success', 'Rencana Pembelajaran berhasil diunggah!');
+    }
 
     /**
      * Remove the specified resource from storage.

@@ -92,7 +92,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{__('admin.button.close')}}</button>
                 {{-- [PERBAIKAN] Ganti type jadi button agar bisa dicegah JS --}}
-                <button type="button" id="btnUpdate" class="btn btn-primary">{{__('admin.buntton.save_changes')}}</button>
+                <button type="button" id="btnUpdate" class="btn btn-primary">{{__('admin.button.save_changes')}}</button>
             </div>
         </div>
     </div>

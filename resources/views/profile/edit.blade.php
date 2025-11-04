@@ -9,11 +9,6 @@
 
 <section class="main-content mt-0">
     <div class="row">
-        <div class="col-md-12 mb-5">
-            <a href="{{ route('profile.index') }}" class="btn btn-secondary btn-lg">
-                <i class="fa fa-arrow-left me-1"></i> {{ __('admin.button.back') }}
-            </a>
-        </div>
         <div class="col-xl-12 col-md-12 col-sm-12">
             <div class="card">
                 <div class="card-header">
@@ -95,9 +90,15 @@
                         </div>
                     </div>
 
-                    <div class="card-footer text-end">
-                        <a href="{{ url()->previous() }}" class="btn btn-lg btn-danger">{{__('admin.button.cancel')}}</a>
-                        <button type="submit" class="btn btn-lg btn-primary">{{__('admin.button.save_changes')}}</button>
+                    <div class="card-footer d-flex justify-content-between">
+                        <div class="d-flex justify-content-start">
+                            <a href="{{ route('profile.index') }}" class="btn btn-lg btn-secondary">
+                                {{ __('admin.button.cancel') }}
+                            </a>
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-lg btn-primary">{{__('admin.button.save_changes')}}</button>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -109,23 +110,21 @@
     @csrf
     @method('DELETE')
 </form>
-
 @endsection
 
 @push('js')
 <script src="{{ asset('assets/plugins/sweetalert/sweetalert.min.js') }}"></script>
 <script>
-// Fungsi Pratinjau Gambar (Bug sudah diperbaiki dengan 'id' di HTML)
+// === Pratinjau Gambar ===
 function previewImage(event) {
     const reader = new FileReader();
     reader.onload = function(){
-        const output = document.getElementById('preview-foto');
-        output.src = reader.result;
+        document.getElementById('preview-foto').src = reader.result;
     };
     reader.readAsDataURL(event.target.files[0]);
 }
 
-// PERBAIKAN KEAMANAN: Event listener untuk 'Hapus Foto'
+// === Hapus Foto ===
 document.getElementById('hapusFotoBtn')?.addEventListener('click', function () {
     Swal.fire({
         title: "Hapus Foto?",
@@ -138,23 +137,37 @@ document.getElementById('hapusFotoBtn')?.addEventListener('click', function () {
         cancelButtonText: "Batal"
     }).then((result) => {
         if (result.isConfirmed) {
-            // Submit form tersembunyi
             document.getElementById('delete-foto-form').submit();
         }
     });
 });
 
-
-// OPTIMASI: Submit form menggunakan AJAX (Fetch API)
+// === Submit Form Dengan Konfirmasi ===
 document.getElementById('profileUpdateForm').addEventListener('submit', function(e) {
-    e.preventDefault(); // Mencegah submit standar
+    e.preventDefault();
 
-    const form = e.target;
+    Swal.fire({
+        title: "Simpan Perubahan?",
+        text: "Pastikan semua data sudah benar sebelum menyimpan.",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Lanjutkan",
+        cancelButtonText: "Batal",
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            simpanData(e.target);
+        }
+    });
+});
+
+// === Fungsi Simpan Data via Fetch ===
+function simpanData(form) {
     const formData = new FormData(form);
     const submitButton = form.querySelector('button[type="submit"]');
     const originalButtonText = submitButton.innerHTML;
 
-    // Tampilkan status loading pada tombol
     submitButton.innerHTML = `
         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
         Menyimpan...
@@ -162,19 +175,18 @@ document.getElementById('profileUpdateForm').addEventListener('submit', function
     submitButton.disabled = true;
 
     fetch(form.action, {
-        method: 'POST', // Form method spoofing (PUT) akan ditangani oleh '@method('PUT')'
+        method: 'POST',
         headers: {
             'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
-            'Accept': 'application/json', // Meminta respon JSON dari controller
+            'Accept': 'application/json'
         },
         body: formData
     })
     .then(response => {
         if (!response.ok) {
-             // Jika status code bukan 2xx (misal 422, 500)
-             return response.json().then(err => Promise.reject(err));
+            return response.json().then(err => Promise.reject(err));
         }
-        return response.json(); // Lanjut jika OK
+        return response.json();
     })
     .then(data => {
         if (data.success) {
@@ -182,46 +194,40 @@ document.getElementById('profileUpdateForm').addEventListener('submit', function
                 title: 'Berhasil!',
                 text: data.message,
                 icon: 'success',
-                timer: 2000,
-                showConfirmButton: false
-            });
-
-            // Jika password diubah, reload halaman setelah 2 detik
-            if (formData.get('password')) {
-                setTimeout(() => {
+                confirmButtonText: 'OK'
+            }).then(() => {
+                // Setelah user menekan "OK", reload halaman atau redirect
+                if (formData.get('password')) {
                     window.location.reload();
-                }, 2000);
-            }
+                } else {
+                    window.location.href = "{{ route('profile.index') }}";
+                }
+            });
         } else {
-            // Menampilkan error dari controller (jika success: false)
             Swal.fire({
                 title: 'Gagal!',
                 text: data.message || 'Terjadi kesalahan.',
                 icon: 'error',
+                confirmButtonText: 'OK'
             });
         }
     })
     .catch(error => {
-        // Menangani error validasi (422) atau server error (500)
         let errorMessage = 'Terjadi kesalahan. Silakan coba lagi.';
-        if (error.message) {
-             errorMessage = error.message;
-        }
-        // Jika ada error validasi, Anda bisa meloop 'error.errors' di sini
+        if (error.message) errorMessage = error.message;
 
         Swal.fire({
             title: 'Oops!',
             text: errorMessage,
-            icon: 'error'
+            icon: 'error',
+            confirmButtonText: 'OK'
         });
         console.error('Error:', error);
     })
     .finally(() => {
-        // Kembalikan tombol ke kondisi semula
         submitButton.innerHTML = originalButtonText;
         submitButton.disabled = false;
     });
-});
-
+}
 </script>
 @endpush
