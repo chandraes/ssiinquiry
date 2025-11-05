@@ -149,7 +149,7 @@
                 </div>
                 <div class="card-footer">
                     <div class="col-md-12">
-                        <a href="{{ route('modul') }}" class="btn btn-outline-secondary">
+                        <a href="{{ route('modul') }}" class="btn btn-secondary button-lg">
                             <i class="fa fa-arrow-left me-1"></i> {{ __('admin.button.back_to') }}{{__('admin.modul.page_title')}}
                         </a>
                     </div>

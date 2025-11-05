@@ -2,12 +2,6 @@
 @section('title'){{ $subModule->title }}@endsection
 @section('content')
 <div class="container-fluid">
-    <div class="col-md-12 mb-5">
-        <a href="{{ route('student.class.show', $kelas->id) }}" class="btn btn-outline-secondary btn-sm mb-3">
-            <i class="fa fa-arrow-left me-2"></i> {{__('admin.siswa.back_to_curriculum')}}
-        </a>
-    </div>
-
     @include('student.partials.grade_feedback_box')
     @php
         $instruction = $subModule->learningMaterials->first();
@@ -141,7 +135,54 @@
             @endif
         </div>
     </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body pb-0 text-center">
+
+            {{-- Cek apakah sub-modul ini SUDAH selesai --}}
+            @if($currentProgress && $currentProgress->completed_at)
+
+                <div class="alert alert-success mb-0">
+                    <i class="fa fa-check-circle me-2"></i>
+                    {{__('admin.siswa.show_learning.finish')}} {{ $currentProgress->completed_at->format('d M Y, H:i') }}.
+                </div>
+
+                <div class="card-footer d-flex justify-content-between text-center mt-5">
+                    <div class="d-flex justify-content-start">
+                        <a href="{{ route('student.class.show', $kelas->id) }}" class="btn btn-secondary btn-lg">
+                            <i class="fa fa-arrow-left me-2"></i> {{__('admin.siswa.back_to_curriculum')}}
+                        </a>
+                    </div>
+                    <div class="d-flex justify-content-start">
+                        {{-- Form untuk "Tandai Selesai" --}}
+                        <form action="{{ route('student.submodule.complete', [$kelas->id, $subModule->id]) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                {{__('admin.siswa.show_learning.button_finish')}} <i class="fa fa-arrow-right ms-2"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            @else
+                <p class="lead">{{__('admin.siswa.show_learning.finish_instruction')}}.</p>
+
+                <div class="card-footer text-center mt-5">
+                    <a href="{{ route('student.class.show', $kelas->id) }}" class="btn btn-secondary btn-lg">
+                        <i class="fa fa-arrow-left me-2"></i> {{__('admin.siswa.back_to_curriculum')}}
+                    </a>
+                </div>                
+            @endif
+        </div>
+    </div>
+    <!-- <div class="card shadow-sm">
+        <div class="card-footer text-center">
+            <a href="{{ route('student.class.show', $kelas->id) }}" class="btn btn-outline-secondary">
+                <i class="fa fa-arrow-left me-2"></i> {{__('admin.siswa.back_to_curriculum')}}
+            </a>
+        </div>
+    </div> -->
 </div>
+
 @endsection
 
 
@@ -313,5 +354,48 @@
             }
         });
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const completeForm = document.querySelector('form[action="{{ route('student.submodule.complete', [$kelas->id, $subModule->id]) }}"]');
+        const completeButton = completeForm.querySelector('button[type="submit"]');
+
+        // Ubah label tombol
+        completeButton.innerHTML = `<i class="fa fa-arrow-right me-2"></i> Selanjutnya`;
+
+        completeForm.addEventListener('submit', function(e) {
+            e.preventDefault(); // cegah submit langsung
+
+            // Cek semua slot upload apakah sudah ada file yang diunggah
+            const totalSlots = document.querySelectorAll('.card-body form[action*="student/practicum/store"]').length;
+            const uploadedSlots = document.querySelectorAll('.alert.alert-success').length;
+
+            if (uploadedSlots < totalSlots) {
+                Swal.fire({
+                    icon: 'error',
+                    title: '{{__("admin.siswa.show_practicum.swal.failed.title")}}',
+                    text: '{{__("admin.siswa.show_practicum.swal.failed.text")}}',
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: '{{__("admin.button.ok")}}'
+                });
+                return;
+            }
+
+            // Jika semua sudah lengkap, tampilkan konfirmasi
+            Swal.fire({
+                title: '{{__("admin.siswa.show_practicum.swal.success.title")}}',
+                text: '{{__("admin.siswa.show_practicum.swal.success.text")}}',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: '{{__("admin.siswa.show_reflection.forward")}}',
+                cancelButtonText: '{{__("admin.button.cancel")}}'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    completeForm.submit(); // submit jika konfirmasi
+                }
+            });
+        });
+    });
 </script>
 @endpush

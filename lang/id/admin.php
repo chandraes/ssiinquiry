@@ -81,6 +81,16 @@ return [
         'delete_title' => 'Hapus Data?',
         'delete_text' => 'Apakah anda yakin ingin menghapus data?',
         'delete_confirm' => 'Lanjutkan',
+        'succes'=> [
+            'title' => 'Berhasil!',
+            'text' => '',
+            'confirm' => 'Oke'
+        ],
+        'error' => [
+            'title' => 'Oops...!',
+            'text' => '',
+            'confirm' => 'Oke'
+        ],
         'create' => [
             'title' => 'Simpan Data?',
             'text' => 'Pastikan semua data sudah benar!',
@@ -471,6 +481,11 @@ return [
             'finish' => 'Anda telah menyelesaikan materi ini pada',
             'finish_instruction' => 'Setelah Anda selesai mempelajari semua materi di atas, tandai sebagai selesai untuk melanjutkan',
             'button_finish' => 'Tandai Selesai & Lanjutkan',
+            'swal'=>[
+                'title' => 'Tandai Selesai?',
+                'text' => 'Pastikan kamu sudah mempelajari seluruh materi sebelum menyelesaikan Sub-Modul ini.',
+                'confirm' => 'Ya, Selesai!',
+            ]
         ],
         'show_practicum' => [
             'chart' => 'Grafik Perbadingan',
@@ -484,17 +499,43 @@ return [
             'finish_submodul' => 'Sub-modul ini akan ditandai selesai secara otomatis...',
             'alert_ceklist' => 'Silakan centang minimal satu file untuk dibandingkan',
             'alert_file' => 'Perbandingan gagal: Pastikan semua file yang dicentang memiliki "Tipe Data Phyphox" yang sama (Contoh: hanya bandingkan "Audio Amplitude" dengan "Audio Amplitude")',
+            'swal'=>[
+                'success'=>[
+                    'title' => 'Semua file sudah lengkap?',
+                    'text' => 'Apakah kamu yakin ingin melanjutkan ke Sub-Modul berikutnya?',
+                ],
+                'failed' => [
+                    'title' => 'Semua file sudah lengkap?',
+                    'text' => 'Apakah kamu yakin ingin melanjutkan ke Sub-Modul berikutnya?',
+                ],
+            ]
         ],
         'show_reflection' => [
             'lead' => 'Jawablah pertanyaan-pertanyaan refleksi berikut berdasarkan pemahaman Anda',
             'answer_instruction' => 'Seluruh pertanyaan harus dijawab sebelum melanjutkan',
             'answer_placeholder' => 'Tuliskan jawaban Anda di sini...',
-            'no_reflection' => 'Belum ada pertanyaan refleksi yang ditambahkan oleh guru',
+            'no_reflection' => 'Belum ada pertanyaan refleksi untuk sub-modul ini',
+            'question' => 'Pertanyaan',
+            'save_answer' => 'Simpan Jawaban',
             'save_draft' => 'Simpan Draf',
             'save_next' => 'Simpan & Lanjutkan',
             'draft_text' => 'Draf jawaban Anda akan disimpan dan Anda bisa kembali lagi nanti',
             'save_text' => 'Aksi ini akan mengirimkan jawaban Anda dan menandai materi selesai. Pastikan semua jawaban sudah terisi',
             'forward' => 'Ya, Lanjutkan',
+            'completed' => 'Anda sudah menyelesaikan sub-modul ini.',
+            'next_submodule' => 'Submodul Selanjutnya',
+            'complete' => 'Selesai',
+            'swal' => [
+                'complete' => [
+                    'title' => 'Selesaikan Sub-Modul Ini?',
+                    'text' => 'Setelah selesai, Anda tidak dapat mengubah jawaban refleksi Anda lagi. Pastikan semua jawaban sudah disimpan.',
+                    'confirm' => 'Ya, Selesaikan',
+                ],
+                'next' => [
+                    'title' => 'Lanjut ke Sub-Modul Berikutnya?',
+                    'text' => 'Kami akan menyimpan progres Anda sebelum melanjutkan.',
+                ],
+            ],
         ],
         'show_forum' => [
             'your_team' => 'Anda berada di',

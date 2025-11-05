@@ -42,7 +42,7 @@
         </div>
         <div class="card-footer">
             <div class="col-md-12">
-                <a href="{{ route('kelas.show', $kelas->id) }}" class="btn btn-outline-secondary">
+                <a href="{{ route('kelas.show', $kelas->id) }}" class="btn btn-secondary button-lg">
                     <i class="fa fa-arrow-left me-1"></i> {{ __('admin.button.back_to') }} {{ __('admin.kelas.show.header') }}
                 </a>
             </div>

@@ -81,6 +81,16 @@ return [
         'delete_title' => 'Delete Data?',
         'delete_text' => 'Are you sure you want to delete this data?',
         'delete_confirm' => 'Continue',
+        'succes'=> [
+            'title' => 'Success!',
+            'text' => '',
+            'confirm' => 'OK'
+        ],
+        'error' => [
+            'title' => 'Oops...!',
+            'text' => '',
+            'confirm' => 'OK'
+        ],
         'create' => [
             'title' => 'Save Data?',
             'text' => 'Make sure all data is correct!',
@@ -463,6 +473,11 @@ return [
             'finish' => 'You have completed this material on',
             'finish_instruction' => 'Once you have completed all the material above, mark it as complete to continue',
             'button_finish' => 'Mark Complete & Continue',
+            'swal'=>[
+                'title' => 'Mark Complete?',
+                'text' => 'Make sure you have studied all the material before completing this submodule.',
+                'confirm' => 'Yes, Complete!',
+            ]
         ],
         'show_practicum' => [
             'chart' => 'Comparison Chart',
@@ -476,17 +491,44 @@ return [
             'finish_submodule' => 'This submodule will be marked complete automatically...',
             'alert_checklist' => 'Please check at least one file to compare',
             'alert_file' => 'Comparison failed: Ensure all checked files have The same "Phyphox Data Type" (Example: only compare "Audio Amplitude" with "Audio Amplitude")',
+            'swal'=>[
+            'success'=>[
+                'title' => 'Are all files complete?',
+                'text' => 'Are you sure you want to continue to the next sub-module?',
+            ],
+            'failed' => [
+                'title' => 'Are all files complete?',
+                'text' => 'Are you sure you want to continue to the next sub-module?',
+            ],
+        ]
         ],
         'show_reflection' => [
             'lead' => 'Answer the following reflection questions based on your understanding',
             'answer_instruction' => 'All questions must be answered before continuing',
             'answer_placeholder' => 'Write your answer here...',
-            'no_reflection' => 'No reflection questions have been added by the teacher',
+            'no_reflection' => 'There are no reflection questions for this sub-module yet.',
+            'question' => 'Question',
+            'save_answer' => 'Save Answer',
             'save_draft' => 'Save Draft',
             'save_next' => 'Save & Continue',
             'draft_text' => 'Your draft answer will be saved and you can return to it later',
             'save_text' => 'This action will submit your answer and mark the material as complete. Make sure all answers are filled in',
             'forward' => 'Yes, Continue',
+            'completed' => 'You have completed this sub-module',
+            'next_submodule' => 'Next Submodule',
+            'complete' => 'Complete',
+            'swal' => [
+                'complete' => [
+                    'title' => 'Complete This Sub-Module?',
+                    'text' => 'Once completed, you cannot change your reflection answers. Make sure all answers are saved.',
+                    'confirm' => 'Yes, Complete',
+                ],
+                'next' => [
+                    'title' => 'Continue to the Next Sub-Module?',
+                    'text' => 'We will save your progress before continuing.',
+                ],
+        ],
+
         ],
         'show_forum' => [
             'your_team' => 'You are in',

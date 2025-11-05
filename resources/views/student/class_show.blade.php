@@ -9,10 +9,6 @@
 
     <div class="card shadow-sm mb-4">
         <div class="card-body">
-            <a href="{{ route('home') }}" class="btn btn-outline-secondary btn-sm mb-3">
-                <i class="fa fa-arrow-left me-2"></i> {{__('admin.siswa.class_show.back')}}
-            </a>
-
             <h2 class="card-title">{{ $modul->judul }}</h2>
             <p class="text-muted h5 mb-2">{{__('admin.siswa.class_show.welcome')}}: <strong>{{ $kelas->nama_kelas }}</strong></p>
             <p class="card-text">{{ $modul->deskripsi }}</p>
@@ -20,9 +16,28 @@
     </div>
 
     <div class="card shadow-sm">
-        <div class="card-header">
-            <h5 class="mb-0">{{__('admin.siswa.class_show.header')}}</h5>
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <div>
+                <h5 class="mb-0">{{ __('admin.siswa.class_show.header') }}</h5>
+            </div>
+
+            <div>
+                @if($modul->rps_file)
+                    <a href="{{ asset('storage/' . $modul->rps_file) }}"
+                    target="_blank"
+                    class="btn btn-primary" title='{{ __("admin.siswa.class_show.learning_plan_title") }}'>
+                        <i class="fa fa-file me-2"></i>
+                        {{ __('admin.siswa.class_show.learning_plan') }}
+                    </a>
+                @else
+                    <span class="text-danger small">
+                        <i class="fa fa-info-circle me-1"></i>
+                        {{ __('admin.siswa.class_show.no_learning_plan_file') }}
+                    </span>
+                @endif
+            </div>
         </div>
+
         <div class="card-body">
             <div class="list-group">
                 @php $previousCompleted = true; @endphp
@@ -86,12 +101,17 @@
                     <div class="card-body text-center">
                         <h5 class="card-title">{{ __('admin.siswa.class_show.summary_grade') }}</h5>
                         <p class="card-text text-muted">{{ __('admin.siswa.class_show.card_text') }}.</p>
-                        <a href="{{ route('student.class.grades', $kelas->id) }}" class="btn btn-primary">
+                        <a href="{{ route('student.class.grades', $kelas->id) }}" class="btn btn-primary btn-lg">
                             <i class="fa fa-star me-2"></i> {{ __('admin.siswa.class_show.transcript') }}
                         </a>
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="card-footer text-center">
+            <a href="{{ route('home') }}" class="btn btn-secondary btn-lg">
+                <i class="fa fa-arrow-left me-2"></i> {{__('admin.button.back_to')}} {{__('admin.dashboard.title')}}
+            </a>
         </div>
     </div>
 </div>
