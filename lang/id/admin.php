@@ -471,6 +471,11 @@ return [
             'finish' => 'Anda telah menyelesaikan materi ini pada',
             'finish_instruction' => 'Setelah Anda selesai mempelajari semua materi di atas, tandai sebagai selesai untuk melanjutkan',
             'button_finish' => 'Tandai Selesai & Lanjutkan',
+            'swal'=>[
+                'title' => 'Tandai Selesai?',
+                'text' => 'Pastikan kamu sudah mempelajari seluruh materi sebelum menyelesaikan Submodul ini.',
+                'confirm' => 'Ya, Selesai!',
+            ]
         ],
         'show_practicum' => [
             'chart' => 'Grafik Perbadingan',

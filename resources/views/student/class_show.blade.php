@@ -26,7 +26,7 @@
                     <a href="{{ asset('storage/' . $modul->rps_file) }}"
                     target="_blank"
                     class="btn btn-primary" title='{{ __("admin.siswa.class_show.learning_plan_title") }}'>
-                        <i class="fa fa-file-pdf me-2"></i>
+                        <i class="fa fa-file me-2"></i>
                         {{ __('admin.siswa.class_show.learning_plan') }}
                     </a>
                 @else
@@ -101,7 +101,7 @@
                     <div class="card-body text-center">
                         <h5 class="card-title">{{ __('admin.siswa.class_show.summary_grade') }}</h5>
                         <p class="card-text text-muted">{{ __('admin.siswa.class_show.card_text') }}.</p>
-                        <a href="{{ route('student.class.grades', $kelas->id) }}" class="btn btn-primary">
+                        <a href="{{ route('student.class.grades', $kelas->id) }}" class="btn btn-primary btn-lg">
                             <i class="fa fa-star me-2"></i> {{ __('admin.siswa.class_show.transcript') }}
                         </a>
                     </div>
@@ -109,7 +109,7 @@
             </div>
         </div>
         <div class="card-footer text-center">
-            <a href="{{ route('home') }}" class="btn btn-outline-secondary">
+            <a href="{{ route('home') }}" class="btn btn-secondary btn-lg">
                 <i class="fa fa-arrow-left me-2"></i> {{__('admin.button.back_to')}} {{__('admin.dashboard.title')}}
             </a>
         </div>

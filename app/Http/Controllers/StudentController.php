@@ -371,7 +371,7 @@ class StudentController extends Controller
 
             if ($nextSubModule) {
                 $pesan = ($action == 'complete') ? 'Refleksi selesai! Lanjut ke materi berikutnya.' : 'Progres disimpan, lanjut ke materi berikutnya.';
-                return redirect()->route('siswa.submodul.show', [$kelas->id, $nextSubModule->id])
+                return redirect()->route('student.submodule.show', [$kelas->id, $nextSubModule->id])
                                  ->with('success', $pesan);
             } else {
                 $pesan = ($action == 'complete') ? 'Selamat! Anda telah menyelesaikan modul ini.' : 'Progres disimpan.';

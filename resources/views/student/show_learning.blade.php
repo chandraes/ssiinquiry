@@ -59,7 +59,7 @@
     </div>
 
     <div class="card shadow-sm">
-        <div class="card-body text-center">
+        <div class="card-body pb-0 text-center">
 
             {{-- Cek apakah sub-modul ini SUDAH selesai --}}
             @if($currentProgress && $currentProgress->completed_at)
@@ -68,28 +68,62 @@
                     <i class="fa fa-check-circle me-2"></i>
                     {{__('admin.siswa.show_learning.finish')}} {{ $currentProgress->completed_at->format('d M Y, H:i') }}.
                 </div>
+                <div class="card-footer text-center mt-5">
+                    <a href="{{ route('student.class.show', $kelas->id) }}" class="btn btn-secondary btn-lg">
+                        <i class="fa fa-arrow-left me-2"></i> {{__('admin.siswa.back_to_curriculum')}}
+                    </a>
+                </div>
 
             @else
 
                 <p class="lead">{{__('admin.siswa.show_learning.finish_instruction')}}.</p>
 
-                {{-- Form untuk "Tandai Selesai" --}}
-                <form action="{{ route('student.submodule.complete', [$kelas->id, $subModule->id]) }}" method="POST">
-                    @csrf
-                    <button type="submit" class="btn btn-primary btn-lg">
-                        {{__('admin.siswa.show_learning.button_finish')}} <i class="fa fa-arrow-right ms-2"></i>
-                    </button>
-                </form>
-
+                <div class="card-footer d-flex justify-content-between text-center mt-5">
+                    <div class="d-flex justify-content-start">
+                        <a href="{{ route('student.class.show', $kelas->id) }}" class="btn btn-secondary btn-lg">
+                            <i class="fa fa-arrow-left me-2"></i> {{__('admin.siswa.back_to_curriculum')}}
+                        </a>
+                    </div>
+                    <div class="d-flex justify-content-start">
+                        {{-- Form untuk "Tandai Selesai" --}}
+                        <form action="{{ route('student.submodule.complete', [$kelas->id, $subModule->id]) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                {{__('admin.siswa.show_learning.button_finish')}} <i class="fa fa-arrow-right ms-2"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
             @endif
-        </div>
-    </div>
-    <div class="card shadow-sm">
-        <div class="card-footer text-center">
-            <a href="{{ route('student.class.show', $kelas->id) }}" class="btn btn-outline-secondary">
-                <i class="fa fa-arrow-left me-2"></i> {{__('admin.siswa.back_to_curriculum')}}
-            </a>
         </div>
     </div>
 </div>
 @endsection
+@push('js')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form[action="{{ route('student.submodule.complete', [$kelas->id, $subModule->id]) }}"]');
+
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault(); // cegah submit langsung
+
+            Swal.fire({
+                title: 'Tandai Selesai?',
+                text: "Pastikan kamu sudah mempelajari seluruh materi sebelum menyelesaikan Submodul ini.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Selesai!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit(); // lanjut submit jika dikonfirmasi
+                }
+            });
+        });
+    }
+});
+</script>
+@endpush

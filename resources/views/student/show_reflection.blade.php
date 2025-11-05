@@ -177,7 +177,7 @@
         </div>
 
         {{-- Tombol Navigasi Bawah (Selesai/Lanjut) --}}
-        <!-- <div class="card-footer d-flex justify-content-between">
+        <div class="card-footer d-flex justify-content-between">
             {{-- Form untuk Tombol 'Selesai' (sekarang terpisah) --}}
             <form action="{{ route('student.reflection.store', [$kelas->id, $subModule->id]) }}" method="POST" id="reflectionForm">
                 @csrf
@@ -203,14 +203,14 @@
                     {{__('admin.siswa.show_reflection.next_submodule')}} <i class="fa fa-arrow-right ms-2"></i>
                 </button>
             </form>
-        </div> -->
-        <div class="card shadow-sm">
+        </div>
+        <!-- <div class="card shadow-sm">
             <div class="card-footer text-center">
                 <a href="{{ route('student.class.show', $kelas->id) }}" class="btn btn-outline-secondary">
                     <i class="fa fa-arrow-left me-2"></i> {{__('admin.siswa.back_to_curriculum')}}
                 </a>
             </div>
-        </div>
+        </div> -->
 
     </div>
 </div>

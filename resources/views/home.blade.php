@@ -65,7 +65,7 @@
                         {{ Str::limit(strip_tags($kelas->modul->deskripsi ?? ''), 100, '...') }}
                     </p>
                     <a href="{{ route('student.class.show', $kelas->id) }}" class="btn btn-primary mt-auto">
-                        {{ __('admin.dashboard.students.join_class') }} <i class="fa fa-arrow-right ms-2"></i>
+                        {{ __('admin.dashboard.students.enter_class') }} <i class="fa fa-arrow-right ms-2"></i>
                     </a>
                 </div>
             </div>
