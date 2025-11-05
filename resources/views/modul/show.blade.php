@@ -14,7 +14,7 @@
                 </div>
                 <div class="card-body">
                     <h4>{{ $modul->judul }}</h4>
-                    <p class="text-muted">{{ $modul->deskripsi }}</p>
+                    <p class="text-muted">{!! $modul->deskripsi !!}</p>
                     <hr>
 
                     <p>
@@ -111,7 +111,7 @@
                                 class="list-group-item list-group-item-action row">
                                 <div class="col-md-12">
                                     <h6 class="mb-0">{{ $subModul->order }}. {{ $subModul->title }}</h6>
-                                    <small class="text-muted">{{ $subModul->description }}</small>
+                                    <small class="text-muted">{!! $subModul->description !!}</small>
                                 </div>
 
                                 {{-- [PERUBAHAN] Kumpulan Tombol Aksi (Edit & Delete) --}}
@@ -167,6 +167,17 @@
 @push('js')
 <script>
 
+    // [PERUBAHAN DI SINI] Inisialisasi TinyMCE
+    tinymce.init({
+        // Gunakan selector class untuk menargetkan SEMUA editor
+        selector: 'textarea.rich-text-editor',
+        plugins: 'lists link code fullscreen',
+        toolbar: 'undo redo | blocks | bold italic | bullist numlist | link code | fullscreen',
+        menubar: false,
+        height: 250,
+        license_key: 'gpl',
+    });
+
     /**
      * 1. FUNGSI UNTUK MENGISI MODAL EDIT (DIBERSIHKAN)
      * Hanya mengisi field dasar + max_points.
@@ -179,23 +190,29 @@
 
         form.attr('action', updateUrl);
 
-        // Ambil data JSON (sekarang hanya berisi data dasar)
-        $.get(dataUrl, function(data) {
+        $.get(dataUrl, function (data) {
             // === Mengisi Data Umum ===
-            modal.find('#edit_submodul_type').val(data.type); // Penting!
+            modal.find('#edit_submodul_type').val(data.type);
             modal.find('#edit_sub_title_id').val(data.title.id);
             modal.find('#edit_sub_title_en').val(data.title.en);
-            modal.find('#edit_sub_description_id').val(data.description.id);
-            modal.find('#edit_sub_description_en').val(data.description.en);
             modal.find('#edit_sub_order').val(data.order);
             modal.find('#edit-max-points').val(data.max_points);
 
-            // === FIELD FORUM DIHAPUS DARI SINI ===
+            // === Update textarea secara manual dulu ===
+            modal.find('#edit_sub_description_id').val(data.description.id);
+            modal.find('#edit_sub_description_en').val(data.description.en);
 
-            // === Logika Tampilkan/Sembunyikan untuk Poin Maksimal ===
+            // === Update TinyMCE jika sudah aktif ===
+            if (tinymce.get('edit_sub_description_id')) {
+                tinymce.get('edit_sub_description_id').setContent(data.description.id || '');
+            }
+            if (tinymce.get('edit_sub_description_en')) {
+                tinymce.get('edit_sub_description_en').setContent(data.description.en || '');
+            }
+
+            // === Logika poin maksimal ===
             var maxPointsField = modal.find('#edit_max_points_wrapper');
             var maxPointsInput = modal.find('#edit-max-points');
-
             if (data.type === 'learning') {
                 maxPointsField.addClass('d-none');
                 maxPointsInput.prop('required', false);
@@ -204,13 +221,12 @@
                 maxPointsInput.prop('required', true);
             }
 
-            // Tampilkan modal
             modal.modal('show');
-
-        }).fail(function() {
+        }).fail(function () {
             Swal.fire('Error', 'Gagal mengambil data sub modul.', 'error');
         });
     }
+
 
     /**
      * 2. EVENT LISTENER UNTUK MODAL CREATE (DIBERSIHKAN)

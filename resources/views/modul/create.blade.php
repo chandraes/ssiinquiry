@@ -1,6 +1,6 @@
 <div class="modal fade" id="createModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
     aria-labelledby="createModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="createModalLabel">
@@ -71,8 +71,8 @@
                                 <div class="form-group">
                                     <label for="deskripsi_id" class="form-label">{{__('admin.modul.create.input_description')}} (ID)</label>
                                     {{-- Perhatikan name="deskripsi[id]" --}}
-                                    <textarea name="deskripsi[id]" id="deskripsi_id" class="form-control"
-                                        style="border-color:darkgrey"></textarea>
+                                    <textarea name="deskripsi[id]" id="deskripsi_id" class="form-control rich-text-editor"
+                                    rows="10"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -91,8 +91,8 @@
                                 <div class="form-group">
                                     <label for="deskripsi_en" class="form-label">{{__('admin.modul.create.input_description')}} (EN)</label>
                                     {{-- Perhatikan name="deskripsi[en]" --}}
-                                    <textarea name="deskripsi[en]" id="deskripsi_en" class="form-control"
-                                        style="border-color:darkgrey"></textarea>
+                                    <textarea name="deskripsi[en]" id="deskripsi_en" class="form-control rich-text-editor"
+                                    rows="10"></textarea>
                                 </div>
                             </div>
                         </div>

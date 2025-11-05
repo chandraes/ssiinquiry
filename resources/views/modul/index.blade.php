@@ -67,7 +67,7 @@
                 <div class="card-body">
                     <h5 class="card-title">{{ $modul->judul }}</h5>
                     <p class="card-text text-muted">
-                        {{ Str::limit($modul->deskripsi, 100) }}
+                        {!! Str::limit($modul->deskripsi, 100) !!}
                     </p>
                 </div>
 
@@ -132,6 +132,17 @@
 @endsection
 @push('js')
 <script>
+// [PERUBAHAN DI SINI] Inisialisasi TinyMCE
+    tinymce.init({
+        // Gunakan selector class untuk menargetkan SEMUA editor
+        selector: 'textarea.rich-text-editor',
+        plugins: 'lists link code fullscreen',
+        toolbar: 'undo redo | blocks | bold italic | bullist numlist | link code | fullscreen',
+        menubar: false,
+        height: 250,
+        license_key: 'gpl',
+    });
+
 $(document).ready(function() {
     // --- Inisialisasi Select2 Phyphox untuk Modal EDIT ---
     // Pastikan Select2 diinisialisasi SEBELUM editButton dipanggil
@@ -221,6 +232,14 @@ $(document).ready(function() {
             $('#edit_deskripsi_id').val(data.deskripsi.id);
             $('#edit_deskripsi_en').val(data.deskripsi.en);
 
+            // === Update TinyMCE jika sudah aktif ===
+            if (tinymce.get('edit_deskripsi_id')) {
+                tinymce.get('edit_deskripsi_id').setContent(data.deskripsi.id || '');
+            }
+            if (tinymce.get('edit_deskripsi_en')) {
+                tinymce.get('edit_deskripsi_en').setContent(data.deskripsi.en || '');
+            }
+            
             // 2. Isi Select2 Phyphox
              if(data.phyphox_ids && Array.isArray(data.phyphox_ids)) {
                  $('#edit_phyphox_id').val(data.phyphox_ids).trigger('change');

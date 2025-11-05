@@ -9,7 +9,7 @@
     <div class="card shadow-sm mb-4">
         <div class="card-body">
             <h2 class="card-title">{{ $subModul->title }}</h2>
-            <p class="text-muted">{{ $subModul->description }}</p>
+            <p class="text-muted">{!! $subModul->description !!}</p>
         </div>
     </div>
 
@@ -127,6 +127,17 @@
 @push('js')
 {{-- [BARU] JavaScript untuk Edit dan Delete Material --}}
 <script>
+    // [PERUBAHAN DI SINI] Inisialisasi TinyMCE
+    tinymce.init({
+        // Gunakan selector class untuk menargetkan SEMUA editor
+        selector: 'textarea.rich-text-editor',
+        plugins: 'lists link code fullscreen',
+        toolbar: 'undo redo | blocks | bold italic | bullist numlist | link code | fullscreen',
+        menubar: false,
+        height: 250,
+        license_key: 'gpl',
+    });
+
     /**
      * 1. FUNGSI UNTUK MENGISI MODAL EDIT
      */
