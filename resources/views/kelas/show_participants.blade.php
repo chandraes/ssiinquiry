@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('title')
-Peserta Kelas
+{{ __('admin.kelas.peserta.title') }} 
 @endsection
 @section('content')
 @include('swal')
@@ -20,7 +20,7 @@ Peserta Kelas
                             <div class="card">
                                 <div class="card-header justify-content-between">
                                     <div>
-                                        <h2 class="card-title mb-10">Daftar Peserta Kelas {{$kelas->nama_kelas}}</h2>
+                                        <h2 class="card-title mb-10">{{ __('admin.kelas.peserta.header') }} : {{$kelas->nama_kelas}}</h2>
                                     </div>
                                     <div class="justified-content-end">
                                         @if($isGuru || $isAdmin)
@@ -28,14 +28,7 @@ Peserta Kelas
                                                 class="btn btn-primary waves-effect waves-light"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#createModal">
-                                                <i class="fa fa-plus me-2"></i>Tambah Peserta
-                                            </button>
-                                        @elseif($isSiswa && !$isJoined)
-                                            <button type="button"
-                                                class="btn btn-success waves-effect waves-light"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#joinModal">
-                                                <i class="fa fa-sign-in-alt me-2"></i>Gabung Kelas
+                                                <i class="fa fa-plus me-2"></i>{{ __('admin.kelas.peserta.add_participant') }} 
                                             </button>
                                         @endif
                                     </div>
@@ -47,9 +40,8 @@ Peserta Kelas
                                             <thead>
                                                 <tr>
                                                     <th class="text-center align-middle" width="5%">No</th>
-                                                    <th class="text-start align-middle">Nama Peserta</th>
-                                                    {{-- <th class="text-center align-middle">Status (Pro/Kontra)</th> --}}
-                                                    <th class="text-center align-middle" width="15%">Aksi</th>
+                                                    <th class="text-start align-middle">{{ __('admin.kelas.peserta.table_name') }}</th>
+                                                    <th class="text-center align-middle" width="15%">{{ __('admin.kelas.peserta.table_action') }}</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -83,7 +75,7 @@ Peserta Kelas
                                                     </tr>
                                                 @empty
                                                     <tr>
-                                                        <td colspan="4" class="text-center">Belum ada peserta di kelas ini.</td>
+                                                        <td colspan="4" class="text-center">{{ __('admin.kelas.peserta.no_participants') }}</td>
                                                     </tr>
                                                 @endforelse
                                             </tbody>
@@ -92,7 +84,7 @@ Peserta Kelas
                                 </div>
                                 <div class="card-footer">
                                     <div class="col-md-12">
-                                        <a href="{{ route('kelas.show', $kelas->id) }}" class="btn btn-outline-secondary">
+                                        <a href="{{ route('kelas.show', $kelas->id) }}" class="btn btn-secondary button-lg">
                                             <i class="fa fa-arrow-left me-1"></i> {{ __('admin.button.back_to') }} {{ __('admin.kelas.show.header') }}
                                         </a>
                                     </div>
@@ -132,12 +124,12 @@ Peserta Kelas
         $('#btnCreate').on('click', function(e) {
             e.preventDefault();
             Swal.fire({
-                title: 'Simpan Data?',
-                text: "Pastikan data peserta sudah benar!",
+                title: '{{__("admin.kelas.peserta.swal.create.title")}}',
+                text: '{{__("admin.kelas.peserta.swal.create.text")}}',
                 icon: 'question',
                 showCancelButton: true,
-                confirmButtonText: 'Ya, Simpan!',
-                cancelButtonText: 'Batal',
+                confirmButtonText: '{{__("admin.kelas.peserta.swal.create.confirm")}}',
+                cancelButtonText: '{{__("admin.button.cancel")}}',
             }).then((result) => {
                 if (result.isConfirmed) {
                     $('#storeForm').submit();
@@ -178,12 +170,12 @@ Peserta Kelas
 
     function deleteButton(id) {
         Swal.fire({
-            title: 'Hapus Peserta?',
-            text: "Peserta akan dihapus dari kelas ini!",
+            title: '{{__("admin.kelas.peserta.swal.delete.title")}}',
+            text: '{{__("admin.kelas.peserta.swal.delete.text")}}',
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: 'Ya, hapus!',
-            cancelButtonText: 'Batal'
+            confirmButtonText: '{{__("admin.kelas.peserta.swal.delete.confirm")}}',
+            cancelButtonText: '{{__("admin.button.cancel")}}',
         }).then((result) => {
             if (result.isConfirmed) {
                 document.getElementById('delete-form-' + id).submit();

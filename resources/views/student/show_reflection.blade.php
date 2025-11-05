@@ -96,7 +96,7 @@
                 <div class="mb-4 p-3 border shadow-sm reflection-question-item">
                     {{-- Pertanyaan --}}
                     <div class="mb-3">
-                        <span class="badge bg-primary me-2">Pertanyaan {{ $loop->iteration }}</span>
+                        <span class="badge bg-primary me-2">{{__('admin.siswa.show_reflection.question')}} {{ $loop->iteration }}</span>
                         <h5 class="d-inline">{{ $question->question_text }}</h5>
                     </div>
 
@@ -160,7 +160,7 @@
                                         id="question_{{ $question->id }}_save_btn"
                                         type="button"
                                         onclick="saveAnswer({{ $question->id }})">
-                                    Simpan Jawaban
+                                    {{__('admin.siswa.show_reflection.save_answer')}}
                                 </button>
                             @endif
                         @endif
@@ -171,7 +171,7 @@
                 </div>
             @empty
                 <div class="alert alert-info text-center">
-                    Belum ada pertanyaan refleksi untuk sub-modul ini.
+                    {{__('admin.siswa.show_reflection.no_reflection')}}
                 </div>
             @endforelse
         </div>
@@ -192,7 +192,7 @@
                 @else
                     {{-- Tampilkan pesan jika sudah selesai --}}
                     <span class="badge bg-success p-3 fs-16">
-                        <i class="fa fa-check-circle me-2"></i> Anda sudah menyelesaikan sub-modul ini.
+                        <i class="fa fa-check-circle me-2"></i> {{__('admin.siswa.show_reflection.completed')}}
                     </span>
                 @endif
 
@@ -299,13 +299,13 @@ $(document).ready(function() {
         var swalTitle, swalText, swalConfirmText;
 
         if (actionValue === 'save_and_next') {
-            swalTitle = 'Lanjut ke Sub-Modul Berikutnya?';
-            swalText = 'Kami akan menyimpan progres Anda sebelum melanjutkan.';
-            swalConfirmText = 'Ya, Lanjutkan';
+            swalTitle = '{{ __("admin.siswa.show_reflection.swal.next.title") }}';
+            swalText = '{{ __("admin.siswa.show_reflection.swal.next.text") }}';
+            swalConfirmText = '{{ __("admin.siswa.show_reflection.forward") }}';
         } else {
-            swalTitle = 'Selesaikan Sub-Modul Ini?';
-            swalText = 'Setelah selesai, Anda tidak dapat mengubah jawaban refleksi Anda lagi. Pastikan semua jawaban sudah disimpan.';
-            swalConfirmText = 'Ya, Selesaikan';
+            swalTitle = '{{ __("admin.siswa.show_reflection.swal.complete.title") }}';
+            swalText = '{{ __("admin.siswa.show_reflection.swal.complete.text") }}';
+            swalConfirmText = '{{ __("admin.siswa.show_reflection.swal.complete.confirm") }}';
         }
 
         Swal.fire({

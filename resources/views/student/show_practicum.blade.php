@@ -372,24 +372,24 @@
             if (uploadedSlots < totalSlots) {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Belum Lengkap!',
-                    text: 'Kamu harus mengunggah semua file praktikum sebelum melanjutkan.',
+                    title: '{{__("admin.siswa.show_practicum.swal.failed.title")}}',
+                    text: '{{__("admin.siswa.show_practicum.swal.failed.text")}}',
                     confirmButtonColor: '#d33',
-                    confirmButtonText: 'OK'
+                    confirmButtonText: '{{__("admin.button.ok")}}'
                 });
                 return;
             }
 
             // Jika semua sudah lengkap, tampilkan konfirmasi
             Swal.fire({
-                title: 'Semua file sudah lengkap?',
-                text: 'Apakah kamu yakin ingin melanjutkan ke langkah berikutnya?',
+                title: '{{__("admin.siswa.show_practicum.swal.success.title")}}',
+                text: '{{__("admin.siswa.show_practicum.swal.success.text")}}',
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#aaa',
-                confirmButtonText: 'Ya, Lanjutkan',
-                cancelButtonText: 'Batal'
+                confirmButtonText: '{{__("admin.siswa.show_reflection.forward")}}',
+                cancelButtonText: '{{__("admin.button.cancel")}}'
             }).then((result) => {
                 if (result.isConfirmed) {
                     completeForm.submit(); // submit jika konfirmasi

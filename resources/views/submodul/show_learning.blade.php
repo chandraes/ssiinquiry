@@ -106,7 +106,7 @@
         </div>
         <div class="card-footer">
             <div class="col-md-12">
-                <a href="{{ route('modul.show', $subModul->modul_id) }}" class="btn btn-outline-secondary">
+                <a href="{{ route('modul.show', $subModul->modul_id) }}" class="btn btn-secondary button-lg">
                     <i class="fa fa-arrow-left me-1"></i> {{ __('admin.button.back_to') }}{{ __('admin.modul.detail.title') }}
                 </a>
             </div>

@@ -109,14 +109,14 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault(); // cegah submit langsung
 
             Swal.fire({
-                title: 'Tandai Selesai?',
-                text: "Pastikan kamu sudah mempelajari seluruh materi sebelum menyelesaikan Submodul ini.",
+                title: '{{__("admin.siswa.show_learning.swal.title")}}',
+                text: '{{__("admin.siswa.show_learning.swal.text")}}',
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, Selesai!',
-                cancelButtonText: 'Batal'
+                confirmButtonText: '{{__("admin.siswa.show_learning.swal.confirm")}}',
+                cancelButtonText: '{{__("admin.button.cancel")}}',
             }).then((result) => {
                 if (result.isConfirmed) {
                     form.submit(); // lanjut submit jika dikonfirmasi

@@ -2,7 +2,7 @@
 @if (session('success'))
 <script>
     Swal.fire({
-        title: 'Berhasil!',
+        title: '{{__("admin.swal.success.title")}}',
         text: '{{ session('success') }}',
         icon: 'success'
     });

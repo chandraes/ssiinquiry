@@ -295,7 +295,7 @@
         <div class="card shadow-sm mb-4">
             <div class="card-footer">
                 <div class="col-md-12">
-                    <a href="{{ route('kelas') }}" class="btn btn-outline-secondary">
+                    <a href="{{ route('kelas') }}" class="btn btn-secondary button-lg">
                         <i class="fa fa-arrow-left me-1"></i> {{ __('admin.button.back_to') }} {{ __('admin.kelas.list_title') }}
                     </a>
                 </div>
