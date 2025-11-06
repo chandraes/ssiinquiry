@@ -213,7 +213,7 @@
         </div>
         <div class="card shadow-sm">
             <div class="card-footer text-center">
-                <a href="{{ route('student.class.show', $kelas->id) }}" class="btn btn-outline-secondary">
+                <a href="{{ route('student.class.show', $kelas->id) }}" class="btn btn-secondary btn-lg">
                     <i class="fa fa-arrow-left me-2"></i> {{__('admin.siswa.back_to_curriculum')}}
                 </a>
             </div>

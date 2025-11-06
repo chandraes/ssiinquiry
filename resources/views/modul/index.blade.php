@@ -72,7 +72,7 @@
                 </div>
 
                 <div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center">
-                    <a href="{{ route('modul.show', $modul->id) }}" class="btn btn-primary btn-sm">
+                    <a href="{{ route('modul.show', $modul->id) }}" class="btn btn-primary btn-lg">
                         {{ __('admin.modul.view_details') }}
                     </a>
 
@@ -87,7 +87,7 @@
                     @role(['guru', 'admin'])
                     <div>
                         {{-- Tombol Edit --}}
-                        <button class="btn btn-warning btn-sm" title="{{ __('admin.button.edit') }}"
+                        <button class="btn btn-warning btn-lg" title="{{ __('admin.button.edit') }}"
                             data-bs-toggle="modal" data-bs-target="#editModal"
                             data-url="{{ route('modul.json', $modul->id) }}"
                             data-update-url="{{ route('modul.update', $modul->id) }}" onclick="editButton(this)">
@@ -95,7 +95,7 @@
                         </button>
 
                         {{-- Tombol Delete (Hanya Admin) --}}
-                        <button class="btn btn-danger btn-sm" title="{{ __('admin.button.delete') }}"
+                        <button class="btn btn-danger btn-lg" title="{{ __('admin.button.delete') }}"
                             onclick="deleteButton({{ $modul->id }})">
                             <i class="fa fa-trash"></i>
                         </button>
