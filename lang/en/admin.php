@@ -9,7 +9,7 @@ return [
     'sidebar' => [
         'main' => 'Main',
         'management' => 'Management',
-        'akun' => 'Account',
+        'account' => 'Account',
         'settings' => 'Settings',
         'dashboard' => 'Dashboard',
         'management_class' => 'Class Management',
@@ -107,7 +107,7 @@ return [
             'title' => 'Delete Data?',
             'text' => 'Are you sure you want to delete this data?',
             'confirm' => 'Continue',
-            'cancel' => 'Cancel',    
+            'cancel' => 'Cancel',
         ],
         'upload' => [
             'title' => 'Confirm Upload',
@@ -174,12 +174,12 @@ return [
             'join_code' => 'Class Join Code',
             'instruction_join_code' => 'Share this code with students to let them join this class.',
             'copy' => 'Copy',
-            
-            //PARTICIPANT MANAGEMENT            
+
+            //PARTICIPANT MANAGEMENT
             'manage_participants' => 'Manage Participants',
             'add_delete_participants' => 'Add/Delete Participants',
             'button_manage_participant' => 'Manage Participants',
-            
+
             //FORUM MANAGEMENT
             'manage_forum' => 'Manage Forum',
             'setup_teams' => 'Manage Pro and Con Teams for this Class',
@@ -189,7 +189,7 @@ return [
             'review_forum' => 'Review Debate Forum',
             'view_progress' => 'View Student Debate Progress',
             'review_forum_button' => 'Review Forum',
-            
+
             //TABLE
             'participant_table_name' => 'Participant Name',
             'participant_table_score' => 'Total Score',
@@ -306,7 +306,7 @@ return [
         'url_instruction' => 'Enter a direct URL to the infographic image (e.g., .../image.jpg)',
         'add_rich_text' => 'Add Rich Text Material',
         'rich_text_title' => 'Title',
-        'rich_text_content' => 'Text Content', 
+        'rich_text_content' => 'Text Content',
         'rich_text_content_id' => 'Text Content (ID)',
         'rich_text_content_en' => 'Text Content (EN)',
         'url_video_label' => 'Video URL (YouTube/Vimeo)',
@@ -353,7 +353,7 @@ return [
         'student_answer_instruction' => 'Student answers per class will be displayed here.',
     ],
 
-    'forum' => [ 
+    'forum' => [
         'title' => 'Forum Management',
         'sub_title' => 'Forum Team Management',
         'class' => 'Class',
@@ -594,7 +594,7 @@ return [
         ],
         'back_to_curriculum' => 'Back to Curriculum',
     ],
-    
+
     'profile' => [
         'title' => 'My Profile',
         'edit_profile' => 'Edit Profile',
