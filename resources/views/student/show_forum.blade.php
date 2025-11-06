@@ -1,7 +1,5 @@
 @extends('layouts.app')
 @section('title'){{ $subModule->title }}@endsection
-
-{{-- [CSS BARU] Menggunakan Flexbox untuk layout anti-overflow --}}
 @push('css')
 <style>
     /* Helper untuk avatar */
@@ -59,13 +57,22 @@
         word-wrap: break-word;
     }
 
+    /* * [PENTING] Memastikan SEMUA konten tidak overflow.
+     * Termasuk tabel, video, dan (yang sering lupa) <pre> tag untuk kode.
+    */
     .post-content img,
     .post-content iframe,
     .post-content video,
-    .post-content table {
+    .post-content table,
+    .post-content pre {
         max-width: 100% !important;
         height: auto;
         display: block;
+    }
+    /* Khusus untuk <pre> dan <table>, butuh overflow horizontal */
+    .post-content pre,
+    .post-content table {
+        overflow-x: auto;
     }
 
     .post-footer {
@@ -74,10 +81,17 @@
         border-top: 1px solid #dee2e6;
     }
 
-    /* Kontainer untuk balasan */
+    /* * [PERBAIKAN DESKTOP]
+     * Kontainer untuk balasan (Tampilan "Thread Line" Profesional)
+    */
     .post-replies {
-        padding-left: 40px;
+        /* * Pindahkan indentasi dari avatar (48px / 2 = 24px)
+         * agar garis ada di tengah avatar.
+        */
+        margin-left: 24px;
+        padding-left: 24px; /* (48px - 24px) */
         margin-top: 1rem;
+        border-left: 2px solid #e9ecef; /* Garis thread */
     }
 
     /* Form balasan yang disembunyikan */
@@ -88,6 +102,65 @@
         margin-top: 1rem;
         border-top: 2px dashed #0d6efd;
         padding-top: 1rem;
+    }
+
+
+    /* ================================================= */
+    /* === 🚀 SOLUSI RESPONSIVE MOBILE (ANTI-OVERFLOW) 🚀 === */
+    /* ================================================= */
+    @media (max-width: 576px) {
+
+        /* 1. Perkecil avatar dan gap untuk hemat ruang */
+        .post-wrapper {
+            gap: 0.75rem; /* (12px) */
+        }
+        .post-avatar {
+            width: 36px;
+            height: 36px;
+            font-size: 0.9rem;
+        }
+        .post-avatar-reply {
+            width: 36px; /* Samakan saja */
+            height: 36px;
+            font-size: 0.9rem;
+        }
+
+        /* * 2. [INI SOLUSI UTAMA ANDA]
+         * Kita "ratakan" (flatten) tampilan balasan di mobile.
+         * Hapus semua indentasi kumulatif.
+        */
+        .post-replies {
+            margin-left: 0;
+            padding-left: 0;
+            margin-top: 0.75rem;
+            border-left: none; /* Hapus garis thread, ganti style */
+        }
+
+        /* * 3. Ganti visual balasan
+         * Sebagai ganti indentasi, kita beri garis pemisah tipis
+         * di atas setiap balasan baru.
+        */
+        .post-replies > .post-wrapper {
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            /* Garis pemisah tipis ini jauh lebih hemat ruang */
+            border-top: 1px solid #e9ecef;
+        }
+
+        /* 4. Perkecil padding di dalam card */
+        .post-header,
+        .post-content,
+        .evidence-list {
+            padding: 0.75rem;
+        }
+        .post-footer {
+            padding: 0.5rem 0.75rem;
+        }
+
+        /* 5. Pastikan header tidak rusak */
+        .post-header .d-flex {
+            flex-wrap: wrap; /* Izinkan timestamp turun ke bawah */
+        }
     }
 </style>
 @endpush

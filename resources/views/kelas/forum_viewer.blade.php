@@ -3,31 +3,167 @@
 
 {{-- Salin CSS dari student/show_forum.blade.php --}}
 @push('css')
+@push('css')
 <style>
-    /* (CSS dari file student/show_forum.blade.php Anda) */
-    .post-avatar { flex-shrink: 0; width: 48px; height: 48px; background-color: #6c757d; color: white; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: bold; font-size: 1.1rem; }
-    .post-avatar-reply { width: 40px; height: 40px; font-size: 0.9rem; }
-    .post-wrapper { display: flex; gap: 1rem; margin-bottom: 1rem; }
-    .post-body { flex-grow: 1; min-width: 0; }
-    .post-card { border: 1px solid #dee2e6; border-radius: 8px; }
-    .post-card.team-pro { border-left: 4px solid #198754; }
-    .post-card.team-kontra { border-left: 4px solid #dc3545; }
-    .post-header { padding: 0.75rem 1rem; background-color: #f8f9fa; border-bottom: 1px solid #dee2e6; }
-    .post-content { padding: 1rem; overflow-wrap: break-word; word-wrap: break-word; }
-    .rich-text-content p:last-child { margin-bottom: 0; }
-    .post-footer { padding: 0.75rem 1rem; border-top: 1px solid #eee; }
-    .post-replies { margin-left: 3.5rem; }
-    .evidence-list { background-color: #f8f9fa; padding: 1rem; }
-
-    /* [PERBAIKAN] CSS untuk satu kolom */
-    .forum-viewer-container {
-        height: 100%; /* Hapus tinggi 80vh */
+    /* Helper untuk avatar */
+    .post-avatar {
+        flex-shrink: 0;
+        width: 48px;
+        height: 48px;
+        background-color: #6c757d;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-weight: bold;
+        font-size: 1.1rem;
     }
-    .forum-column {
-        padding: 1rem;
-        background-color: #fdfdfd;
-        border: 1px solid #eee;
+    .post-avatar-reply {
+        width: 40px;
+        height: 40px;
+        font-size: 0.9rem;
+    }
+
+    /* Wrapper utama postingan */
+    .post-wrapper {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    /* Body postingan (bagian kanan) */
+    .post-body {
+        /* [INI KUNCI ANTI-OVERFLOW] */
+        flex-grow: 1;
+        min-width: 0;
+    }
+
+    .post-card {
+        border: 1px solid #dee2e6;
         border-radius: 8px;
+    }
+
+    .post-card.team-pro { border-left: 4px solid #198754; }
+    .post-card.team-con { border-left: 4px solid #dc3545; }
+
+    .post-header {
+        background-color: #f8f9fa;
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    /* Konten postingan (teks, gambar) */
+    .post-content {
+        padding: 1rem;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+    }
+
+    /* * [PENTING] Memastikan SEMUA konten tidak overflow.
+     * Termasuk tabel, video, dan (yang sering lupa) <pre> tag untuk kode.
+    */
+    .post-content img,
+    .post-content iframe,
+    .post-content video,
+    .post-content table,
+    .post-content pre {
+        max-width: 100% !important;
+        height: auto;
+        display: block;
+    }
+    /* Khusus untuk <pre> dan <table>, butuh overflow horizontal */
+    .post-content pre,
+    .post-content table {
+        overflow-x: auto;
+    }
+
+    .post-footer {
+        padding: 0.5rem 1rem;
+        background-color: #f8f9fa;
+        border-top: 1px solid #dee2e6;
+    }
+
+    /* * [PERBAIKAN DESKTOP]
+     * Kontainer untuk balasan (Tampilan "Thread Line" Profesional)
+    */
+    .post-replies {
+        /* * Pindahkan indentasi dari avatar (48px / 2 = 24px)
+         * agar garis ada di tengah avatar.
+        */
+        margin-left: 24px;
+        padding-left: 24px; /* (48px - 24px) */
+        margin-top: 1rem;
+        border-left: 2px solid #e9ecef; /* Garis thread */
+    }
+
+    /* Form balasan yang disembunyikan */
+    #hidden-reply-form-home {
+        display: none;
+    }
+    #reply-form-wrapper {
+        margin-top: 1rem;
+        border-top: 2px dashed #0d6efd;
+        padding-top: 1rem;
+    }
+
+
+    /* ================================================= */
+    /* === 🚀 SOLUSI RESPONSIVE MOBILE (ANTI-OVERFLOW) 🚀 === */
+    /* ================================================= */
+    @media (max-width: 576px) {
+
+        /* 1. Perkecil avatar dan gap untuk hemat ruang */
+        .post-wrapper {
+            gap: 0.75rem; /* (12px) */
+        }
+        .post-avatar {
+            width: 36px;
+            height: 36px;
+            font-size: 0.9rem;
+        }
+        .post-avatar-reply {
+            width: 36px; /* Samakan saja */
+            height: 36px;
+            font-size: 0.9rem;
+        }
+
+        /* * 2. [INI SOLUSI UTAMA ANDA]
+         * Kita "ratakan" (flatten) tampilan balasan di mobile.
+         * Hapus semua indentasi kumulatif.
+        */
+        .post-replies {
+            margin-left: 0;
+            padding-left: 0;
+            margin-top: 0.75rem;
+            border-left: none; /* Hapus garis thread, ganti style */
+        }
+
+        /* * 3. Ganti visual balasan
+         * Sebagai ganti indentasi, kita beri garis pemisah tipis
+         * di atas setiap balasan baru.
+        */
+        .post-replies > .post-wrapper {
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            /* Garis pemisah tipis ini jauh lebih hemat ruang */
+            border-top: 1px solid #e9ecef;
+        }
+
+        /* 4. Perkecil padding di dalam card */
+        .post-header,
+        .post-content,
+        .evidence-list {
+            padding: 0.75rem;
+        }
+        .post-footer {
+            padding: 0.5rem 0.75rem;
+        }
+
+        /* 5. Pastikan header tidak rusak */
+        .post-header .d-flex {
+            flex-wrap: wrap; /* Izinkan timestamp turun ke bawah */
+        }
     }
 </style>
 @endpush
