@@ -460,7 +460,7 @@ jQuery(document).ready(function($) {
             pdf.line(leftMargin, topMargin + 23, pdfWidth - rightMargin, topMargin + 23);
 
             // Tentukan posisi Y awal (tepat di bawah header)
-            let currentY = topMargin + 25;
+            let currentY = topMargin + 30;
 
             // --- Ambil SEMUA postingan utama (top-level) ---
             // Ini adalah elemen .post-wrapper yang ada di blade 'forum_post.blade.php'
