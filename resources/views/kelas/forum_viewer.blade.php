@@ -3,7 +3,6 @@
 
 {{-- Salin CSS dari student/show_forum.blade.php --}}
 @push('css')
-@push('css')
 <style>
     /* Helper untuk avatar */
     .post-avatar {
