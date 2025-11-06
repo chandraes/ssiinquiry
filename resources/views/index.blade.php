@@ -150,19 +150,30 @@
     </header>
 
     <section id="home"
-        class="h-screen flex flex-col justify-center items-center bg-gradient-to-br from-blue-50 to-blue-200 text-center px-6 pt-20">
-        <h1 class="text-5xl font-bold text-blue-800 mb-4">{!! __('landing.hero_title') !!}</h1>
-        <p class="text-lg text-gray-600 mb-6 max-w-2xl">
-            {!! __('landing.hero_subtitle') !!}
-        </p>
-        <div>
-            <a href="#about" class="bg-blue-700 text-white px-6 py-3 rounded-lg hover:bg-blue-800 transition">{{
-                __('landing.hero_button_learn') }}</a>
-            <a href="#contact"
-                class="ml-3 border border-blue-700 text-blue-700 px-6 py-3 rounded-lg hover:bg-blue-700 hover:text-white transition">{{
-                __('landing.hero_button_start') }}</a>
+        class="relative h-screen flex flex-col justify-center items-center text-center px-6 pt-20 bg-cover bg-center bg-no-repeat"
+        style="background-image: url('https://images.unsplash.com/photo-1602052577122-f73b9710adba?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&fm=jpg&q=60&w=3000');">
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-900/70 to-blue-600/60"></div>
+
+        <div class="relative z-10 max-w-3xl mx-auto text-white">
+            <h1 class="text-5xl md:text-6xl font-bold mb-6 drop-shadow-lg leading-tight">
+                {!! __('landing.hero_title') !!}
+            </h1>
+            <p class="text-lg md:text-xl mb-8 text-gray-200 drop-shadow-md">
+                {!! __('landing.hero_subtitle') !!}
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#about"
+                    class="bg-white text-blue-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">
+                    {{ __('landing.hero_button_learn') }}
+                </a>
+                <a href="#contact"
+                    class="border border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-700 transition">
+                    {{ __('landing.hero_button_start') }}
+                </a>
+            </div>
         </div>
     </section>
+
 
     <section id="about" class="py-20 max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center gap-10">
         <img src="{{$logoUrl}}" alt="Phypox Illustration" class="w-1/2 max-w-md mx-auto">
@@ -230,13 +241,22 @@
         </div>
     </section>
 
-    <section id="contact" class="py-20 bg-blue-700 text-white text-center">
-        <h2 class="text-3xl font-bold mb-4">{{ __('landing.cta_title') }}</h2>
-        <p class="mb-8">{{ __('landing.cta_subtitle') }}</p>
-        <a href="{{route('register')}}"
-            class="bg-white text-blue-700 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">{{
-            __('landing.cta_button') }}</a>
+    <section id="contact"
+        class="relative py-20 text-white text-center bg-cover bg-center bg-no-repeat"
+        style="background-image: url('https://images.unsplash.com/photo-1602052577122-f73b9710adba?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&fm=jpg&q=60&w=3000');">
+        <!-- Overlay agar teks tetap terbaca -->
+        <div class="absolute inset-0 bg-blue-900/80"></div>
+
+        <div class="relative z-10 max-w-2xl mx-auto">
+            <h2 class="text-3xl font-bold mb-4">{{ __('landing.cta_title') }}</h2>
+            <p class="mb-8 text-gray-200">{{ __('landing.cta_subtitle') }}</p>
+            <a href="{{ route('register') }}"
+                class="bg-white text-blue-700 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">
+                {{ __('landing.cta_button') }}
+            </a>
+        </div>
     </section>
+
 
     <footer class="bg-gray-900 text-gray-400 py-6 text-center text-sm">
         {!! __('landing.footer_copyright') !!}
