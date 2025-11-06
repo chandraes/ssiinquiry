@@ -514,31 +514,63 @@ jQuery(document).ready(function($) {
                 // lebih besar dari 'pageContentHeight' (kasus postingan super panjang)
                 pdf.addImage(imgData, 'PNG', leftMargin, currentY, contentWidth, postHeightInPdf);
 
-                // 5. Hitung Posisi Y baru
-                // Kita harus menghitung di mana 'addImage' selesai menempelkan gambar.
+                // 5. Hitung Posisi Y baru (Logika Kompleks yang Diperbaiki)
 
-                // (currentY - topMargin) adalah posisi relatif di dalam area konten
-                let totalHeightWithPost = (currentY - topMargin) + postHeightInPdf;
+                // Dapatkan halaman saat ini SETELAH addImage
+                const currentPage = pdf.internal.page; // <-- INI PERBAIKANNYA
 
-                // Jika Y awal BUKAN di topMargin (misal halaman 1)
-                if (currentY > topMargin) {
-                    // Kita pakai Y dari header halaman 1
-                    totalHeightWithPost = (currentY - (topMargin + 25)) + postHeightInPdf;
+                // Hitung tinggi relatif post yang sudah ada di halaman 'currentY'
+                let yOnPage;
+                if (currentPage === 1 && currentY <= (topMargin + 25)) {
+                    // Halaman 1, 'currentY' dihitung dari (topMargin + 25)
+                    yOnPage = (currentY - (topMargin + 25));
+                } else {
+                    // Halaman 2+, 'currentY' dihitung dari (topMargin)
+                    yOnPage = (currentY - topMargin);
                 }
 
-                // Sisa tinggi di halaman terakhir yang ditempati oleh postingan ini
-                let heightOnLastPage = totalHeightWithPost % pageContentHeight;
+                // Pastikan tidak negatif jika kita tepat di margin
+                if (yOnPage < 0) yOnPage = 0;
 
-                if (heightOnLastPage === 0 && totalHeightWithPost > 0) {
-                     // Jika pas di akhir halaman
+                // Hitung total tinggi konten (yang lama di halaman + yang baru)
+                const totalRelativeHeight = yOnPage + postHeightInPdf;
+
+                // Hitung jumlah halaman yang *mungkin* ditempati oleh post ini
+                const pagesSpanned = Math.ceil(totalRelativeHeight / pageContentHeight);
+
+                // Hitung sisa tinggi di halaman terakhir yang ditempati post ini
+                let heightOnLastPage = totalRelativeHeight % pageContentHeight;
+
+                if (heightOnLastPage === 0 && totalRelativeHeight > 0) {
+                     // Jika pas di akhir halaman, sisa tingginya adalah tinggi halaman penuh
                     heightOnLastPage = pageContentHeight;
                 }
 
-                // Posisi Y baru adalah di atas + sisa tinggi itu
+                // Tambahkan halaman baru jika 'addImage' *seharusnya* menambahkannya
+                if (pagesSpanned > 1) {
+                    // 'addImage' mungkin sudah menambahkan halaman, kita hanya perlu
+                    // memastikan kita berada di halaman yang benar
+                    const expectedPage = (currentPage - 1) + pagesSpanned;
+
+                    // Tambah halaman jika 'addImage' belum
+                    while(pdf.internal.getNumberOfPages() < expectedPage){
+                        pdf.addPage();
+                    }
+                    pdf.setPage(expectedPage); // Pindah ke halaman terakhir
+                }
+
+                // Posisi Y baru adalah di 'topMargin' + sisa tinggi itu
                 currentY = topMargin + heightOnLastPage;
 
                 // Tambahkan margin *antar* postingan
                 currentY += postMargin;
+
+                // Cek terakhir: Jika 'currentY' baru (dengan margin)
+                // melebihi halaman, pindah ke halaman baru
+                if (currentY > (pdfHeight - bottomMargin)) {
+                    pdf.addPage();
+                    currentY = topMargin;
+                }
 
             } // --- Akhir dari Loop 'for...of' ---
 
