@@ -311,10 +311,13 @@ return [
         'add_rich_text' => 'Tambah Materi Teks (Rich Text)', // <-- BARU
 
         // ... (key url_label)
+        'rich_text_title' => 'Judul',
+        'rich_text_content' => 'Konten Teks', 
         'rich_text_content_id' => 'Konten Teks (ID)', // <-- BARU
         'rich_text_content_en' => 'Text Content (EN)',
 
         'url_video_label' => 'URL Video (YouTube/Vimeo)',
+        'material_title' => 'Judul Materi',
     ],  
 
     'reflection_modal' => [

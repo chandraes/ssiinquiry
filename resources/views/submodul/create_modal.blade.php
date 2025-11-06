@@ -49,8 +49,8 @@
                                 <div class="form-group">
                                     <label for="sub_description_id" class="form-label">{{
                                         __('admin.submodul_modal.desc_id_label') }}</label>
-                                    <textarea name="description[id]" id="sub_description_id" class="form-control"
-                                        style="border-color:darkgrey"></textarea>
+                                    <textarea name="description[id]" id="sub_description_id" class="form-control rich-text-editor"
+                                    rows="10"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -69,8 +69,8 @@
                                 <div class="form-group">
                                     <label for="sub_description_en" class="form-label">{{
                                         __('admin.submodul_modal.desc_en_label') }}</label>
-                                    <textarea name="description[en]" id="sub_description_en" class="form-control"
-                                        style="border-color:darkgrey"></textarea>
+                                    <textarea name="description[en]" id="sub_description_en" class="form-control rich-text-editor"
+                                    rows="10"></textarea>
                                 </div>
                             </div>
                         </div>

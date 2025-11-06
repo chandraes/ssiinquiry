@@ -10,12 +10,12 @@
                     @csrf
                     <input type="hidden" name="sub_module_id" value="{{ $subModul->id }}">
                     <input type="hidden" name="type" value="rich_text">
-                    <label class="form-label fw-bold">Judul Materi</label>
+                    <label class="form-label fw-bold">{{ __('admin.material_modal.rich_text_title') }}</label>
                     @include('learning_material.partials.title_tabs', ['id_suffix' => 'richtext'])
 
                     <hr>
 
-                    <label class="form-label fw-bold">Konten Teks</label>
+                    <label class="form-label fw-bold">{{ __('admin.material_modal.rich_text_content') }}</label>
                     <ul class="nav nav-tabs mb-3" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" id="content-id-tab-rt" data-bs-toggle="tab"

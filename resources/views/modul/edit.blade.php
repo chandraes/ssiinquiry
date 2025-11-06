@@ -1,6 +1,6 @@
 <div class="modal fade" id="editModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
     aria-labelledby="editModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editModalLabel">{{__('admin.modul.edit.header')}}</h5>
@@ -38,7 +38,8 @@
                             </div>
                             <div class="mb-3">
                                 <label for="edit_deskripsi_id" class="form-label">{{__('admin.modul.create.input_description')}} (ID)</label>
-                                <textarea name="deskripsi[id]" id="edit_deskripsi_id" class="form-control" rows="3"></textarea>
+                                <textarea name="deskripsi[id]" id="edit_deskripsi_id" class="form-control rich-text-editor"
+                                    rows="10"></textarea>
                             </div>
                         </div>
 
@@ -50,7 +51,8 @@
                             </div>
                             <div class="mb-3">
                                 <label for="edit_deskripsi_en" class="form-label">{{__('admin.modul.create.input_description')}} (EN)</label>
-                                <textarea name="deskripsi[en]" id="edit_deskripsi_en" class="form-control" rows="3"></textarea>
+                                <textarea name="deskripsi[en]" id="edit_deskripsi_en" class="form-control rich-text-editor"
+                                    rows="10"></textarea>
                             </div>
                         </div>
                     </div>

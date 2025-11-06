@@ -5,7 +5,8 @@
     <div class="card shadow-sm mb-4">
         <div class="card-body">
             <h2 class="card-title"><i class="fa fa-book-open text-primary me-2"></i>{{ $subModule->title }}</h2>
-            <p class="text-muted">{{ $subModule->description }}</p>
+            
+            <p class="text-muted">{!! $subModule->description !!}</p>
         </div>
     </div>
 

@@ -305,9 +305,12 @@ return [
         'url_placeholder' => 'https://example.com/...',
         'url_instruction' => 'Enter a direct URL to the infographic image (e.g., .../image.jpg)',
         'add_rich_text' => 'Add Rich Text Material',
+        'rich_text_title' => 'Title',
+        'rich_text_content' => 'Text Content', 
         'rich_text_content_id' => 'Text Content (ID)',
         'rich_text_content_en' => 'Text Content (EN)',
         'url_video_label' => 'Video URL (YouTube/Vimeo)',
+        'material_title' => 'Material Title',
     ],
 
     'reflection_modal' => [
