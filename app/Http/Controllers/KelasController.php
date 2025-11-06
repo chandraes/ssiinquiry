@@ -213,13 +213,13 @@ class KelasController extends Controller
 
     public function siswa_kelas($id)
     {
-        $userLogin = auth()->user();
+
         // dd($id);
         // Ambil data kelas, sekaligus eager loading peserta (users)
         $kelas = Kelas::with('peserta', 'peserta.user', 'modul')->findOrFail($id);
 
         $user = Auth::user();
-
+        $userLogin = $user;
         // Periksa apakah user yang login sudah tergabung dalam kelas ini
         $isJoined = $kelas->peserta->pluck('user_id')->contains($user->id);
 
