@@ -4,6 +4,9 @@ return [
     'loader_alt' => 'Pemuat',
     'logo_alt' => 'Logo',
 
+    'loading_state_title' => 'Mempersiapkan PDF, mohon tunggu...',
+    'loading_state_subtitle' => '(Proses ini bisa memakan waktu hingga 1 menit jika forum sangat panjang)',
+
     'footer_copyright' => 'Hak Cipta © :year oleh <a href="javascript:void(0);"> SSI Inquiry </a> Semua hak dilindungi',
 
     'sidebar' => [

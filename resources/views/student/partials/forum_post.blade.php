@@ -28,7 +28,7 @@
                             </small>
                         @endif
                     </div>
-                    <small class="text-muted">{{ $post->created_at->diffForHumans() }}</small>
+                    <small class="text-muted">{{ $post->created_at}} ({{ $post->created_at->diffForHumans() }})</small>
                 </div>
             </div>
 

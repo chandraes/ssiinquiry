@@ -192,8 +192,8 @@
 <div id="pdf-overlay">
     <div class="overlay-content">
         <i class="fa fa-spinner fa-spin"></i>
-        <p>Mempersiapkan PDF, mohon tunggu...</p>
-        <small>(Proses ini bisa memakan waktu hingga 1 menit jika forum sangat panjang)</small>
+        <p>{{__('admin.loading_state_title')}}</p>
+        <small>{{__('admin.loading_state_subtitle')}}</small>
     </div>
 </div>
 <div class="container-fluid">
@@ -231,7 +231,8 @@
                 <div class="d-flex justify-content-end mb-3">
                     <button class="btn btn-success" id="download-pdf-btn"
                             data-kelas-name="{{ $kelas->nama_kelas }}"
-                            data-submodule-name="{{ $kelas->modul->judul }}"
+                            data-module-name="{{ $kelas->modul->judul }}"
+                            data-submodule-name="{{ $selectedSubModule->title }}"
                             data-filename="Transkrip-Forum-{{ Str::slug($kelas->nama_kelas, '-') }}-{{ $selectedSubModule->id }}.pdf">
                         <i class="fa fa-file-pdf-o me-2"></i> Download Transkrip PDF
                     </button>
@@ -413,6 +414,7 @@ jQuery(document).ready(function($) {
         var $overlay = $('#pdf-overlay');
 
         var kelasName = $btn.data('kelas-name');
+        var moduleName = $btn.data('module-name');
         var subModuleName = $btn.data('submodule-name');
         var fileName = $btn.data('filename');
 
@@ -450,11 +452,12 @@ jQuery(document).ready(function($) {
 
             pdf.setFontSize(12);
             pdf.setFont('helvetica', 'normal');
-            pdf.text("Kelas: " + kelasName, leftMargin, topMargin + 10);
-            pdf.text("Modul: " + subModuleName, leftMargin, topMargin + 15);
+            pdf.text("Modul: " + moduleName, leftMargin, topMargin + 10);
+            pdf.text("Kelas: " + kelasName, leftMargin, topMargin + 15);
+            pdf.text("Submodul: " + subModuleName, leftMargin, topMargin + 20);
 
             pdf.setLineWidth(0.5);
-            pdf.line(leftMargin, topMargin + 18, pdfWidth - rightMargin, topMargin + 18);
+            pdf.line(leftMargin, topMargin + 23, pdfWidth - rightMargin, topMargin + 23);
 
             // Tentukan posisi Y awal (tepat di bawah header)
             let currentY = topMargin + 25;

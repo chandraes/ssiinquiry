@@ -4,6 +4,9 @@ return [
     'loader_alt' => 'Loader',
     'logo_alt' => 'Logo',
 
+    'loading_state_title' => 'Preparing PDF, please wait...',
+    'loading_state_subtitle' => '(This process can take up to 1 minute if the forum is very long)',
+
     'footer_copyright' => 'Copyright © :year by <a href="javascript:void(0);">SSI Inquiry</a> All rights reserved.',
 
     'sidebar' => [
