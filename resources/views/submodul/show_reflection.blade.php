@@ -199,9 +199,8 @@
     // == FUNGSI MODAL YANG SUDAH ADA (DIPERBARUI)
     // ===================================================================
 
-    // --- (Fungsi editButton tidak berubah) ---
     function editButton(button) {
-        var url = $(button).data('url');
+        var url = $(button).data('url'); // URL untuk GET detail pertanyaan
         var modal = $('#editQuestionModal');
         var form = $('#editQuestionForm');
         var editList = $('#edit_options_list');
@@ -211,23 +210,36 @@
         $('#edit_mc_options_container').hide();
 
         $.get(url, function(data) {
-            var updateUrl = "{{ url('admin/reflection-question') }}/" + data.id;
+            // Gunakan route update Laravel
+            var updateUrl = "{{ route('reflection_question.update', ':id') }}";
+            updateUrl = updateUrl.replace(':id', data.id); // Ganti :id dengan ID pertanyaan aktual
+
             form.attr('action', updateUrl);
+            form.attr('method', 'POST'); // karena HTML form hanya support GET/POST
+            // tambahkan _method=PUT agar cocok dengan Laravel
+            if (!form.find('input[name="_method"]').length) {
+                form.append('<input type="hidden" name="_method" value="PUT">');
+            }
 
-            modal.find('#edit_question_text_id').val(data.question_text.id);
-            modal.find('#edit_question_text_en').val(data.question_text.en);
-            modal.find('#edit_question_order').val(data.order);
-            modal.find('#edit_question_type').val(data.type);
+            // Isi field dengan data dari server
+            modal.find('#edit_question_text_id').val(data.question_text.id ?? '');
+            modal.find('#edit_question_text_en').val(data.question_text.en ?? '');
+            modal.find('#edit_question_order').val(data.order ?? '');
+            modal.find('#edit_question_type').val(data.type ?? '');
 
-            if (data.type === 'multiple_choice' && data.options && data.options.length > 0) {
+            // Tampilkan opsi jika multiple choice
+            if (data.type === 'multiple_choice' && Array.isArray(data.options) && data.options.length > 0) {
                 data.options.forEach((option, index) => {
                     const optionHtml = createOptionHtml('edit', index, option);
                     editList.append(optionHtml);
                 });
                 $('#edit_mc_options_container').show();
             }
+
+            modal.modal('show'); // tampilkan modal edit
         });
     }
+
 
     // --- (Fungsi deleteQuestion tidak berubah) ---
     function deleteQuestion(id) {

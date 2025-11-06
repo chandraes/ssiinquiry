@@ -177,33 +177,43 @@
         </div>
 
         {{-- Tombol Navigasi Bawah (Selesai/Lanjut) --}}
-        <div class="card-footer d-flex justify-content-between">
-            {{-- Form untuk Tombol 'Selesai' (sekarang terpisah) --}}
+        <div class="card-footer mt-4">
             <form action="{{ route('student.reflection.store', [$kelas->id, $subModule->id]) }}" method="POST" id="reflectionForm">
                 @csrf
 
-                {{-- Tombol 'Selesai' (Hanya jika belum selesai) --}}
-                @if(!$isLocked)
-                    <button type="submit" name="action" value="complete"
-                            class="btn btn-success btn-lg px-4"
-                            id="completeButton">
-                        <i class="fa fa-check-circle me-2"></i> {{__('admin.siswa.show_reflection.complete')}}
-                    </button>
-                @else
-                    {{-- Tampilkan pesan jika sudah selesai --}}
-                    <span class="badge bg-success p-3 fs-16">
-                        <i class="fa fa-check-circle me-2"></i> {{__('admin.siswa.show_reflection.completed')}}
-                    </span>
-                @endif
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+                    {{-- Tombol Complete --}}
+                    @if(!$isLocked)
+                        <button type="submit" name="action" value="complete"
+                                class="btn btn-success btn-lg flex-fill text-nowrap">
+                            <i class="fa fa-check-circle me-2"></i>
+                            {{ __('admin.siswa.show_reflection.complete') }}
+                        </button>
+                    @else
+                        <span class="badge bg-success p-3 fs-16 flex-fill text-center">
+                            <i class="fa fa-check-circle me-2"></i>
+                            {{ __('admin.siswa.show_reflection.completed') }}
+                        </span>
+                    @endif
 
-                {{-- Tombol 'Lanjut' (Selalu Tampil) --}}
-                <button type="submit" name="action" value="save_and_next"
-                        class="btn btn-primary btn-lg px-4"
-                        id="nextButton">
-                    {{__('admin.siswa.show_reflection.next_submodule')}} <i class="fa fa-arrow-right ms-2"></i>
-                </button>
+                    {{-- Tombol Next --}}
+                    <button type="submit" name="action" value="save_and_next"
+                            class="btn btn-primary btn-lg flex-fill text-nowrap">
+                        {{ __('admin.siswa.show_reflection.next_submodule') }}
+                        <i class="fa fa-arrow-right ms-2"></i>
+                    </button>
+                </div>
+
+                {{-- Tombol Back to Curriculum --}}
+                <div class="text-center mt-5">
+                    <a href="{{ route('student.class.show', $kelas->id) }}" class="btn btn-secondary btn-lg px-4 w-100 w-md-auto">
+                        <i class="fa fa-arrow-left me-2"></i>
+                        {{ __('admin.siswa.back_to_curriculum') }}
+                    </a>
+                </div>
             </form>
         </div>
+
         <!-- <div class="card shadow-sm">
             <div class="card-footer text-center">
                 <a href="{{ route('student.class.show', $kelas->id) }}" class="btn btn-outline-secondary">

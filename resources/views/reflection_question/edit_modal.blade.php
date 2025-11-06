@@ -5,10 +5,10 @@
                 <h5 class="modal-title">{{ __('admin.reflection_modal.edit_title') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <form action="" method="POST" id="editQuestionForm">
-                @csrf
-                @method('PUT')
-                <div class="modal-body">
+            <div class="modal-body">
+                <form action="" method="POST" id="editQuestionForm">
+                    @csrf
+                    @method('PUT')
 
                     {{-- [BARU] Tipe Pertanyaan --}}
                     <div class="mb-3">
@@ -64,12 +64,12 @@
                         <label class="form-label">{{ __('admin.reflection_modal.order_label') }}</label>
                         <input type="number" id="edit_question_order" name="order" class="form-control" value="1">
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('admin.submodul_modal.close') }}</button>
-                    <button type="submit" class="btn btn-primary">{{ __('admin.submodul_modal.save_changes') }}</button>
-                </div>
-            </form>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('admin.submodul_modal.close') }}</button>
+                <button type="submit" form="editQuestionForm" class="btn btn-primary">{{ __('admin.submodul_modal.save_changes') }}</button>
+            </div>
         </div>
     </div>
 </div>

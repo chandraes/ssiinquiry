@@ -79,22 +79,21 @@
 
                 <p class="lead">{{__('admin.siswa.show_learning.finish_instruction')}}.</p>
 
-                <div class="card-footer d-flex justify-content-between text-center mt-5">
-                    <div class="d-flex justify-content-start">
-                        <a href="{{ route('student.class.show', $kelas->id) }}" class="btn btn-secondary btn-lg">
-                            <i class="fa fa-arrow-left me-2"></i> {{__('admin.siswa.back_to_curriculum')}}
-                        </a>
-                    </div>
-                    <div class="d-flex justify-content-start">
-                        {{-- Form untuk "Tandai Selesai" --}}
-                        <form action="{{ route('student.submodule.complete', [$kelas->id, $subModule->id]) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="btn btn-primary btn-lg">
-                                {{__('admin.siswa.show_learning.button_finish')}} <i class="fa fa-arrow-right ms-2"></i>
-                            </button>
-                        </form>
-                    </div>
+                <div class="card-footer d-flex flex-wrap justify-content-between align-items-center gap-3 mt-5">
+                    {{-- Tombol Kembali --}}
+                    <a href="{{ route('student.class.show', $kelas->id) }}" class="btn btn-secondary btn-lg flex-fill text-nowrap">
+                        <i class="fa fa-arrow-left me-2"></i> {{__('admin.siswa.back_to_curriculum')}}
+                    </a>
+
+                    {{-- Tombol Tandai Selesai --}}
+                    <form action="{{ route('student.submodule.complete', [$kelas->id, $subModule->id]) }}" method="POST" class="flex-fill text-end">
+                        @csrf
+                        <button type="submit" class="btn btn-primary btn-lg w-100 text-nowrap">
+                            {{__('admin.siswa.show_learning.button_finish')}} <i class="fa fa-arrow-right ms-2"></i>
+                        </button>
+                    </form>
                 </div>
+
             @endif
         </div>
     </div>
