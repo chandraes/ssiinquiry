@@ -27,7 +27,7 @@
             $logoUrl = $logoPath ? asset('storage/' . $logoPath) : asset('assets/images/brand/logo.png');
             @endphp
             <a href="{{route('landing-page')}}"
-                style="display: block; position: relative; width: 120px; padding: 20px 0px;">
+                style="display: block; position: relative; width: 120px; padding: 0px 0px;">
                 <img src="{{$logoUrl}}" alt="SSI Inquiry Logo" />
             </a>
 
