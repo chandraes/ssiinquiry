@@ -154,21 +154,33 @@
         // Ambil data JSON dari controller
         $.get(dataUrl, function(data) {
 
-            // Isi input Judul
+            // Isi input judul
             modal.find('[name="title[id]"]').val(data.title.id);
             modal.find('[name="title[en]"]').val(data.title.en);
 
-            // Cek Tipe Konten
-            if (data.type == 'rich_text') {
+            // Reset semua editor sebelum digunakan
+            if (tinymce.get('edit_content_rich_text_id')) {
+                tinymce.get('edit_content_rich_text_id').setContent('');
+            }
+            if (tinymce.get('edit_content_rich_text_en')) {
+                tinymce.get('edit_content_rich_text_en').setContent('');
+            }
+
+            // Cek tipe konten
+            if (data.type === 'rich_text') {
                 // Tampilkan field Rich Text, sembunyikan URL
                 $('#edit-richtext-field').show();
                 $('#edit-url-field').hide();
 
-                // Isi textarea
-                modal.find('#edit_content_rich_text_id').val(data.content.id);
-                modal.find('#edit_content_rich_text_en').val(data.content.en);
+                // Isi textarea (TinyMCE pakai API)
+                if (tinymce.get('edit_content_rich_text_id')) {
+                    tinymce.get('edit_content_rich_text_id').setContent(data.content.id ?? '');
+                }
+                if (tinymce.get('edit_content_rich_text_en')) {
+                    tinymce.get('edit_content_rich_text_en').setContent(data.content.en ?? '');
+                }
 
-                // Hapus value dari input URL (untuk keamanan)
+                // Kosongkan field URL
                 modal.find('#edit_content_url').val('');
 
             } else {
@@ -177,11 +189,15 @@
                 $('#edit-url-field').show();
 
                 // Isi input URL
-                modal.find('#edit_content_url').val(data.content_url);
+                modal.find('#edit_content_url').val(data.content_url ?? '');
 
-                // Hapus value dari textarea (untuk keamanan)
-                modal.find('#edit_content_rich_text_id').val('');
-                modal.find('#edit_content_rich_text_en').val('');
+                // Kosongkan isi editor Rich Text
+                if (tinymce.get('edit_content_rich_text_id')) {
+                    tinymce.get('edit_content_rich_text_id').setContent('');
+                }
+                if (tinymce.get('edit_content_rich_text_en')) {
+                    tinymce.get('edit_content_rich_text_en').setContent('');
+                }
             }
 
             // Tampilkan modal
@@ -191,6 +207,7 @@
             Swal.fire('Error', 'Gagal mengambil data materi.', 'error');
         });
     }
+
 
     /**
      * 2. FUNGSI KONFIRMASI DELETE

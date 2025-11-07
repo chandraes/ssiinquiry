@@ -123,55 +123,54 @@ class LearningMaterialController extends Controller
      */
     public function update(Request $request, LearningMaterial $material)
     {
-        // 1. Validasi
-        $request->validate([
+        // Ambil tipe dari data lama
+        $type = $material->type;
+
+        // Validasi dasar
+        $rules = [
             'title.id' => 'required|string|max:255',
             'title.en' => 'required|string|max:255',
-
-            // Validasi kondisional (kita asumsikan TIPE tidak bisa diubah)
-            'content_url' => 'nullable|required_unless:type,rich_text|url',
-            'content_rich_text.id' => 'nullable|required_if:type,rich_text|string',
-            'content_rich_text.en' => 'nullable|required_if:type,rich_text|string',
-
             'order' => 'nullable|integer',
-        ]);
+        ];
+
+        // Validasi kondisional
+        if ($type === 'rich_text') {
+            $rules['content_rich_text.id'] = 'required|string';
+            $rules['content_rich_text.en'] = 'required|string';
+        } else {
+            $rules['content_url'] = 'required|url';
+        }
+
+        $validated = $request->validate($rules);
 
         try {
-
-            $contentPayload = null;
-            $type = $material->type; // Ambil tipe dari material yang ada
-
-            // 2. Siapkan payload 'content'
-            if ($type == 'rich_text') {
-                // [PERBAIKAN KEAMANAN]
-                $clean_id = clean($request->content_rich_text['id']);
-                $clean_en = clean($request->content_rich_text['en']);
-
+            // Siapkan payload content
+            if ($type === 'rich_text') {
                 $contentPayload = [
-                    'id' => $clean_id,
-                    'en' => $clean_en
+                    'id' => clean($request->input('content_rich_text.id')),
+                    'en' => clean($request->input('content_rich_text.en')),
                 ];
             } else {
-                $url = $request->content_url;
+                $url = $request->input('content_url');
                 $contentPayload = [
                     'id' => ['url' => $url],
-                    'en' => ['url' => $url]
+                    'en' => ['url' => $url],
                 ];
             }
 
-            // 3. Update Database
+            // Update database
             $material->update([
-                'title' => $request->title,
+                'title' => $request->input('title'),
                 'content' => $contentPayload,
-                'order' => $request->order ?? 0,
+                'order' => $request->input('order', 0),
             ]);
 
             return redirect()->back()->with('success', 'Materi berhasil diperbarui!');
-
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Gagal memperbarui materi: ' . $e->getMessage());
         }
     }
+
 
     /**
      * [BARU] Menghapus learning material.
