@@ -350,7 +350,7 @@
         const completeButton = completeForm.querySelector('button[type="submit"]');
 
         // Ubah label tombol
-        completeButton.innerHTML = `<i class="fa fa-arrow-right me-2"></i> Selanjutnya`;
+        completeButton.innerHTML = `<i class="fa fa-arrow-right me-2"></i> {{__('admin.siswa.show_reflection.next_submodule')}}`;
 
         completeForm.addEventListener('submit', function(e) {
             e.preventDefault(); // cegah submit langsung
