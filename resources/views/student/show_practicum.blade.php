@@ -142,10 +142,10 @@
             {{-- Cek apakah sub-modul ini SUDAH selesai --}}
             @if($currentProgress && $currentProgress->completed_at)
 
-                {{-- <div class="alert alert-success mb-0">
+                <div class="alert alert-success mb-0">
                     <i class="fa fa-check-circle me-2"></i>
                     {{__('admin.siswa.show_learning.finish')}} {{ $currentProgress->completed_at->format('d M Y, H:i') }}.
-                </div> --}}
+                </div>
 
                 <div class="card-footer d-flex flex-wrap justify-content-between align-items-center gap-3 mt-5">
                     {{-- Tombol Kembali --}}
