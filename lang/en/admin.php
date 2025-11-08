@@ -494,7 +494,7 @@ return [
             'uploaded' => 'Uploaded',
             'label' => 'Include in comparison chart',
             'no_slot' => 'No upload slots configured by the teacher',
-            'finish_submodule' => 'This submodule will be marked complete automatically...',
+            'finish_submodul' => 'This submodule will be marked complete automatically...',
             'alert_checklist' => 'Please check at least one file to compare',
             'alert_file' => 'Comparison failed: Ensure all checked files have The same "Phyphox Data Type" (Example: only compare "Audio Amplitude" with "Audio Amplitude")',
             'swal'=>[

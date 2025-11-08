@@ -60,7 +60,7 @@ return [
             'my_class' => 'Kelas Saya',
             'class_name' => 'Nama Kelas',
             'enter_class' => 'Masuk Kelas',
-            'join_class' => 'Masuk Kelas',
+            'join_class' => 'Gabung Kelas',
             'unregistered_student' => 'Anda belum terdaftar di kelas manapun',
             'explore_modules' => 'Jelajahi Modul Lain',
             'no_modules_available' => 'Tidak ada modul lain yang tersedia saat ini',
