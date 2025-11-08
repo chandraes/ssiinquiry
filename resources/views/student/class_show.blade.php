@@ -86,7 +86,7 @@
                             <small class="ms-2">{{ $statusIcon }} {{ $statusTitle }}</small>
                         </div>
                         <p class="mb-1 {{ $isLocked ? '' : 'text-muted' }}">
-                            {{ Str::limit($subModule->description, 150) }}
+                            {!! Str::limit($subModule->description, 150) !!}
                         </p>
                     </a>
 

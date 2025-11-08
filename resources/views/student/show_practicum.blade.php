@@ -34,7 +34,7 @@
         <div class="card-body">
 
             {{-- [BAGIAN BARU] Kontrol Grafik Perbandingan --}}
-            <div class="border p-3 rounded mb-4">
+            <div class="border p-3 mb-4">
                 <h5 class="mb-3">{{__('admin.siswa.show_practicum.chart')}}</h5>
                 <p class="text-muted">{{__('admin.siswa.show_practicum.instruction_checklist')}}.</p>
                 <button id="compare-charts-btn" class="btn btn-info">
@@ -131,21 +131,21 @@
             @if($currentProgress && $currentProgress->completed_at)
                 {{-- ... (Info "Sudah Selesai") ... --}}
             @else
-                <p class="text-muted mb-0">{{__('admin.siswa.show_practicum.finish_submodule')}}</p>
+                <p class="text-muted mb-0">{{__('admin.siswa.show_practicum.finish_submodul')}}</p>
             @endif
-        </div>
+        {{-- </div>
     </div>
 
     <div class="card shadow-sm">
-        <div class="card-body pb-0 text-center">
+        <div class="card-body pb-0 text-center"> --}}
 
             {{-- Cek apakah sub-modul ini SUDAH selesai --}}
             @if($currentProgress && $currentProgress->completed_at)
 
-                <div class="alert alert-success mb-0">
+                {{-- <div class="alert alert-success mb-0">
                     <i class="fa fa-check-circle me-2"></i>
                     {{__('admin.siswa.show_learning.finish')}} {{ $currentProgress->completed_at->format('d M Y, H:i') }}.
-                </div>
+                </div> --}}
 
                 <div class="card-footer d-flex flex-wrap justify-content-between align-items-center gap-3 mt-5">
                     {{-- Tombol Kembali --}}
@@ -161,7 +161,7 @@
                     </form>
                 </div>
             @else
-                <p class="lead">{{__('admin.siswa.show_learning.finish_instruction')}}.</p>
+                {{-- <p class="lead">{{__('admin.siswa.show_learning.finish_instruction')}}.</p> --}}
 
                 <div class="card-footer text-center mt-5">
                     <a href="{{ route('student.class.show', $kelas->id) }}" class="btn btn-secondary btn-lg">
@@ -171,13 +171,6 @@
             @endif
         </div>
     </div>
-    <!-- <div class="card shadow-sm">
-        <div class="card-footer text-center">
-            <a href="{{ route('student.class.show', $kelas->id) }}" class="btn btn-outline-secondary">
-                <i class="fa fa-arrow-left me-2"></i> {{__('admin.siswa.back_to_curriculum')}}
-            </a>
-        </div>
-    </div> -->
 </div>
 
 @endsection
