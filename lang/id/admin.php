@@ -495,6 +495,8 @@ return [
         ],
         'show_practicum' => [
             'chart' => 'Grafik Perbadingan',
+            'loading_chart' => "Memuat grafik...",
+            "failed_chart" => "Gagal memuat data grafik.",
             'instruction_ceklist' => 'Centang file yang sudah diunggah di bawah ini, lalu klik tombol untuk membandingkannya dalam satu grafik',
             'compare_button' => 'Bandingkan Grafik yang Dipilih',
             'instruction_upload' => 'Unggahlah file data CSV Anda pada slot yang sesuai di bawah ini',

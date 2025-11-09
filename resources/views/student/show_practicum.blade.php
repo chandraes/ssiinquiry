@@ -114,7 +114,26 @@
                                 </label>
                             </div>
 
-                            {{-- [DIHAPUS] Tombol "view-chart-btn" dan canvas individual dihapus --}}
+                            <div class="individual-chart-container mt-3 border p-2" style="max-height: 350px; position: relative;">
+                                {{-- Feedback saat memuat --}}
+                               <div class="chart-loading-feedback text-center p-5"> {{-- <== SUDAH DIPERBAIKI --}}
+                                    <i class="fa fa-spinner fa-spin me-2"></i> {{__('admin.siswa.show_practicum.loading_chart')}}
+                                </div>
+
+                                {{-- Canvas ini akan diisi oleh JavaScript saat halaman dimuat --}}
+                                <canvas class="individual-chart-canvas"
+                                        id="individual-chart-{{ $submission->id }}"
+                                        {{-- Data ini akan dibaca oleh JS untuk mem-fetch CSV --}}
+                                        data-url="{{ asset('storage/' . $submission->file_path) }}"
+                                        data-label="{{ $slot->label }} ({{ $submission->original_filename }})"
+                                        data-type="{{ $slot->phyphox_experiment_type }}"
+                                        style="display: none;"></canvas>
+
+                                {{-- Feedback jika gagal --}}
+                                <div class="chart-error-feedback text-center p-5" style="display: none;">
+                                    <i class="fa fa-exclamation-triangle text-danger me-2"></i> {{__('admin.siswa.show_practicum.failed_chart')}}
+                                </div>
+                            </div>
 
                         @endif
                     </div>
@@ -167,7 +186,7 @@
                     <a href="{{ route('student.class.show', $kelas->id) }}" class="btn btn-secondary btn-lg">
                         <i class="fa fa-arrow-left me-2"></i> {{__('admin.siswa.back_to_curriculum')}}
                     </a>
-                </div>                
+                </div>
             @endif
         </div>
     </div>
@@ -345,7 +364,67 @@
         });
     }
 
+    function drawIndividualChart(ctx, parsedFile, chartType) {
+
+         // 1. Ambil label sumbu dari header file
+        var xLabel = (parsedFile.csvData.length > 0) ? parsedFile.csvData[0][0] : 'Kolom 1';
+        var yLabel = (parsedFile.csvData.length > 0) ? parsedFile.csvData[0][1] : 'Kolom 2';
+
+        // 2. Siapkan data
+        var dataRows = parsedFile.csvData.slice(1); // Lewati header
+
+        // Gunakan format {x, y}
+        var xyData = dataRows.map(row => ({
+            x: parseFloat(row[0]),
+            y: parseFloat(row[1])
+        }));
+
+        // 3. Tentukan tipe chart (selalu 'line' untuk data {x,y})
+        var TipeChartSebenarnya = 'line';
+
+        // 4. Buat dataset
+        var dataset = {
+            label: parsedFile.label,
+            data: xyData,
+            borderColor: 'rgb(75, 192, 192)',
+            backgroundColor: 'rgb(75, 192, 192, 0.2)', // Warna transparan
+            tension: 0.1,
+            pointRadius: 0 // Tidak perlu titik untuk data yg banyak
+        };
+
+        // 5. Gambar Chart
+        new Chart(ctx, {
+            type: TipeChartSebenarnya,
+            data: {
+                datasets: [dataset] // Masukkan sebagai array 1 elemen
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: false,
+                scales: {
+                    x: {
+                        type: 'linear', // Gunakan sumbu linear untuk {x,y}
+                        title: { display: true, text: xLabel }
+                    },
+                    y: {
+                        title: { display: true, text: yLabel }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false // Sembunyikan legenda, karena hanya 1 data
+                    }
+                }
+            }
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
+
+        loadIndividualCharts();
+
+
         const completeForm = document.querySelector('form[action="{{ route('student.submodule.complete', [$kelas->id, $subModule->id]) }}"]');
         const completeButton = completeForm.querySelector('button[type="submit"]');
 
@@ -387,5 +466,43 @@
             });
         });
     });
+
+    function loadIndividualCharts() {
+        // 1. Temukan semua canvas individual
+        var $canvases = $('.individual-chart-canvas');
+
+        if ($canvases.length === 0) return; // Tidak ada yang perlu dimuat
+
+        // 2. Iterasi dan muat data untuk masing-masing
+        $canvases.each(function() {
+            var $canvas = $(this);
+            var $container = $canvas.closest('.individual-chart-container');
+            var $loading = $container.find('.chart-loading-feedback');
+            var $error = $container.find('.chart-error-feedback');
+
+            // Ambil data dari atribut data-*
+            var url = $canvas.data('url');
+            var label = $canvas.data('label');
+            var type = $canvas.data('type');
+            var ctx = $canvas[0].getContext('2d');
+
+            // 3. Ambil & parse data (gunakan fungsi helper yang sudah ada)
+            fetchAndParseCsv(url, label, ";")
+                .then(parsedData => {
+                    // 4. Gambar grafik individual
+                    drawIndividualChart(ctx, parsedData, type);
+
+                    // 5. Tampilkan canvas, sembunyikan loading
+                    $loading.hide();
+                    $canvas.show();
+                })
+                .catch(error => {
+                    console.error("Gagal memuat chart individual:", error);
+                    // Tampilkan pesan error
+                    $loading.hide();
+                    $error.show();
+                });
+        });
+    }
 </script>
 @endpush

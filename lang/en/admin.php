@@ -487,6 +487,8 @@ return [
         ],
         'show_practicum' => [
             'chart' => 'Comparison Chart',
+            'loading_chart' => "Loading Chart...",
+            "failed_chart" => "Failed to load chart.",
             'instruction_checklist' => 'Check the uploaded files below and click the button to compare them in a single chart',
             'compare_button' => 'Compare Selected Charts',
             'instruction_upload' => 'Upload your CSV data file to the appropriate slot below',
