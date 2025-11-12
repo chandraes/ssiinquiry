@@ -390,12 +390,12 @@
 
             {{-- [BAGIAN 1: DESKRIPSI RINGKAS (HANYA MOBILE)] --}}
             <p class="card-text mt-3 d-block d-md-none small short-description-mobile">
-                {{ Str::limit($modul->deskripsi, 80) }}
+                {!! Str::limit($modul->deskripsi, 80) !!}
             </p>
 
             {{-- [BAGIAN 2: DESKRIPSI LENGKAP & TOMBOL TOGGLE (MOBILE & DESKTOP)] --}}
             <div class="full-description-toggle" id="fullDescription">
-                <p class="card-text small m-0">{{ $modul->deskripsi }}</p>
+                <p class="card-text small m-0">{!! $modul->deskripsi !!}</p>
             </div>
 
             {{-- Tombol Toggle (Hanya di Mobile) --}}
