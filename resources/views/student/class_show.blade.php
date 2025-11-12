@@ -35,14 +35,16 @@
 
     /* CARD HERO SECTION (Header Kelas) */
     .class-hero-card {
-       background: linear-gradient(135deg, var(--primary-color) 0%, #7b68ee 100%);
+        background: linear-gradient(135deg, var(--primary-color) 0%, #7b68ee 100%);
         color: white;
         border-radius: var(--border-radius-xl);
-        padding: 20px; /* Padding lebih kecil untuk mobile */
+        padding: 20px;
+        /* Padding lebih kecil untuk mobile */
         box-shadow: var(--shadow-strong);
         position: relative;
         overflow: hidden;
-        min-height: 150px; /* Tinggi minimum untuk mobile */
+        min-height: 150px;
+        /* Tinggi minimum untuk mobile */
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -50,26 +52,32 @@
     }
 
     .class-hero-card h2 {
-        font-size: 1.8rem; /* Ukuran font lebih kecil lagi untuk mobile agar tidak memotong */
+        font-size: 1.8rem;
+        /* Ukuran font lebih kecil lagi untuk mobile agar tidak memotong */
         font-weight: 800;
         margin-bottom: 0.5rem;
         z-index: 1;
     }
 
     .class-hero-card p {
-        font-size: 0.9rem; /* Ukuran font lebih kecil lagi */
+        font-size: 0.9rem;
+        /* Ukuran font lebih kecil lagi */
         opacity: 0.9;
         z-index: 1;
     }
 
     /* Ilustrasi di Header Kelas */
-  .hero-illustration {
+    .hero-illustration {
         position: absolute;
-        bottom: -20px; /* Tarik sedikit ke bawah */
-        right: -10px; /* Tarik sedikit ke kanan */
-        width: 120px; /* Ukuran ilustrasi sangat kecil untuk mobile */
+        bottom: -20px;
+        /* Tarik sedikit ke bawah */
+        right: -10px;
+        /* Tarik sedikit ke kanan */
+        width: 120px;
+        /* Ukuran ilustrasi sangat kecil untuk mobile */
         height: auto;
-        opacity: 0.6; /* Kurangi opasitas agar teks lebih menonjol */
+        opacity: 0.6;
+        /* Kurangi opasitas agar teks lebih menonjol */
         pointer-events: none;
         z-index: 0;
     }
@@ -237,15 +245,47 @@
         font-size: 1rem;
     }
 
+    .full-description-toggle {
+        display: none;
+        /* Sembunyikan konten lengkap secara default */
+        transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+    }
+
+    .full-description-toggle.show-full {
+        display: block;
+        max-height: 500px;
+        /* Nilai besar agar konten terlihat */
+        opacity: 1;
+        margin-top: 1rem;
+        padding-top: 0.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .toggle-button-hero {
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: color 0.3s;
+        margin-top: 0.5rem;
+        display: inline-block;
+        /* Penting untuk penataan */
+    }
+
     /* Media Queries untuk Layar Desktop/Tablet (ukuran > 768px) */
     @media (min-width: 768px) {
-       .class-hero-card {
+        .class-hero-card {
             padding: 40px;
             min-height: 250px;
         }
+
         .class-hero-card h2 {
             font-size: 3rem;
         }
+
         .class-hero-card p {
             font-size: 1.2rem;
         }
@@ -319,6 +359,20 @@
             padding: 0.8rem 1.8rem;
             font-size: 1.1rem;
         }
+
+        .short-description-mobile,
+        .toggle-button-hero {
+            display: none !important;
+        }
+
+        .full-description-toggle {
+            display: block !important;
+            opacity: 1 !important;
+            max-height: none !important;
+            padding: 0;
+            border-top: none;
+            margin-top: 0.5rem;
+        }
     }
 </style>
 @endpush
@@ -328,22 +382,27 @@
 
     {{-- [REVISI BAGIAN 1: HEADER/HERO SECTION DENGAN ILUSTRASI] --}}
     <div class="class-hero-card mb-4">
-        {{-- Ilustrasi untuk background header (Mobile-First) --}}
-        {{-- Kita gunakan satu tag img saja dan kontrol dengan CSS untuk ukuran responsif --}}
         {{-- <img src="{{asset('assets/images/hero_class.png')}}" alt="Ilustrasi Kelas" class="hero-illustration"> --}}
 
-        {{-- Konten Teks --}}
         <div class="hero-text-content">
             <h2>{{ $modul->judul }}</h2>
             <p class="h5 mt-1">{{__('admin.siswa.class_show.welcome')}}: <strong>{{ $kelas->nama_kelas }}</strong></p>
 
-            {{-- Deskripsi panjang (Desktop) --}}
-            <p class="card-text mt-3 d-none d-md-block">{{ $modul->deskripsi }}</p>
-
-            {{-- Deskripsi ringkas (Mobile) --}}
-            <p class="card-text mt-3 d-block d-md-none small">
-                {{ Str::limit($modul->deskripsi, 60) }} {{-- Dibatasi lebih pendek --}}
+            {{-- [BAGIAN 1: DESKRIPSI RINGKAS (HANYA MOBILE)] --}}
+            <p class="card-text mt-3 d-block d-md-none small short-description-mobile">
+                {{ Str::limit($modul->deskripsi, 80) }}
             </p>
+
+            {{-- [BAGIAN 2: DESKRIPSI LENGKAP & TOMBOL TOGGLE (MOBILE & DESKTOP)] --}}
+            <div class="full-description-toggle" id="fullDescription">
+                <p class="card-text small m-0">{{ $modul->deskripsi }}</p>
+            </div>
+
+            {{-- Tombol Toggle (Hanya di Mobile) --}}
+            <a href="#" id="toggleDescriptionBtn" class="toggle-button-hero d-block d-md-none"
+                onclick="toggleFullDescription(event)">
+                <i class="fa fa-chevron-down me-1"></i> Baca Deskripsi Lengkap
+            </a>
         </div>
     </div>
 
@@ -455,8 +514,8 @@
                 @php $previousCompleted = $isCompleted; @endphp
                 @empty
                 <div class="alert alert-light text-center p-4">
-                    {{-- <img src="https://via.placeholder.com/100x100/e9ecef/6c757d?text=No+Modules" alt="Tidak ada modul"
-                        class="img-fluid mb-3" style="max-width: 100px;"> --}}
+                    {{-- <img src="https://via.placeholder.com/100x100/e9ecef/6c757d?text=No+Modules"
+                        alt="Tidak ada modul" class="img-fluid mb-3" style="max-width: 100px;"> --}}
                     <h5 class="text-secondary">{{ __('admin.siswa.class_show.no_curriculum') }}.</h5>
                     <p class="small text-muted">Akan segera ditambahkan oleh guru Anda.</p>
                 </div>
@@ -490,3 +549,26 @@
     </div>
 </div>
 @endsection
+@push('js')
+<script>
+function toggleFullDescription(event) {
+    event.preventDefault();
+
+    const fullDesc = document.getElementById('fullDescription');
+    const shortDesc = document.querySelector('.short-description-mobile');
+    const toggleBtn = document.getElementById('toggleDescriptionBtn');
+
+    if (fullDesc.classList.contains('show-full')) {
+        // Mode Sembunyikan
+        fullDesc.classList.remove('show-full');
+        shortDesc.style.display = 'block'; // Tampilkan lagi ringkasan
+        toggleBtn.innerHTML = '<i class="fa fa-chevron-down me-1"></i> Baca Deskripsi Lengkap';
+    } else {
+        // Mode Tampilkan
+        fullDesc.classList.add('show-full');
+        shortDesc.style.display = 'none'; // Sembunyikan ringkasan
+        toggleBtn.innerHTML = '<i class="fa fa-chevron-up me-1"></i> Sembunyikan Deskripsi';
+    }
+}
+</script>
+@endpush
