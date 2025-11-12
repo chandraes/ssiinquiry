@@ -5,7 +5,7 @@
     <div class="card shadow-sm mb-4">
         <div class="card-body">
             <h2 class="card-title"><i class="fa fa-book-open text-primary me-2"></i>{{ $subModule->title }}</h2>
-            
+
             <p class="text-muted">{!! $subModule->description !!}</p>
         </div>
     </div>
@@ -37,7 +37,7 @@
                     @endphp
                     @if($embedUrl)
                         <div class="ratio ratio-16x9">
-                            <iframe src="{{ $embedUrl }}" title="{{ $material->title }}" allowfullscreen></iframe>
+                            <iframe src="{{ $embedUrl }}" title="{{ $material->title }}" allowfullscreen onload="hideGlobalLoader()"></iframe>
                         </div>
                     @else
                         <p>{{__('admin.siswa.show_learning.not_valid')}}: <a href="{{ $url }}" target="_blank">{{ $url }}</a></p>
@@ -101,6 +101,17 @@
 @endsection
 @push('js')
 <script>
+
+    function hideGlobalLoader() {
+        // Tambahkan sedikit penundaan (misalnya 500ms) untuk mengakomodir Safari.
+        // Ini memastikan browser memiliki waktu untuk merender iframe.
+        setTimeout(function() {
+            const globalLoader = document.getElementById('global-loader');
+            if (globalLoader) {
+                globalLoader.style.display = 'none';
+            }
+        }, 500); // Penundaan 500 milidetik
+    }
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.querySelector('form[action="{{ route('student.submodule.complete', [$kelas->id, $subModule->id]) }}"]');
 
