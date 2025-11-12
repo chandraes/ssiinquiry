@@ -289,7 +289,10 @@ class KelasController extends Controller
     {
         // 1. Muat relasi dasar kelas
         // Kita juga butuh 'modul' untuk mengambil daftar sub-modul
-        $kelas->load('students', 'modul');
+        $kelas = Kelas::with([
+                    'students',
+                    'modul',
+                ])->withCount('peserta')->findOrFail($kelas->id);
 
         // 2. Ambil semua sub-modul yang BISA DINILAI untuk modul ini
         // Kita tidak mengambil tipe 'learning' (Materi)
@@ -308,6 +311,7 @@ class KelasController extends Controller
                 return $item->user_id . '_' . $item->sub_module_id;
             });
 
+        // dd($kelas);
         // 4. Kirim data ke view
         return view('kelas.show', [
             'kelas' => $kelas,
