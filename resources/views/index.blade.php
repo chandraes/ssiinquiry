@@ -15,7 +15,14 @@
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-  <style> body { font-family: 'Poppins', sans-serif; } </style>
+  <style> 
+    body { font-family: 'Poppins', sans-serif; }
+
+    /* Default: header transparan → pakai logo putih */
+    .logo-color { display: none; }
+    .solid .logo-white { display: none; }
+    .solid .logo-color { display: block; }
+  </style>
 </head>
 <body class="antialiased bg-white text-gray-800">
 
@@ -25,12 +32,21 @@
     
     <!-- Logo -->
     <a href="{{ route('landing-page') }}" class="flex items-center">
-      <img 
-        src="{{ $logoUrl }}" 
-        alt="Logo SSI Inquiry" 
-        class="h-10 w-auto object-contain"
-      >
+      {{-- Logo putih (saat navbar transparan) --}}
+        <img 
+            src="{{ asset('assets/images/ssi_white.png') }}"
+            class="h-10 w-auto object-contain logo-white"
+            alt="Logo SSI White"
+        >
+
+        {{-- Logo berwarna (saat navbar putih) --}}
+        <img 
+            src="{{ $logoUrl }}"
+            class="h-10 w-auto object-contain logo-color"
+            alt="Logo SSI Color"
+        >
     </a>
+
 
     <!-- Desktop nav -->
     <nav id="desktopNav" class="hidden md:flex items-center gap-6 text-white">
@@ -239,35 +255,45 @@
   <script>
 
     // <script>
-document.getElementById('menuBtn').addEventListener('click', function () {
-    const menu = document.getElementById('mobileNav');
-    menu.classList.toggle('hidden');
-});
+  document.getElementById('menuBtn').addEventListener('click', function () {
+      const menu = document.getElementById('mobileNav');
+      menu.classList.toggle('hidden');
+  });
 
-// Navbar becomes white on scroll
-const header = document.getElementById('mainHeader');
-const desktopNav = document.getElementById('desktopNav');
-const desktopBtn = document.getElementById('desktopBtn');
-function onScrollHeader() {
-    if (window.scrollY > 40) {
-        header.classList.add('bg-white','shadow-md');
-        desktopNav.classList.add('text-gray-800');
-        desktopNav.classList.remove('text-white');
-        desktopBtn.querySelectorAll('a').forEach(a => {
-            a.classList.remove('text-white', 'border-white');
-            a.classList.add('text-gray-900');
-        });
-    } else {
-        header.classList.remove('bg-white','shadow-md');
-        desktopNav.classList.remove('text-gray-800');
-        desktopNav.classList.add('text-white');
-        desktopBtn.querySelectorAll('a').forEach(a => {
-            a.classList.add('text-white');
-        });
-    }
-}
-onScrollHeader();
-window.addEventListener('scroll', onScrollHeader);
+  // Navbar becomes white on scroll
+  const header = document.getElementById('mainHeader');
+  const desktopNav = document.getElementById('desktopNav');
+  const desktopBtn = document.getElementById('desktopBtn');
+
+  function onScrollHeader() {
+      if (window.scrollY > 40) {
+          // Tambahkan class solid
+          header.classList.add('solid', 'bg-white', 'shadow-md');
+
+          desktopNav.classList.add('text-gray-800');
+          desktopNav.classList.remove('text-white');
+
+          desktopBtn.querySelectorAll('a').forEach(a => {
+              a.classList.remove('text-white', 'border-white');
+              a.classList.add('text-gray-900');
+          });
+
+      } else {
+          // Kembalikan transparan
+          header.classList.remove('solid', 'bg-white', 'shadow-md');
+
+          desktopNav.classList.remove('text-gray-800');
+          desktopNav.classList.add('text-white');
+
+          desktopBtn.querySelectorAll('a').forEach(a => {
+              a.classList.add('text-white');
+          });
+      }
+  }
+
+  onScrollHeader();
+  window.addEventListener('scroll', onScrollHeader);
+
 
   </script>
 </body>
