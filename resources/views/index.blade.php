@@ -1,275 +1,274 @@
-<!DOCTYPE html>
-{{-- Mengatur atribut 'lang' secara dinamis sesuai bahasa aktif --}}
+{{-- resources/views/landing.blade.php --}}
+<!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    @php
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  @php
     $faviconPath = get_setting('app_favicon');
     $faviconUrl = $faviconPath ? asset('storage/' . $faviconPath) : asset('favicon.ico');
-    @endphp
+    $logoPath = get_setting('app_logo');
 
-    <link rel="icon" href="{{ $faviconUrl }}">
+    $logoUrl = $logoPath ? asset('storage/' . $logoPath) : asset('assets/images/brand/logo.png');
+  @endphp
+    <title>SSI Inquiry — Eksperimen Sains</title>
 
-    <title>SSI Inquiry</title>
-
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style> body { font-family: 'Poppins', sans-serif; } </style>
 </head>
+<body class="antialiased bg-white text-gray-800">
 
-<body class="font-poppins text-gray-800 scroll-smooth">
-    <header class="fixed top-0 left-0 w-full bg-white shadow z-50">
-        <nav class="max-w-6xl mx-auto flex justify-between items-center py-4 px-6">
-            @php
-            $logoPath = get_setting('app_logo');
-            $logoUrl = $logoPath ? asset('storage/' . $logoPath) : asset('assets/images/brand/logo.png');
-            @endphp
-            <a href="{{route('landing-page')}}"
-                style="display: block; position: relative; width: 120px; padding: 0px 0px;">
-                <img src="{{$logoUrl}}" alt="SSI Inquiry Logo" />
-            </a>
+  <!-- NAVBAR (transparan di hero; berubah saat scroll) -->
+  <header id="mainHeader" class="fixed w-full z-50 transition-all">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    
+    <!-- Logo -->
+    <a href="{{ route('landing-page') }}" class="flex items-center">
+      <img 
+        src="{{ $logoUrl }}" 
+        alt="Logo SSI Inquiry" 
+        class="h-10 w-auto object-contain"
+      >
+    </a>
 
-            <ul class="hidden md:flex space-x-6">
-                <li><a href="#home" class="hover:text-blue-600">{{ __('landing.navbar_home') }}</a></li>
-                <li><a href="#about" class="hover:text-blue-600">{{ __('landing.navbar_about') }}</a></li>
-                <li><a href="#features" class="hover:text-blue-600">{{ __('landing.navbar_features') }}</a></li>
-                <li><a href="#how" class="hover:text-blue-600">{{ __('landing.navbar_how') }}</a></li>
-            </ul>
+    <!-- Desktop nav -->
+    <nav id="desktopNav" class="hidden md:flex items-center gap-6 text-white">
+      <a href="#home" class="hover:opacity-90">Home</a>
+      <a href="#how" class="hover:opacity-90">Cara Kerja</a>
+      <a href="#examples" class="hover:opacity-90">Contoh</a>
+      <a href="#contact" class="hover:opacity-90">Daftar</a>
+    </nav>
 
-            <div class="hidden md:flex items-center space-x-3">
-                <a href="/login"
-                    class="border border-blue-700 text-blue-700 px-4 py-2 rounded-lg hover:bg-blue-700 hover:text-white transition">{{
-                    __('landing.button_login') }}</a>
-                <a href="/register" class="bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition">{{
-                    __('landing.button_register') }}</a>
+    <!-- Desktop buttons -->
+    <div id="desktopBtn" class="hidden md:flex items-center gap-3">
+      <a href="{{ route('login') }}" class="text-white border border-white px-3 py-1 rounded hover:bg-white/10">Masuk</a>
+      <a href="{{ route('register') }}" class="bg-yellow-300 text-gray-900 px-4 py-2 rounded-lg font-semibold">Daftar</a>
+    </div>
 
-                {{-- 👇 [BARU] Language Switcher --}}
-                <div class="relative" x-data="{ open: false }" @click.away="open = false">
-                    {{-- [DIUBAH] Tombol utama kini menampilkan bendera dan teks --}}
-                    <button @click="open = !open"
-                        class="flex items-center justify-center w-auto px-3 h-9 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 overflow-hidden bg-white">
-                        @if(app()->getLocale() == 'id')
-                        <img src="https://flagcdn.com/id.svg" alt="Bendera Indonesia" class="w-7 h-5 object-cover">
-                        {{-- [BARU] Teks ID di sebelah bendera --}}
-                        <span class="ml-2 font-semibold text-sm text-gray-700">ID</span>
-                        @else
-                        <img src="https://flagcdn.com/gb.svg" alt="Bendera Inggris" class="w-7 h-5 object-cover">
-                        {{-- [BARU] Teks EN di sebelah bendera --}}
-                        <span class="ml-2 font-semibold text-sm text-gray-700">EN</span>
-                        @endif
-                    </button>
+    <!-- Mobile toggle -->
+    <button id="menuBtn" class="md:hidden text-white text-2xl">☰</button>
+  </div>
 
-                    {{-- Dropdown Pilihan Bahasa --}}
-                    <div x-show="open" x-transition
-                        class="absolute right-0 mt-2 py-1 w-40 bg-white rounded-md shadow-xl z-20"
-                        style="display: none;">
+  <!-- Mobile dropdown -->
+  <nav id="mobileNav" class="hidden flex flex-col bg-white text-gray-800 px-4 pb-4 shadow-md md:hidden">
+    <a href="#home" class="py-2">Home</a>
+    <a href="#how" class="py-2">Cara Kerja</a>
+    <a href="#examples" class="py-2">Contoh</a>
+    <a href="#contact" class="py-2">Daftar</a>
 
-                        {{-- [DIUBAH] Item dropdown kini lebih informatif --}}
-                        <a href="{{ route('language.switch', 'id') }}"
-                            class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-blue-100">
-                            <img src="https://flagcdn.com/id.svg" class="w-7 h-5 mr-3" alt="Bendera Indonesia">
-                            <span>Indonesia</span>
-                            {{-- [BARU] Teks ID di pojok kanan --}}
-                            <span class="ml-auto text-xs font-bold text-gray-400">ID</span>
-                        </a>
+    <a href="{{ route('login') }}" class="py-2 font-semibold">Masuk</a>
+    <a href="{{ route('register') }}" class="py-2 font-semibold text-blue-600">Daftar</a>
+  </nav>
+</header>
 
-                        <a href="{{ route('language.switch', 'en') }}"
-                            class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-blue-100">
-                            <img src="https://flagcdn.com/gb.svg" class="w-7 h-5 mr-3" alt="Bendera Inggris">
-                            <span>English</span>
-                            {{-- [BARU] Teks EN di pojok kanan --}}
-                            <span class="ml-auto text-xs font-bold text-gray-400">EN</span>
+
+    <!-- HERO -->
+    <section id="home" class="relative h-screen min-h-[400px] flex items-center overflow-hidden">
+        <!-- background -->
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-500"></div>
+        <div class="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
+
+        <div class="relative z-10 w-full max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center gap-10 py-20">
+            <!-- left: headline -->
+            <div class="flex-1 text-white">
+                <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">
+                    Eksperimen Sains.<br>
+                    Analisis. Diskusi.
+                </h1>
+                <p class="text-lg md:text-xl text-white/90 mb-6 max-w-xl">
+                    Belajar sains berbasis penyelidikan dengan data nyata — rekam, upload, analisis, dan diskusikan.
+                </p>
+
+                <div class="flex gap-4">
+                    <a href="#register" class="inline-flex items-center gap-3 bg-yellow-300 text-gray-900 px-6 py-3 rounded-xl font-bold shadow hover:scale-[1.02] transition">
+                        Mulai Eksperimen
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div 
+            class="absolute bottom-0 right-0 pointer-events-none select-none
+                w-[300px] sm:w-[400px] md:w-[600px] lg:w-[800px]">
+            <img 
+                src="{{ asset('assets/images/scientist.png') }}" 
+                alt="Ilustrasi Scientist"
+                class="w-full h-auto object-contain"
+            >
+        </div>
+
+    </section>
+
+
+  <!-- HOW IT WORKS -->
+  <section id="how" class="py-20 bg-white">
+    <div class="max-w-6xl mx-auto px-6 text-center">
+      <h2 class="text-3xl font-bold text-blue-700 mb-8">Bagaimana Cara Kerjanya?</h2>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+        {{-- Card 1 --}}
+        <div class="p-6 rounded-xl border text-center">
+          <div class="mx-auto w-50 h-50 mb-4 flex items-center justify-center rounded-lg bg-yellow-50">
+            {{-- icon phone --}}
+            <img src="{{ asset('assets/images/record.png') }}">
+          </div>
+          <h3 class="font-semibold mb-1">Rekam</h3>
+          <p class="text-sm text-gray-500">Gunakan sensor HP untuk merekam data eksperimen.</p>
+        </div>
+
+        {{-- Card 2 --}}
+        <div class="p-6 rounded-xl border text-center">
+          <div class="mx-auto w-50 h-50 mb-4 flex items-center justify-center rounded-lg bg-blue-50">
+            <img src="{{ asset('assets/images/upload.png') }}">
+          </div>
+          <h3 class="font-semibold mb-1">Upload & Lihat Data</h3>
+          <p class="text-sm text-gray-500">Upload file, tampilkan grafik otomatis.</p>
+        </div>
+
+        {{-- Card 3 --}}
+        <div class="p-6 rounded-xl border text-center">
+          <div class="mx-auto w-50 h-50 mb-4 flex items-center justify-center rounded-lg bg-green-50">
+            <img src="{{ asset('assets/images/compare.png') }}">
+          </div>
+          <h3 class="font-semibold mb-1">Bandingkan</h3>
+          <p class="text-sm text-gray-500">Bandingkan banyak hasil percobaan secara cepat.</p>
+        </div>
+
+        {{-- Card 4 --}}
+        <div class="p-6 rounded-xl border text-center">
+          <div class="mx-auto w-50 h-50 mb-4 flex items-center justify-center rounded-lg bg-purple-50">
+            <img src="{{ asset('assets/images/discussion.png') }}">
+          </div>
+          <h3 class="font-semibold mb-1">Diskusi</h3>
+          <p class="text-sm text-gray-500">Diskusikan hasil dengan guru dan teman.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+    <!-- EXAMPLES -->
+    <section id="examples" class="py-20 bg-gray-50">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="text-3xl font-bold text-blue-700 mb-8 text-center">
+                Contoh Eksperimen Menggunakan Phyphox
+            </h2>
+
+            <div class="grid md:grid-cols-2 gap-8">
+
+                <!-- 1. Amplitudo Suara -->
+                <div class="bg-white p-8 rounded-2xl shadow flex flex-col md:flex-row gap-6">
+                    <img src="{{ asset('assets/images/examples/amplitude.png') }}" 
+                        class="w-full md:w-40 h-auto object-contain">
+                    <div>
+                        <h3 class="text-2xl font-semibold mb-3">Mengukur Amplitudo Suara</h3>
+                        <p class="text-gray-600 mb-6">
+                            Gunakan mikrofon HP untuk mengukur kuat lemahnya suara di sekitar.
+                            Siswa dapat membandingkan amplitudo berbagai sumber suara.
+                        </p>
+                        <a href="{{route('login')}}" class="inline-block px-5 py-3 bg-yellow-300 rounded-lg font-semibold">
+                            Coba Eksperimen
                         </a>
                     </div>
                 </div>
-                {{-- 👆 [BARU] Akhir Language Switcher --}}
 
-            </div>
-
-            <div class="md:hidden">
-                <button id="menu-btn" class="text-blue-700 focus:outline-none text-3xl">☰</button>
-            </div>
-        </nav>
-
-        <div id="mobile-menu" class="hidden bg-white shadow-md md:hidden">
-            <ul class="flex flex-col items-center space-y-3 py-4">
-                <li><a href="#home" class="hover:text-blue-600">{{ __('landing.navbar_home') }}</a></li>
-                <li><a href="#about" class="hover:text-blue-600">{{ __('landing.navbar_about') }}</a></li>
-                <li><a href="#features" class="hover:text-blue-600">{{ __('landing.navbar_features') }}</a></li>
-                <li><a href="#how" class="hover:text-blue-600">{{ __('landing.navbar_how') }}</a></li>
-                <li><a href="{{route('login')}}"
-                        class="border border-blue-700 text-blue-700 px-4 py-1 rounded-lg hover:bg-blue-700 hover:text-white transition">{{
-                        __('landing.button_login') }}</a></li>
-                <li><a href="{{route('register')}}"
-                        class="bg-blue-700 text-white px-4 py-1 rounded-lg hover:bg-blue-800 transition">{{
-                        __('landing.button_register') }}</a></li>
-                <li>
-                    <div class="relative" x-data="{ open: false }" @click.away="open = false">
-                        {{-- [DIUBAH] Tombol utama kini menampilkan bendera dan teks --}}
-                        <button @click="open = !open"
-                            class="flex items-center justify-center w-auto px-3 h-9 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 overflow-hidden bg-white">
-                            @if(app()->getLocale() == 'id')
-                            <img src="https://flagcdn.com/id.svg" alt="Bendera Indonesia" class="w-7 h-5 object-cover">
-                            {{-- [BARU] Teks ID di sebelah bendera --}}
-                            <span class="ml-2 font-semibold text-sm text-gray-700">ID</span>
-                            @else
-                            <img src="https://flagcdn.com/gb.svg" alt="Bendera Inggris" class="w-7 h-5 object-cover">
-                            {{-- [BARU] Teks EN di sebelah bendera --}}
-                            <span class="ml-2 font-semibold text-sm text-gray-700">EN</span>
-                            @endif
-                        </button>
-
-                        {{-- Dropdown Pilihan Bahasa --}}
-                        <div x-show="open" x-transition
-                            class="absolute right-0 mt-2 py-1 w-40 bg-white rounded-md shadow-xl z-20"
-                            style="display: none;">
-
-                            {{-- [DIUBAH] Item dropdown kini lebih informatif --}}
-                            <a href="{{ route('language.switch', 'id') }}"
-                                class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-blue-100">
-                                <img src="https://flagcdn.com/id.svg" class="w-7 h-5 mr-3" alt="Bendera Indonesia">
-                                <span>Indonesia</span>
-                                {{-- [BARU] Teks ID di pojok kanan --}}
-                                <span class="ml-auto text-xs font-bold text-gray-400">ID</span>
-                            </a>
-
-                            <a href="{{ route('language.switch', 'en') }}"
-                                class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-blue-100">
-                                <img src="https://flagcdn.com/gb.svg" class="w-7 h-5 mr-3" alt="Bendera Inggris">
-                                <span>English</span>
-                                {{-- [BARU] Teks EN di pojok kanan --}}
-                                <span class="ml-auto text-xs font-bold text-gray-400">EN</span>
-                            </a>
-                        </div>
+                <!-- 2. Spektrum Suara -->
+                <div class="bg-white p-8 rounded-2xl shadow flex flex-col md:flex-row gap-6">
+                    <img src="{{ asset('assets/images/examples/spectrum.png') }}" 
+                        class="w-full md:w-40 h-auto object-contain">
+                    <div>
+                        <h3 class="text-2xl font-semibold mb-3">Analisis Spektrum Suara</h3>
+                        <p class="text-gray-600 mb-6">
+                            Dengan fitur Audio Spectrum, siswa bisa melihat komponen frekuensi suara secara real-time.
+                        </p>
+                        <a href="{{route('login')}}" class="inline-block px-5 py-3 bg-yellow-300 rounded-lg font-semibold">
+                            Coba Eksperimen
+                        </a>
                     </div>
-                </li>
-            </ul>
-        </div>
-    </header>
+                </div>
 
-    <section id="home"
-        class="relative h-screen flex flex-col justify-center items-center text-center px-6 pt-20 bg-cover bg-center bg-no-repeat"
-        style="background-image: url('https://images.unsplash.com/photo-1602052577122-f73b9710adba?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&fm=jpg&q=60&w=3000');">
-        <div class="absolute inset-0 bg-gradient-to-br from-blue-900/70 to-blue-600/60"></div>
+                <!-- 3. Pegas & Getaran -->
+                <div class="bg-white p-8 rounded-2xl shadow flex flex-col md:flex-row gap-6">
+                    <img src="{{ asset('assets/images/examples/spring.png') }}" 
+                        class="w-full md:w-40 h-auto object-contain">
+                    <div>
+                        <h3 class="text-2xl font-semibold mb-3">Getaran & Pegas (Accelerometer)</h3>
+                        <p class="text-gray-600 mb-6">
+                            Tempelkan HP pada pegas atau ayunan kecil. Rekam grafik getaran dan analisis frekuensi serta periode.
+                        </p>
+                        <!-- <a href="#" class="inline-block px-5 py-3 bg-yellow-300 rounded-lg font-semibold">
+                            Coba Eksperimen
+                        </a> -->
+                    </div>
+                </div>
 
-        <div class="relative z-10 max-w-3xl mx-auto text-white">
-            <h1 class="text-5xl md:text-6xl font-bold mb-6 drop-shadow-lg leading-tight">
-                {!! __('landing.hero_title') !!}
-            </h1>
-            <p class="text-lg md:text-xl mb-8 text-gray-200 drop-shadow-md">
-                {!! __('landing.hero_subtitle') !!}
-            </p>
-            <div class="flex flex-col sm:flex-row justify-center gap-4">
-                <a href="#about"
-                    class="bg-white text-blue-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">
-                    {{ __('landing.hero_button_learn') }}
-                </a>
-                <a href="#contact"
-                    class="border border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-700 transition">
-                    {{ __('landing.hero_button_start') }}
-                </a>
+                <!-- 4. Ayunan Fisika -->
+                <div class="bg-white p-8 rounded-2xl shadow flex flex-col md:flex-row gap-6">
+                    <img src="{{ asset('assets/images/examples/bandul.png') }}" 
+                        class="w-full md:w-40 h-auto object-contain">
+                    <div>
+                        <h3 class="text-2xl font-semibold mb-3">Mengukur Periode Ayunan</h3>
+                        <p class="text-gray-600 mb-6">
+                            Phyphox dapat mengukur periode ayunan menggunakan fitur pendulum atau giroskop.
+                        </p>
+                        <!-- <a href="#" class="inline-block px-5 py-3 bg-yellow-300 rounded-lg font-semibold">
+                            Lihat Cara Kerja
+                        </a> -->
+                    </div>
+                </div>
+
             </div>
         </div>
     </section>
 
 
-    <section id="about" class="py-20 max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center gap-10">
-        <img src="{{$logoUrl}}" alt="Phypox Illustration" class="w-1/2 max-w-md mx-auto">
-        <div>
-            <h2 class="text-3xl font-bold text-blue-700 mb-4">{!! __('landing.about_title') !!}</h2>
-            <p class="text-gray-700 mb-4 leading-relaxed">
-                {!! __('landing.about_p1') !!}
-            </p>
-            <p class="text-gray-700 leading-relaxed">
-                {!! __('landing.about_p2') !!}
-            </p>
-        </div>
-    </section>
 
-    <section id="features" class="py-20 bg-gray-50 text-center">
-        <h2 class="text-3xl font-bold text-blue-700 mb-10">{{ __('landing.features_title') }}</h2>
-        <div class="grid md:grid-cols-4 gap-8 max-w-6xl mx-auto px-6">
-            <div class="bg-white shadow rounded-xl p-6">
-                <div class="text-4xl mb-3">📱</div>
-                <h3 class="font-semibold text-lg mb-2">{{ __('landing.feature_1_title') }}</h3>
-                <p class="text-gray-600">{{ __('landing.feature_1_desc') }}</p>
-            </div>
-            <div class="bg-white shadow rounded-xl p-6">
-                <div class="text-4xl mb-3">📊</div>
-                <h3 class="font-semibold text-lg mb-2">{{ __('landing.feature_2_title') }}</h3>
-                <p class="text-gray-600">{{ __('landing.feature_2_desc') }}</p>
-            </div>
-            <div class="bg-white shadow rounded-xl p-6">
-                <div class="text-4xl mb-3">🎥</div>
-                <h3 class="font-semibold text-lg mb-2">{{ __('landing.feature_3_title') }}</h3>
-                <p class="text-gray-600">{{ __('landing.feature_3_desc') }}</p>
-            </div>
-            <div class="bg-white shadow rounded-xl p-6">
-                <div class="text-4xl mb-3">💬</div>
-                <h3 class="font-semibold text-lg mb-2">{{ __('landing.feature_4_title') }}</h3>
-                <p class="text-gray-600">{{ __('landing.feature_4_desc') }}</p>
-            </div>
-        </div>
-    </section>
+  <!-- CTA -->
+  <section id="register" class="py-20 bg-gradient-to-br from-blue-600 to-blue-500 text-white">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <h2 class="text-3xl font-bold mb-4">Siap Membawa Sains Jadi Lebih Seru?</h2>
+      <p class="mb-6 text-white/90">Daftar gratis dan mulai jelajahi eksperimen interaktif sekarang.</p>
+      <a href="{{ route('register') }}" class="px-8 py-3 bg-yellow-300 text-gray-900 rounded-xl font-bold">Daftar Gratis</a>
+    </div>
+  </section>
 
-    <section id="how" class="py-20 text-center">
-        <h2 class="text-3xl font-bold text-blue-700 mb-10">{{ __('landing.how_title') }}</h2>
+  <footer class="py-8 text-center text-sm text-gray-500">
+    © {{ date('Y') }} SSI Inquiry
+  </footer>
 
-        <div class="grid md:grid-cols-4 gap-8 max-w-6xl mx-auto px-6">
-            <div class="p-6 bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-300">
-                <div class="text-4xl mb-3">🧪</div>
-                <h3 class="font-semibold mb-2">{{ __('landing.step_1_title') }}</h3>
-                <p class="text-gray-600">{{ __('landing.step_1_desc') }}</p>
-            </div>
-            <div class="p-6 bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-300">
-                <div class="text-4xl mb-3">⬆️</div>
-                <h3 class="font-semibold mb-2">{{ __('landing.step_2_title') }}</h3>
-                <p class="text-gray-600">{{ __('landing.step_2_desc') }}</p>
-            </div>
-            <div class="p-6 bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-300">
-                <div class="text-4xl mb-3">▶️</div>
-                <h3 class="font-semibold mb-2">{{ __('landing.step_3_title') }}</h3>
-                <p class="text-gray-600">{{ __('landing.step_3_desc') }}</p>
-            </div>
-            <div class="p-6 bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-300">
-                <div class="text-4xl mb-3">💡</div>
-                <h3 class="font-semibold mb-2">{{ __('landing.step_4_title') }}</h3>
-                <p class="text-gray-600">{{ __('landing.step_4_desc') }}</p>
-            </div>
-        </div>
-    </section>
+  <script>
 
-    <section id="contact"
-        class="relative py-20 text-white text-center bg-cover bg-center bg-no-repeat"
-        style="background-image: url('https://images.unsplash.com/photo-1602052577122-f73b9710adba?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&fm=jpg&q=60&w=3000');">
-        <!-- Overlay agar teks tetap terbaca -->
-        <div class="absolute inset-0 bg-blue-900/80"></div>
+    // <script>
+document.getElementById('menuBtn').addEventListener('click', function () {
+    const menu = document.getElementById('mobileNav');
+    menu.classList.toggle('hidden');
+});
 
-        <div class="relative z-10 max-w-2xl mx-auto">
-            <h2 class="text-3xl font-bold mb-4">{{ __('landing.cta_title') }}</h2>
-            <p class="mb-8 text-gray-200">{{ __('landing.cta_subtitle') }}</p>
-            <a href="{{ route('register') }}"
-                class="bg-white text-blue-700 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">
-                {{ __('landing.cta_button') }}
-            </a>
-        </div>
-    </section>
+// Navbar becomes white on scroll
+const header = document.getElementById('mainHeader');
+const desktopNav = document.getElementById('desktopNav');
+const desktopBtn = document.getElementById('desktopBtn');
+function onScrollHeader() {
+    if (window.scrollY > 40) {
+        header.classList.add('bg-white','shadow-md');
+        desktopNav.classList.add('text-gray-800');
+        desktopNav.classList.remove('text-white');
+        desktopBtn.querySelectorAll('a').forEach(a => {
+            a.classList.remove('text-white', 'border-white');
+            a.classList.add('text-gray-900');
+        });
+    } else {
+        header.classList.remove('bg-white','shadow-md');
+        desktopNav.classList.remove('text-gray-800');
+        desktopNav.classList.add('text-white');
+        desktopBtn.querySelectorAll('a').forEach(a => {
+            a.classList.add('text-white');
+        });
+    }
+}
+onScrollHeader();
+window.addEventListener('scroll', onScrollHeader);
 
-
-    <footer class="bg-gray-900 text-gray-400 py-6 text-center text-sm">
-        {!! __('landing.footer_copyright') !!}
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
-    <script>
-        const menuBtn = document.getElementById('menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
-        // set current year
-        document.getElementById('year').textContent = new Date().getFullYear();
-    </script>
+  </script>
 </body>
-
 </html>
