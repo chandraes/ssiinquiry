@@ -373,13 +373,191 @@
             border-top: none;
             margin-top: 0.5rem;
         }
+
+        
+    }
+
+    /* CEK POINT */
+
+    .progress-track {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        margin: 25px 0 40px 0;
+        padding: 0 10px;
+    }
+
+    .progress-track::before {
+        content: "";
+        position: absolute;
+        top: 35px;
+        left: 0;
+        height: 6px;
+        width: 100%;
+        background: #e2e2e2;
+        border-radius: 4px;
+    }
+
+    .progress-bar-fill {
+        content: "";
+        position: absolute;
+        top: 35px;
+        left: 0;
+        height: 6px;
+        background: #28a745;
+        border-radius: 4px;
+        transition: width 0.5s ease;
+    }
+
+    .checkpoint {
+        text-align: center;
+        position: relative;
+        z-index: 2;
+        width: 100px;
+        cursor: pointer;
+    }
+
+    .checkpoint.locked {
+        cursor: not-allowed;
+        opacity: 0.4;
+    }
+
+    .checkpoint .dot {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 14px;
+        transition: transform 0.3s;
+    }
+
+    .checkpoint.completed .dot {
+        background: #28a745;
+        color: white;
+        transform: scale(1.1);
+    }
+
+    .checkpoint.available .dot {
+        background: #ffc107;
+        color: #000;
+    }
+
+    .checkpoint.locked .dot {
+        background: #6c757d;
+        color: white;
+    }
+
+    .checkpoint-title {
+        margin-top: 10px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .checkpoint:hover .dot {
+        transform: scale(1.25);
+    }
+
+    .checkpoint.locked:hover .dot {
+        transform: scale(1); /* disabled */
+    }
+
+    /* Progress percentage text */
+    .progress-percent {
+        text-align: right;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: #28a745;
+    }
+
+    /* Sembunyikan progress track di mobile */
+    @media (max-width: 1000px) {
+        .progress-percent,
+        .progress-track,
+        .progress-bar-fill,
+        .checkpoint {
+            display: none !important;
+        }
     }
 </style>
 @endpush
 
 @section('content')
-<div class="container-fluid py-4"> {{-- Tambahkan padding vertikal --}}
+@php
+    $total = count($subModules);
+    $completedCount = 0;
+    $previousCompleted = true;
+@endphp
 
+{{-- Hitung completed --}}
+@foreach($subModules as $sm)
+    @php 
+        $progress = $progressData->get($sm->id);
+        if ($progress && $progress->completed_at) $completedCount++;
+    @endphp
+@endforeach
+
+{{-- Hitung persentase --}}
+@php 
+    $percentage = $total > 0 ? round(($completedCount / $total) * 100) : 0;
+@endphp
+
+<div class="card shadow-sm" style="border-radius: var(--border-radius-xl); padding-inline:15px">
+    {{-- Percentage text --}}
+    <div class="progress-percent mt-5">
+        Progress: {{ $percentage }}%
+    </div>
+
+    {{-- Progress bar track --}}
+    <div class="progress-track px-10">
+        <div class="progress-bar-fill" style="width: {{ $percentage }}%;"></div>
+
+        @foreach($subModules as $subModule)
+            @php
+                $progress = $progressData->get($subModule->id);
+                $isCompleted = $progress && $progress->completed_at;
+                $isAvailable = $previousCompleted;
+                $isLocked = !$isAvailable;
+
+                if ($isCompleted) {
+                    $statusClass = 'completed';
+                    $icon = 'fa-check';
+                    $link = route('student.submodule.show', [$kelas->id, $subModule->id]);
+                } elseif ($isAvailable) {
+                    $statusClass = 'available';
+                    $icon = 'fa-arrow-right';
+                    $link = route('student.submodule.show', [$kelas->id, $subModule->id]);
+                } else {
+                    $statusClass = 'locked';
+                    $icon = 'fa-lock';
+                    $link = '#';
+                }
+            @endphp
+
+            <a 
+                href="{{ $isLocked ? '#' : $link }}" 
+                class="checkpoint {{ $statusClass }}" 
+                @if($isLocked) onclick="event.preventDefault();" @endif
+            >
+                <div class="dot">
+                    <i class="fas {{ $icon }}"></i>
+                </div>
+                <div class="checkpoint-title">
+                    {{ Str::limit($subModule->title, 50) }}
+                </div>
+            </a>
+
+            @php 
+                $previousCompleted = $isCompleted;
+            @endphp
+        @endforeach
+    </div>
+</div>
+
+<div class="container-fluid py-4"> {{-- Tambahkan padding vertikal --}}
     {{-- [REVISI BAGIAN 1: HEADER/HERO SECTION DENGAN ILUSTRASI] --}}
     <div class="class-hero-card mb-4">
         {{-- <img src="{{asset('assets/images/hero_class.png')}}" alt="Ilustrasi Kelas" class="hero-illustration"> --}}
@@ -463,11 +641,15 @@
 
                 // Tentukan ikon kategori
                 $typeIcon = '';
-                if($subModule->type == 'learning') $typeIcon = 'fa-book-reader'; // Ikon yang lebih menarik
-                elseif($subModule->type == 'reflection') $typeIcon = 'fa-lightbulb';
-                elseif($subModule->type == 'practicum') $typeIcon = 'fa-flask';
-                elseif($subModule->type == 'forum') $typeIcon = 'fa-comments';
-                else $typeIcon = 'fa-puzzle-piece';
+                $useSvgIcon = false;
+
+                if ($subModule->type == 'learning') { $typeIcon = 'fa-book-reader';
+                } elseif ($subModule->type == 'reflection') { $typeIcon = 'fa-chart-line';
+                } elseif ($subModule->type == 'practicum') { 
+                // Gunakan SVG khusus
+                $useSvgIcon = true; $typeIcon = asset('assets/iconfonts/phyphox.svg');
+                } elseif ($subModule->type == 'forum') { $typeIcon = 'fa-comments';
+                } else { $typeIcon = 'fa-puzzle-piece';}
 
                 $linkHref = $isLocked ? '#' : route('student.submodule.show', [$kelas->id, $subModule->id]);
                 @endphp
@@ -476,10 +658,39 @@
                     aria-disabled="{{ $isLocked ? 'true' : 'false' }}" title="{{ $statusTitle }}" @if($isLocked)
                     onclick="event.preventDefault();" @endif>
 
+                    
                     <div class="d-flex w-100 align-items-center">
                         {{-- Ikon Besar Kategori Modul --}}
                         <div class="module-icon-large {{ $statusIconColor }}">
-                            <i class="fas {{ $typeIcon }}"></i>
+                            @if($useSvgIcon)
+                                {{-- Inline SVG agar warna mengikuti class statusIconColor --}}
+                                @php
+                                    $svgPath = public_path('assets/iconfonts/phyphox.svg');
+                                    $svgContent = file_exists($svgPath) ? file_get_contents($svgPath) : null;
+
+                                    if ($svgContent) {
+                                        // Tambahkan class untuk stroke warna mengikuti parent
+                                        // dan ubah fill menjadi none agar tidak menimpa warna
+                                        $svgContent = preg_replace(
+                                            '/<svg([^>]*)>/',
+                                            '<svg$1 class="w-100 h-100 stroke-current fill-none" stroke-width="2.2">',
+                                            $svgContent,
+                                            1
+                                        );
+
+                                        // Pastikan semua stroke berwarna currentColor
+                                        $svgContent = str_replace(['stroke="#000"', 'stroke="black"'], 'stroke="currentColor"', $svgContent);
+
+                                        // Jika SVG punya fill hitam, ganti agar mengikuti currentColor
+                                        $svgContent = str_replace(['fill="#000"', 'fill="black"'], 'fill="currentColor"', $svgContent);
+                                    }
+                                @endphp
+
+                                {!! $svgContent !!}
+
+                            @else
+                                <i class="fas {{ $typeIcon }}"></i>
+                            @endif
                         </div>
 
                         <div class="flex-grow-1 me-2">
