@@ -50,16 +50,37 @@
 
     <!-- Desktop nav -->
     <nav id="desktopNav" class="hidden md:flex items-center gap-6 text-white">
-      <a href="#home" class="hover:opacity-90">Home</a>
-      <a href="#how" class="hover:opacity-90">Cara Kerja</a>
-      <a href="#examples" class="hover:opacity-90">Contoh</a>
-      <a href="#contact" class="hover:opacity-90">Daftar</a>
+      <a href="#home" class="hover:opacity-90">{{__('landing.navbar_home')}}</a>
+      <a href="#how" class="hover:opacity-90">{{__('landing.navbar_how')}}</a>
+      <a href="#examples" class="hover:opacity-90">{{__('landing.navbar_example')}}</a>
+      <a href="#register" class="hover:opacity-90">{{__('landing.button_register')}}</a>
     </nav>
 
     <!-- Desktop buttons -->
     <div id="desktopBtn" class="hidden md:flex items-center gap-3">
-      <a href="{{ route('login') }}" class="text-white border border-white px-3 py-1 rounded hover:bg-white/10">Masuk</a>
-      <a href="{{ route('register') }}" class="bg-yellow-300 text-gray-900 px-4 py-2 rounded-lg font-semibold">Daftar</a>
+      <a href="{{ route('login') }}" class="text-white border border-white px-3 py-1 rounded hover:bg-white/10">{{__('landing.button_login')}}</a>
+      <a href="{{ route('register') }}" class="bg-yellow-300 text-gray-900 px-4 py-2 rounded-lg font-semibold">{{__('landing.button_register')}}</a>
+   
+      <!-- Tombol Bahasa (Desktop) -->
+      <div class="relative">
+        <button id="langBtn" class="flex items-center gap-2 transition-colors">
+          <img src="{{ app()->getLocale() == 'id' ? 'https://flagcdn.com/id.svg' : 'https://flagcdn.com/gb.svg' }}" class="w-5 h-3" alt="Flag">
+          <span class="text-sm font-semibold uppercase">{{ app()->getLocale() }}</span>
+        </button>
+
+        <div id="langDropdown" class="hidden absolute right-0 mt-2 py-1 w-40 bg-white rounded-md shadow-xl z-50">
+          <a href="{{ route('language.switch', 'id') }}"
+            class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-blue-100">
+            <img src="https://flagcdn.com/id.svg" class="w-5 h-3 mr-3" alt="Flag Indonesia">
+            <span>Indonesia</span>
+          </a>
+          <a href="{{ route('language.switch', 'en') }}"
+            class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-blue-100">
+            <img src="https://flagcdn.com/gb.svg" class="w-5 h-3 mr-3" alt="Flag UK">
+            <span>English</span>
+          </a>
+        </div>
+      </div>
     </div>
 
     <!-- Mobile toggle -->
@@ -67,60 +88,83 @@
   </div>
 
   <!-- Mobile dropdown -->
-  <nav id="mobileNav" class="hidden flex flex-col bg-white text-gray-800 px-4 pb-4 shadow-md md:hidden">
-    <a href="#home" class="py-2">Home</a>
-    <a href="#how" class="py-2">Cara Kerja</a>
-    <a href="#examples" class="py-2">Contoh</a>
-    <a href="#contact" class="py-2">Daftar</a>
+  <nav id="mobileNav" class="hidden flex items-center flex-col bg-white text-gray-800 px-4 pb-4 shadow-md md:hidden">
+    <a href="#home" class="py-2">{{__('landing.navbar_home')}}</a>
+    <a href="#how" class="py-2">{{__('landing.navbar_how')}}</a>
+    <a href="#examples" class="py-2">{{__('landing.navbar_example')}}</a>
+    <a href="#register" class="py-2">{{__('landing.button_register')}}</a>
 
     <a href="{{ route('login') }}" class="py-2 font-semibold">Masuk</a>
     <a href="{{ route('register') }}" class="py-2 font-semibold text-blue-600">Daftar</a>
+
+    <!-- Tombol Bahasa (Mobile) -->
+    <div class="relative mt-2">
+        <button id="langBtnMobile" class="flex items-center gap-2 transition-colors">
+          <img src="{{ app()->getLocale() == 'id' ? 'https://flagcdn.com/id.svg' : 'https://flagcdn.com/gb.svg' }}" class="w-5 h-3" alt="Flag">
+          <span class="text-sm font-semibold uppercase">{{ app()->getLocale() }}</span>
+        </button>
+
+        <div id="langDropdownMobile" 
+            class="hidden absolute text-center  mt-2 py-1 w-40 bg-white rounded-md shadow-xl z-50">
+
+            <a href="{{ route('language.switch', 'id') }}"
+                class="flex items-center px-4 py-1 text-sm text-gray-700 hover:bg-blue-100">
+                <img src="https://flagcdn.com/id.svg" class="w-7 h-5 mr-3">
+                <span>Indonesia</span>
+                <span class="ml-auto text-xs font-bold text-gray-400">ID</span>
+            </a>
+
+            <a href="{{ route('language.switch', 'en') }}"
+                class="flex items-center px-4 py-1 text-sm text-gray-700 hover:bg-blue-100">
+                <img src="https://flagcdn.com/gb.svg" class="w-7 h-5 mr-3">
+                <span>English</span>
+                <span class="ml-auto text-xs font-bold text-gray-400">EN</span>
+            </a>
+        </div>
+    </div>
+
   </nav>
 </header>
 
 
-    <!-- HERO -->
-    <section id="home" class="relative h-screen min-h-[400px] flex items-center overflow-hidden">
-        <!-- background -->
-        <div class="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-500"></div>
-        <div class="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
+  <!-- HERO -->
+  <section id="home" class="relative h-screen min-h-[400px] flex items-center overflow-hidden">
+    <!-- background -->
+    <div class="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-500"></div>
+    <div class="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
 
-        <div class="relative z-10 w-full max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center gap-10 py-20">
-            <!-- left: headline -->
-            <div class="flex-1 text-white">
-                <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">
-                    Eksperimen Sains.<br>
-                    Analisis. Diskusi.
-                </h1>
-                <p class="text-lg md:text-xl text-white/90 mb-6 max-w-xl">
-                    Belajar sains berbasis penyelidikan dengan data nyata — rekam, upload, analisis, dan diskusikan.
-                </p>
-
-                <div class="flex gap-4">
-                    <a href="#register" class="inline-flex items-center gap-3 bg-yellow-300 text-gray-900 px-6 py-3 rounded-xl font-bold shadow hover:scale-[1.02] transition">
-                        Mulai Eksperimen
-                    </a>
-                </div>
-            </div>
+    <div class="relative z-10 w-full max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center gap-10 py-20">
+      <!-- left: headline -->
+      <div class="flex-1 text-white">
+        <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">
+            {!! __('landing.hero_title') !!}
+        </h1>
+        <p class="text-lg md:text-xl text-white/90 mb-6 max-w-xl">
+            {{__('landing.hero_subtitle')}}
+        </p>
+        <div class="flex gap-4">
+            <a href="{{route('register')}}" class="inline-flex items-center gap-3 bg-yellow-300 text-gray-900 px-6 py-3 rounded-xl font-bold shadow hover:scale-[1.02] transition">
+                {{__('landing.hero_button_start')}}
+            </a>
         </div>
+      </div>
+    </div>
 
-        <div 
-            class="absolute bottom-0 right-0 pointer-events-none select-none
-                w-[300px] sm:w-[400px] md:w-[600px] lg:w-[800px]">
-            <img 
-                src="{{ asset('assets/images/scientist.png') }}" 
-                alt="Ilustrasi Scientist"
-                class="w-full h-auto object-contain"
-            >
-        </div>
-
-    </section>
-
+    <div 
+        class="absolute bottom-0 right-0 pointer-events-none select-none
+            w-[300px] sm:w-[400px] md:w-[600px] lg:w-[800px]">
+        <img 
+            src="{{ asset('assets/images/scientist.png') }}" 
+            alt="Ilustrasi Scientist"
+            class="w-full h-auto object-contain"
+        >
+    </div>
+  </section>
 
   <!-- HOW IT WORKS -->
   <section id="how" class="py-20 bg-white">
     <div class="max-w-6xl mx-auto px-6 text-center">
-      <h2 class="text-3xl font-bold text-blue-700 mb-8">Bagaimana Cara Kerjanya?</h2>
+      <h2 class="text-3xl font-bold text-blue-700 mb-8">{{__('landing.how_title')}}</h2>
 
       <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
         {{-- Card 1 --}}
@@ -129,8 +173,8 @@
             {{-- icon phone --}}
             <img src="{{ asset('assets/images/record.png') }}">
           </div>
-          <h3 class="font-semibold mb-1">Rekam</h3>
-          <p class="text-sm text-gray-500">Gunakan sensor HP untuk merekam data eksperimen.</p>
+          <h3 class="font-semibold mb-1">{{__('landing.how_p1_title')}}</h3>
+          <p class="text-sm text-gray-500">{{__('landing.how_p1_subtitle')}}</p>
         </div>
 
         {{-- Card 2 --}}
@@ -138,8 +182,8 @@
           <div class="mx-auto w-50 h-50 mb-4 flex items-center justify-center rounded-lg bg-blue-50">
             <img src="{{ asset('assets/images/upload.png') }}">
           </div>
-          <h3 class="font-semibold mb-1">Upload & Lihat Data</h3>
-          <p class="text-sm text-gray-500">Upload file, tampilkan grafik otomatis.</p>
+          <h3 class="font-semibold mb-1">{{__('landing.how_p2_title')}}</h3>
+          <p class="text-sm text-gray-500">{{__('landing.how_p2_subtitle')}}</p>
         </div>
 
         {{-- Card 3 --}}
@@ -147,8 +191,8 @@
           <div class="mx-auto w-50 h-50 mb-4 flex items-center justify-center rounded-lg bg-green-50">
             <img src="{{ asset('assets/images/compare.png') }}">
           </div>
-          <h3 class="font-semibold mb-1">Bandingkan</h3>
-          <p class="text-sm text-gray-500">Bandingkan banyak hasil percobaan secara cepat.</p>
+          <h3 class="font-semibold mb-1">{{__('landing.how_p3_title')}}</h3>
+          <p class="text-sm text-gray-500">{{__('landing.how_p3_subtitle')}}</p>
         </div>
 
         {{-- Card 4 --}}
@@ -156,8 +200,8 @@
           <div class="mx-auto w-50 h-50 mb-4 flex items-center justify-center rounded-lg bg-purple-50">
             <img src="{{ asset('assets/images/discussion.png') }}">
           </div>
-          <h3 class="font-semibold mb-1">Diskusi</h3>
-          <p class="text-sm text-gray-500">Diskusikan hasil dengan guru dan teman.</p>
+          <h3 class="font-semibold mb-1">{{__('landing.how_p4_title')}}</h3>
+          <p class="text-sm text-gray-500">{{__('landing.how_p4_subtitle')}}</p>
         </div>
       </div>
     </div>
@@ -167,7 +211,7 @@
     <section id="examples" class="py-20 bg-gray-50">
         <div class="max-w-6xl mx-auto px-6">
             <h2 class="text-3xl font-bold text-blue-700 mb-8 text-center">
-                Contoh Eksperimen Menggunakan Phyphox
+                {{__('landing.examples_title')}}
             </h2>
 
             <div class="grid md:grid-cols-2 gap-8">
@@ -177,13 +221,12 @@
                     <img src="{{ asset('assets/images/examples/amplitude.png') }}" 
                         class="w-full md:w-40 h-auto object-contain">
                     <div>
-                        <h3 class="text-2xl font-semibold mb-3">Mengukur Amplitudo Suara</h3>
+                        <h3 class="text-2xl font-semibold mb-3">{{__('landing.example_1_title')}}</h3>
                         <p class="text-gray-600 mb-6">
-                            Gunakan mikrofon HP untuk mengukur kuat lemahnya suara di sekitar.
-                            Siswa dapat membandingkan amplitudo berbagai sumber suara.
+                          {{__('landing.example_1_desc')}}
                         </p>
                         <a href="{{route('login')}}" class="inline-block px-5 py-3 bg-yellow-300 rounded-lg font-semibold">
-                            Coba Eksperimen
+                          {{__('landing.button_experiment')}}
                         </a>
                     </div>
                 </div>
@@ -193,12 +236,12 @@
                     <img src="{{ asset('assets/images/examples/spectrum.png') }}" 
                         class="w-full md:w-40 h-auto object-contain">
                     <div>
-                        <h3 class="text-2xl font-semibold mb-3">Analisis Spektrum Suara</h3>
+                        <h3 class="text-2xl font-semibold mb-3">{{__('landing.example_2_title')}}</h3>
                         <p class="text-gray-600 mb-6">
-                            Dengan fitur Audio Spectrum, siswa bisa melihat komponen frekuensi suara secara real-time.
+                          {{__('landing.example_2_desc')}}
                         </p>
                         <a href="{{route('login')}}" class="inline-block px-5 py-3 bg-yellow-300 rounded-lg font-semibold">
-                            Coba Eksperimen
+                          {{__('landing.button_experiment')}}
                         </a>
                     </div>
                 </div>
@@ -208,12 +251,12 @@
                     <img src="{{ asset('assets/images/examples/spring.png') }}" 
                         class="w-full md:w-40 h-auto object-contain">
                     <div>
-                        <h3 class="text-2xl font-semibold mb-3">Getaran & Pegas (Accelerometer)</h3>
+                        <h3 class="text-2xl font-semibold mb-3">{{__('landing.example_3_title')}}</h3>
                         <p class="text-gray-600 mb-6">
-                            Tempelkan HP pada pegas atau ayunan kecil. Rekam grafik getaran dan analisis frekuensi serta periode.
+                            {{__('landing.example_3_desc')}}
                         </p>
                         <!-- <a href="#" class="inline-block px-5 py-3 bg-yellow-300 rounded-lg font-semibold">
-                            Coba Eksperimen
+                            Lihat Cara Kerja
                         </a> -->
                     </div>
                 </div>
@@ -223,9 +266,9 @@
                     <img src="{{ asset('assets/images/examples/bandul.png') }}" 
                         class="w-full md:w-40 h-auto object-contain">
                     <div>
-                        <h3 class="text-2xl font-semibold mb-3">Mengukur Periode Ayunan</h3>
+                        <h3 class="text-2xl font-semibold mb-3">{{__('landing.example_4_title')}}</h3>
                         <p class="text-gray-600 mb-6">
-                            Phyphox dapat mengukur periode ayunan menggunakan fitur pendulum atau giroskop.
+                            {{__('landing.example_4_desc')}}
                         </p>
                         <!-- <a href="#" class="inline-block px-5 py-3 bg-yellow-300 rounded-lg font-semibold">
                             Lihat Cara Kerja
@@ -242,14 +285,14 @@
   <!-- CTA -->
   <section id="register" class="py-20 bg-gradient-to-br from-blue-600 to-blue-500 text-white">
     <div class="max-w-4xl mx-auto px-6 text-center">
-      <h2 class="text-3xl font-bold mb-4">Siap Membawa Sains Jadi Lebih Seru?</h2>
-      <p class="mb-6 text-white/90">Daftar gratis dan mulai jelajahi eksperimen interaktif sekarang.</p>
-      <a href="{{ route('register') }}" class="px-8 py-3 bg-yellow-300 text-gray-900 rounded-xl font-bold">Daftar Gratis</a>
+      <h2 class="text-3xl font-bold mb-4">{{__('landing.register_title')}}</h2>
+      <p class="mb-6 text-white/90">{{__('landing.register_subtitle')}}</p>
+      <a href="{{ route('register') }}" class="px-8 py-3 bg-yellow-300 text-gray-900 rounded-xl font-bold">{{__('landing.register_button')}}</a>
     </div>
   </section>
 
   <footer class="py-8 text-center text-sm text-gray-500">
-    © {{ date('Y') }} SSI Inquiry
+    {!! __('landing.footer_copyright') !!}
   </footer>
 
   <script>
@@ -294,6 +337,43 @@
   onScrollHeader();
   window.addEventListener('scroll', onScrollHeader);
 
+  document.addEventListener("click", function (event) {
+      const btn = document.getElementById("langBtn");
+      const dropdown = document.getElementById("langDropdown");
+
+      const btnMobile = document.getElementById("langBtnMobile");
+      const dropdownMobile = document.getElementById("langDropdownMobile");
+
+      // Desktop toggle
+      if (btn && btn.contains(event.target)) {
+          dropdown.classList.toggle("hidden");
+          return;
+      }
+      if (dropdown && !dropdown.contains(event.target)) {
+          dropdown.classList.add("hidden");
+      }
+
+      // Mobile toggle
+      if (btnMobile && btnMobile.contains(event.target)) {
+          dropdownMobile.classList.toggle("hidden");
+          return;
+      }
+      if (dropdownMobile && !dropdownMobile.contains(event.target)) {
+          dropdownMobile.classList.add("hidden");
+      }
+  });
+
+  const langBtn = document.getElementById('langBtn');
+
+  if (window.scrollY > 40) {
+      langBtn.classList.remove('text-white');
+      langBtn.classList.add('text-gray-800');
+  } else {
+      langBtn.classList.add('text-white');
+      langBtn.classList.remove('text-gray-800');
+  }
+
+  document.getElementById('year').textContent = new Date().getFullYear();
 
   </script>
 </body>
