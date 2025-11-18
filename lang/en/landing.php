@@ -37,7 +37,7 @@ return [
     'button_experiment' => 'Try Experiment',
 
     // Register Section
-    'register_title' => 'Ready to Make Science More Exciting?',
+    'register_title' => 'Ready to Explore Science with More Fun?',
     'register_subtitle' => 'Sign up for free and start exploring interactive experiments today.',
     'register_button' => 'Sign Up Free',
 
