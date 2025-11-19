@@ -37,7 +37,7 @@ return [
     'button_experiment' => 'Coba Eksperimen',
 
     // Register Section
-    'register_title' => 'Siap Membawa Sains Jadi Lebih Seru?',
+    'register_title' => 'Siap Menjelajah Sains dengan Lebih Seru?',
     'register_subtitle' => 'Daftar gratis dan mulai jelajahi eksperimen interaktif sekarang.',
     'register_button' => 'Daftar Gratis',
 

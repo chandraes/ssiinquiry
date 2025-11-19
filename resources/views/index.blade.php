@@ -152,7 +152,7 @@
 
     <div 
         class="absolute bottom-0 right-0 pointer-events-none select-none
-            w-[300px] sm:w-[400px] md:w-[600px] lg:w-[800px]">
+            w-[150px] sm:w-[200px] md:w-[300px] lg:w-[600px]">
         <img 
             src="{{ asset('assets/images/scientist.png') }}" 
             alt="Ilustrasi Scientist"
