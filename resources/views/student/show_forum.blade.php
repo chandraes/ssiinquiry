@@ -349,11 +349,21 @@ jQuery(document).ready(function($) {
 
     function initTinyMCE(selector, callback) {
         if (tinymce.get(selector)) { tinymce.get(selector).remove(); }
+
         tinymce.init({
             selector: selector,
-            plugins: 'lists link image media autoresize',
-            toolbar: 'undo redo | bold italic | bullist numlist | link',
-            height: 200, menubar: false, autoresize_bottom_margin: 15, license_key: 'gpl',
+            height: 200,
+            menubar: false,
+            license_key: 'gpl',
+
+            plugins: 'lists link image media autoresize emoticons',
+            toolbar: 'undo redo | bold italic | emoticons | bullist numlist | link image media | fullscreen',
+
+            emoticons_database: 'emoji', // gunakan emoji modern
+            emoticons_database_url: 'https://cdn.tiny.cloud/1/no-api-key/tinymce/6/plugins/emoticons/js/emojis.min.js',
+
+            autoresize_bottom_margin: 15,
+
             setup: function(editor) {
                 editor.on('init', function() {
                     if (callback) { callback(editor); }
@@ -361,6 +371,7 @@ jQuery(document).ready(function($) {
             }
         });
     }
+
 
     initTinyMCE('#forum-editor', null);
 

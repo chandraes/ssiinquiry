@@ -51,7 +51,7 @@
                 </div>
             @else
                 <div class="alert alert-info text-center">
-                    {{ __('admin.practicum.no_practicum') }}.
+                    {{ __('admin.practicum.no_practicum_instruction') }}.
                 </div>
             @endif
         </div>
@@ -253,10 +253,29 @@
 </script>
 <script>
  tinymce.init({
-    selector: 'textarea.rich-text-editor',
-    plugins: 'lists link', // Mengaktifkan plugin bullet/list
-    toolbar: 'undo redo | bold italic | bullist numlist | link',
-    license_key: 'gpl'
-});
+        selector: 'textarea.rich-text-editor',
+        height: 250,
+        menubar: false,
+        license_key: 'gpl',
+
+        plugins: 'advlist autolink lists link image charmap preview anchor ' +
+            'searchreplace visualblocks code fullscreen ' +
+            'insertdatetime media table paste help wordcount',
+
+        toolbar:
+            'undo redo | blocks | ' +
+            'bold italic underline | link code |' +
+            'alignleft aligncenter alignright alignjustify | ' +
+            'bullist numlist outdent indent | ' +
+            'link image media table | code fullscreen',
+
+        // OPTIONAL: biar style heading lebih modern
+        style_formats: [
+            { title: 'Heading 1', format: 'h1' },
+            { title: 'Heading 2', format: 'h2' },
+            { title: 'Heading 3', format: 'h3' },
+            { title: 'Paragraph', format: 'p' }
+        ],
+    });
 </script>
 @endpush
