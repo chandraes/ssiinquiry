@@ -34,7 +34,7 @@
 
         <div class="card-body">
             @forelse($subModul->learningMaterials as $material)
-                <div class="list-group-item d-flex justify-content-between align-items-center mb-2 p-3 border">
+                <!-- <div class="list-group-item d-flex justify-content-between align-items-center mb-2 p-3 border">
                     <div>
                         <strong>{{ $material->title }}</strong>
                         <small class="badge
@@ -89,7 +89,48 @@
                             <i class="fa fa-trash"></i>
                         </button>
                     </div>
+                </div> -->
+
+                <div class="list-group-item material-item mb-2 p-3 border">
+                    <div class="material-content">
+                        <strong>{{ $material->title }}</strong>
+                        <small class="badge
+                            @if($material->type == 'video') bg-danger
+                            @elseif($material->type == 'article') bg-info
+                            @elseif($material->type == 'infographic') bg-success
+                            @elseif($material->type == 'regulation') bg-warning
+                            @else bg-dark @endif
+                        ">{{ $material->type }}</small>
+
+                        @if($material->type == 'rich_text')
+                            <div class="rich-text-content border p-2 rounded-2 mt-2" style="max-height: 200px; overflow-y: auto;">
+                                {!! $material->content !!}
+                            </div>
+                        @else
+                            <p class="mb-0 mt-1 text-muted word-break-all">
+                                <a href="{{ $url }}" target="_blank" class="text-break">
+                                    {{ $url }}
+                                </a>
+                            </p>
+                        @endif
+                    </div>
+
+                    <div class="material-actions mt-2">
+                        <button class="btn btn-warning btn-sm"
+                                data-url="{{ route('learning_material.edit.json', $material->id) }}"
+                                data-update-url="{{ route('learning_material.update', $material->id) }}"
+                                onclick="editMaterial(this)">
+                            <i class="fa fa-pencil"></i>
+                        </button>
+
+                        <button class="btn btn-danger btn-sm"
+                                onclick="deleteMaterial({{ $material->id }})">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </div>
+
                 </div>
+
 
                 <form id="delete-material-form-{{ $material->id }}"
                       action="{{ route('learning_material.destroy', $material->id) }}"
@@ -104,7 +145,7 @@
                 </div>
             @endforelse
         </div>
-        <div class="card-footer">
+        <div class="card-footer text-center">
             <div class="col-md-12">
                 <a href="{{ route('modul.show', $subModul->modul_id) }}" class="btn btn-secondary button-lg">
                     <i class="fa fa-arrow-left me-1"></i> {{ __('admin.button.back_to') }}{{ __('admin.modul.detail.title') }}
@@ -133,17 +174,36 @@
         height: 250,
         menubar: false,
         license_key: 'gpl',
-        z_index: 999999,
-        plugins: 'advlist autolink lists link image charmap preview anchor ' +
-            'searchreplace visualblocks code fullscreen ' +
-            'insertdatetime media table help wordcount',
+
+        plugins: [
+            'advlist autolink lists link image charmap preview anchor',
+            'searchreplace visualblocks code fullscreen',
+            'insertdatetime media table paste help wordcount',
+            'fontfamily fontsize'
+        ].join(' '),
 
         toolbar:
-            'undo redo | blocks | ' +
-            'bold italic underline |' +
-            'alignleft aligncenter alignright alignjustify| mathjax | ' +
-            'bullist numlist| ' +
-            'link image media table | code fullscreen',
+            'undo redo | fontfamily fontsize | blocks | ' +
+            'bold italic underline | ' +
+            'alignleft aligncenter alignright alignjustify | ' +
+            'mathjax | ' +
+            'bullist numlist | link image media table | code fullscreen',
+
+        /* Daftar Font */
+        font_family_formats:
+            "Arial=arial,helvetica,sans-serif;" +
+            "Arial Black=arial black,avant garde;" +
+            "Comic Sans MS=comic sans ms,sans-serif;" +
+            "Courier New=courier new,courier,monospace;" +
+            "Georgia=georgia,palatino;" +
+            "Tahoma=tahoma,arial,helvetica,sans-serif;" +
+            "Times New Roman=times new roman,times;" +
+            "Verdana=verdana,geneva;" +
+            "Poppins=Poppins,sans-serif;" +
+            "Roboto=Roboto,sans-serif;",
+
+        /* Font size (optional) */
+        fontsize_formats: "10px 12px 14px 16px 18px 24px 36px 48px",
 
         setup: function (editor) {
             editor.ui.registry.addButton('mathjax', {
@@ -177,15 +237,9 @@
                     });
                 }
             });
-        },
-
-        style_formats: [
-            { title: 'Heading 1', format: 'h1' },
-            { title: 'Heading 2', format: 'h2' },
-            { title: 'Heading 3', format: 'h3' },
-            { title: 'Paragraph', format: 'p' }
-        ]
+        }
     });
+
 
     /**
      * 1. FUNGSI UNTUK MENGISI MODAL EDIT
