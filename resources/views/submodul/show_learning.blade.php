@@ -34,7 +34,7 @@
 
         <div class="card-body">
             @forelse($subModul->learningMaterials as $material)
-                <!-- <div class="list-group-item d-flex justify-content-between align-items-center mb-2 p-3 border">
+                <div class="list-group-item d-flex justify-content-between align-items-center mb-2 p-3 border">
                     <div>
                         <strong>{{ $material->title }}</strong>
                         <small class="badge
@@ -89,48 +89,7 @@
                             <i class="fa fa-trash"></i>
                         </button>
                     </div>
-                </div> -->
-
-                <div class="list-group-item material-item mb-2 p-3 border">
-                    <div class="material-content">
-                        <strong>{{ $material->title }}</strong>
-                        <small class="badge
-                            @if($material->type == 'video') bg-danger
-                            @elseif($material->type == 'article') bg-info
-                            @elseif($material->type == 'infographic') bg-success
-                            @elseif($material->type == 'regulation') bg-warning
-                            @else bg-dark @endif
-                        ">{{ $material->type }}</small>
-
-                        @if($material->type == 'rich_text')
-                            <div class="rich-text-content border p-2 rounded-2 mt-2" style="max-height: 200px; overflow-y: auto;">
-                                {!! $material->content !!}
-                            </div>
-                        @else
-                            <p class="mb-0 mt-1 text-muted word-break-all">
-                                <a href="{{ $url }}" target="_blank" class="text-break">
-                                    {{ $url }}
-                                </a>
-                            </p>
-                        @endif
-                    </div>
-
-                    <div class="material-actions mt-2">
-                        <button class="btn btn-warning btn-sm"
-                                data-url="{{ route('learning_material.edit.json', $material->id) }}"
-                                data-update-url="{{ route('learning_material.update', $material->id) }}"
-                                onclick="editMaterial(this)">
-                            <i class="fa fa-pencil"></i>
-                        </button>
-
-                        <button class="btn btn-danger btn-sm"
-                                onclick="deleteMaterial({{ $material->id }})">
-                            <i class="fa fa-trash"></i>
-                        </button>
-                    </div>
-
                 </div>
-
 
                 <form id="delete-material-form-{{ $material->id }}"
                       action="{{ route('learning_material.destroy', $material->id) }}"
@@ -145,7 +104,7 @@
                 </div>
             @endforelse
         </div>
-        <div class="card-footer text-center">
+        <div class="card-footer">
             <div class="col-md-12">
                 <a href="{{ route('modul.show', $subModul->modul_id) }}" class="btn btn-secondary button-lg">
                     <i class="fa fa-arrow-left me-1"></i> {{ __('admin.button.back_to') }}{{ __('admin.modul.detail.title') }}
@@ -239,7 +198,6 @@
             });
         }
     });
-
 
     /**
      * 1. FUNGSI UNTUK MENGISI MODAL EDIT
