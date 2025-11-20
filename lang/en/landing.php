@@ -5,7 +5,7 @@ return [
     'navbar_home' => 'Home',
     'navbar_example' => 'Examples',
     'navbar_how' => 'How It Works',
-    'button_login' => 'Log In',
+    'button_login' => 'Login',
     'button_register' => 'Register',
 
     // Hero Section

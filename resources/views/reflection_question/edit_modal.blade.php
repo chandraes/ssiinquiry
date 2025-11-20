@@ -32,13 +32,13 @@
                         <div class="tab-pane fade show active" id="q-id-pane-edit" role="tabpanel">
                             <div class="mb-3">
                                 <label class="form-label">{{ __('admin.reflection_modal.question_text_id') }}</label>
-                                <textarea id="edit_question_text_id" name="question_text[id]" class="form-control" rows="3" required></textarea>
+                                <textarea id="edit_question_text_id" name="question_text[id]" class="form-control rich-text-editor" rows="3" required></textarea>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="q-en-pane-edit" role="tabpanel">
                             <div class="mb-3">
                                 <label class="form-label">{{ __('admin.reflection_modal.question_text_en') }}</label>
-                                <textarea id="edit_question_text_en" name="question_text[en]" class="form-control" rows="3" required></textarea>
+                                <textarea id="edit_question_text_en" name="question_text[en]" class="form-control rich-text-editor" rows="3" required></textarea>
                             </div>
                         </div>
                     </div>

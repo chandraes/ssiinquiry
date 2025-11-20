@@ -168,15 +168,42 @@
 <script>
 
     // [PERUBAHAN DI SINI] Inisialisasi TinyMCE
+    // tinymce.init({
+    //     // Gunakan selector class untuk menargetkan SEMUA editor
+    //     selector: 'textarea.rich-text-editor',
+    //     plugins: 'lists link code fullscreen',
+    //     toolbar: 'undo redo | blocks | bold italic | bullist numlist | link code | fullscreen',
+    //     menubar: false,
+    //     height: 250,
+    //     license_key: 'gpl',
+    // });
+
     tinymce.init({
-        // Gunakan selector class untuk menargetkan SEMUA editor
         selector: 'textarea.rich-text-editor',
-        plugins: 'lists link code fullscreen',
-        toolbar: 'undo redo | blocks | bold italic | bullist numlist | link code | fullscreen',
-        menubar: false,
         height: 250,
+        menubar: false,
         license_key: 'gpl',
+
+        plugins: 'advlist autolink lists link image charmap preview anchor ' +
+            'searchreplace visualblocks code fullscreen ' +
+            'insertdatetime media table paste help wordcount',
+
+        toolbar:
+            'undo redo | blocks | ' +
+            'bold italic underline | link code |' +
+            'alignleft aligncenter alignright alignjustify | ' +
+            'bullist numlist outdent indent | ' +
+            'link image media table | code fullscreen',
+
+        // OPTIONAL: biar style heading lebih modern
+        style_formats: [
+            { title: 'Heading 1', format: 'h1' },
+            { title: 'Heading 2', format: 'h2' },
+            { title: 'Heading 3', format: 'h3' },
+            { title: 'Paragraph', format: 'p' }
+        ],
     });
+
 
     /**
      * 1. FUNGSI UNTUK MENGISI MODAL EDIT (DIBERSIHKAN)

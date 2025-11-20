@@ -12,20 +12,45 @@
         --radius-xl: 20px;
     }
 
+    body {
+        font-family: 'Poppins', sans-serif;
+        /* Pastikan font Poppins tersedia atau fallback */
+    }
+
     /* ============ DESKRIPSI SUBMODULE ============ */
     .card-description {
         background: linear-gradient(135deg, var(--primary-color) 0%, #7b68ee 100%);
-        color: white !important;
+        color: white;
         border-radius: var(--radius-xl);
-        padding: 30px !important;
+        padding: 20px;
+        /* Padding lebih kecil untuk mobile */
         box-shadow: var(--shadow-strong);
-        border: none;
+        position: relative;
+        overflow: hidden;
+        min-height: 150px;
+        /* Tinggi minimum untuk mobile */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        
     }
 
     .card-description h2 {
-        font-weight: 700;
-        font-size: 2rem;
+        font-size: 1.5rem;
+        /* Ukuran font lebih kecil lagi untuk mobile agar tidak memotong */
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+        z-index: 1;
     }
+
+    .card-description p {
+        font-size: 0.9rem;
+        /* Ukuran font lebih kecil lagi */
+        opacity: 0.9;
+        z-index: 1;
+    }
+
 
     /* ============ STYLE KATEGORI MATERI ============ */
     .material-box {
@@ -112,10 +137,12 @@
 @section('content')
 <div class="container-fluid">
     <div class="card shadow-sm mb-4 card-description">
-        <div class="card-body">
-            <h2 class="card-title"><i class="fa fa-book-open text-primary me-2"></i>{{ $subModule->title }}</h2>
+        <div class="card-body px-3">
+            <h2 class="card-title"><i class="fa fa-book text-white me-2"></i>{{ $subModule->title }}</h2>
 
-            <p class="text-white">{!! $subModule->description !!}</p>
+            <!-- <p class="text-white">{!! $subModule->description !!}</p> -->
+            <p class="h5 mt-1">{!! $subModule->description !!}</p>
+
         </div>
     </div>
      @forelse($subModule->learningMaterials as $material)
@@ -125,7 +152,7 @@
         @else card-other 
         @endif">
 
-        <div class="card-body">
+        <div class="card-body px-3">
 
             {{-- Icon & Judul --}}
             <div class="d-flex align-items-center mb-2">
@@ -151,7 +178,6 @@
 
             {{-- === VIDEO === --}}
             @elseif($material->type === 'video')
-
                 @php
                     $content = is_array($material->content) ? $material->content : [];
                     $url = $content['url'] ?? null;

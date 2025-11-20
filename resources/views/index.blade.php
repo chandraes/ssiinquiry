@@ -22,109 +22,125 @@
     .logo-color { display: none; }
     .solid .logo-white { display: none; }
     .solid .logo-color { display: block; }
+
+    #desktopBtn a[href*="register"] {
+        color: black !important;
+    }
+
+    #mobileNav a[href*="register"] {
+        color: black !important;
+    }
+
   </style>
 </head>
 <body class="antialiased bg-white text-gray-800">
 
   <!-- NAVBAR (transparan di hero; berubah saat scroll) -->
   <header id="mainHeader" class="fixed w-full z-50 transition-all">
-  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      
+      <!-- Logo -->
+      <a href="{{ route('landing-page') }}" class="flex items-center">
+        {{-- Logo putih (saat navbar transparan) --}}
+          <img 
+              src="{{ asset('assets/images/ssi_white.png') }}"
+              class="h-10 w-auto object-contain logo-white"
+              alt="Logo SSI White"
+          >
+
+          {{-- Logo berwarna (saat navbar putih) --}}
+          <img 
+              src="{{ $logoUrl }}"
+              class="h-10 w-auto object-contain logo-color"
+              alt="Logo SSI Color"
+          >
+      </a>
+
+
+      <!-- Desktop nav -->
+      <nav id="desktopNav" class="hidden md:flex items-center gap-6 text-white">
+        <a href="#home" class="hover:opacity-90">{{__('landing.navbar_home')}}</a>
+        <a href="#how" class="hover:opacity-90">{{__('landing.navbar_how')}}</a>
+        <a href="#examples" class="hover:opacity-90">{{__('landing.navbar_example')}}</a>
+        <a href="#register" class="hover:opacity-90">{{__('landing.button_register')}}</a>
+      </nav>
+
+      <!-- Desktop buttons -->
+      <div id="desktopBtn" class="hidden md:flex items-center gap-3">
+        <a href="{{ route('login') }}" class="text-white border-4 border-white-300 px-3 py-1 rounded-lg font-semibold hover:bg-white/20">
+          {{__('landing.button_login')}}
+        </a>
+        <a href="{{ route('register') }}" class="text-black bg-yellow-300 px-4 py-2 rounded-lg font-semibold">
+            {{__('landing.button_register')}}
+        </a>
+
     
-    <!-- Logo -->
-    <a href="{{ route('landing-page') }}" class="flex items-center">
-      {{-- Logo putih (saat navbar transparan) --}}
-        <img 
-            src="{{ asset('assets/images/ssi_white.png') }}"
-            class="h-10 w-auto object-contain logo-white"
-            alt="Logo SSI White"
-        >
+        <!-- Tombol Bahasa (Desktop) -->
+        <div class="relative">
+          <button id="langBtn" class="flex items-center gap-2 transition-colors">
+            <img src="{{ app()->getLocale() == 'id' ? 'https://flagcdn.com/id.svg' : 'https://flagcdn.com/gb.svg' }}" class="w-5 h-3" alt="Flag">
+            <span class="text-sm font-semibold uppercase">{{ app()->getLocale() }}</span>
+          </button>
 
-        {{-- Logo berwarna (saat navbar putih) --}}
-        <img 
-            src="{{ $logoUrl }}"
-            class="h-10 w-auto object-contain logo-color"
-            alt="Logo SSI Color"
-        >
-    </a>
-
-
-    <!-- Desktop nav -->
-    <nav id="desktopNav" class="hidden md:flex items-center gap-6 text-white">
-      <a href="#home" class="hover:opacity-90">{{__('landing.navbar_home')}}</a>
-      <a href="#how" class="hover:opacity-90">{{__('landing.navbar_how')}}</a>
-      <a href="#examples" class="hover:opacity-90">{{__('landing.navbar_example')}}</a>
-      <a href="#register" class="hover:opacity-90">{{__('landing.button_register')}}</a>
-    </nav>
-
-    <!-- Desktop buttons -->
-    <div id="desktopBtn" class="hidden md:flex items-center gap-3">
-      <a href="{{ route('login') }}" class="text-white border border-white px-3 py-1 rounded hover:bg-white/10">{{__('landing.button_login')}}</a>
-      <a href="{{ route('register') }}" class="bg-yellow-300 text-gray-900 px-4 py-2 rounded-lg font-semibold">{{__('landing.button_register')}}</a>
-   
-      <!-- Tombol Bahasa (Desktop) -->
-      <div class="relative">
-        <button id="langBtn" class="flex items-center gap-2 transition-colors">
-          <img src="{{ app()->getLocale() == 'id' ? 'https://flagcdn.com/id.svg' : 'https://flagcdn.com/gb.svg' }}" class="w-5 h-3" alt="Flag">
-          <span class="text-sm font-semibold uppercase">{{ app()->getLocale() }}</span>
-        </button>
-
-        <div id="langDropdown" class="hidden absolute right-0 mt-2 py-1 w-40 bg-white rounded-md shadow-xl z-50">
-          <a href="{{ route('language.switch', 'id') }}"
-            class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-blue-100">
-            <img src="https://flagcdn.com/id.svg" class="w-5 h-3 mr-3" alt="Flag Indonesia">
-            <span>Indonesia</span>
-          </a>
-          <a href="{{ route('language.switch', 'en') }}"
-            class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-blue-100">
-            <img src="https://flagcdn.com/gb.svg" class="w-5 h-3 mr-3" alt="Flag UK">
-            <span>English</span>
-          </a>
+          <div id="langDropdown" class="hidden absolute right-0 mt-2 py-1 w-40 bg-white rounded-md shadow-xl z-50">
+            <a href="{{ route('language.switch', 'id') }}"
+              class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-blue-100">
+              <img src="https://flagcdn.com/id.svg" class="w-5 h-3 mr-3" alt="Flag Indonesia">
+              <span class="text-gray-900">Indonesia</span>
+            </a>
+            <a href="{{ route('language.switch', 'en') }}"
+              class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-blue-100">
+              <img src="https://flagcdn.com/gb.svg" class="w-5 h-3 mr-3" alt="Flag UK">
+              <span class="text-gray-900">English</span>
+            </a>
+          </div>
         </div>
       </div>
+
+      <!-- Mobile toggle -->
+      <button id="menuBtn" class="md:hidden text-white text-2xl">☰</button>
     </div>
 
-    <!-- Mobile toggle -->
-    <button id="menuBtn" class="md:hidden text-white text-2xl">☰</button>
-  </div>
+    <!-- Mobile dropdown -->
+    <nav id="mobileNav" class="hidden flex items-center flex-col bg-white text-gray-800 px-4 pb-4 shadow-md md:hidden">
+      <a href="#home" class="py-2">{{__('landing.navbar_home')}}</a>
+      <a href="#how" class="py-2">{{__('landing.navbar_how')}}</a>
+      <a href="#examples" class="py-2">{{__('landing.navbar_example')}}</a>
+      <a href="#register" class="py-2">{{__('landing.button_register')}}</a>
 
-  <!-- Mobile dropdown -->
-  <nav id="mobileNav" class="hidden flex items-center flex-col bg-white text-gray-800 px-4 pb-4 shadow-md md:hidden">
-    <a href="#home" class="py-2">{{__('landing.navbar_home')}}</a>
-    <a href="#how" class="py-2">{{__('landing.navbar_how')}}</a>
-    <a href="#examples" class="py-2">{{__('landing.navbar_example')}}</a>
-    <a href="#register" class="py-2">{{__('landing.button_register')}}</a>
+      <a href="{{ route('login') }}" class="py-2 font-semibold">{{__('landing.button_login')}}</a>
+      <a href="{{ route('register') }}" class="py-2 font-semibold text-black">
+          {{__('landing.button_register')}}
+      </a>
 
-    <a href="{{ route('login') }}" class="py-2 font-semibold">Masuk</a>
-    <a href="{{ route('register') }}" class="py-2 font-semibold text-blue-600">Daftar</a>
+      <!-- Tombol Bahasa (Mobile) -->
+      <div class="relative mt-2">
+          <button id="langBtnMobile" class="flex items-center gap-2 transition-colors">
+            <img src="{{ app()->getLocale() == 'id' ? 'https://flagcdn.com/id.svg' : 'https://flagcdn.com/gb.svg' }}" class="w-5 h-3" alt="Flag">
+            <span class="text-sm font-semibold uppercase">{{ app()->getLocale() }}</span>
+          </button>
 
-    <!-- Tombol Bahasa (Mobile) -->
-    <div class="relative mt-2">
-        <button id="langBtnMobile" class="flex items-center gap-2 transition-colors">
-          <img src="{{ app()->getLocale() == 'id' ? 'https://flagcdn.com/id.svg' : 'https://flagcdn.com/gb.svg' }}" class="w-5 h-3" alt="Flag">
-          <span class="text-sm font-semibold uppercase">{{ app()->getLocale() }}</span>
-        </button>
+          <div id="langDropdownMobile" 
+              class="hidden absolute text-center  mt-2 py-1 w-40 bg-white rounded-md shadow-xl z-50">
 
-        <div id="langDropdownMobile" 
-            class="hidden absolute text-center  mt-2 py-1 w-40 bg-white rounded-md shadow-xl z-50">
+              <a href="{{ route('language.switch', 'id') }}"
+                  class="flex items-center px-4 py-1 text-sm text-gray-700 hover:bg-blue-100">
+                  <img src="https://flagcdn.com/id.svg" class="w-7 h-5 mr-3">
+                  <span class="text-black">Indonesia</span>
+                  <span class="ml-auto text-xs font-bold text-gray-400">ID</span>
+              </a>
 
-            <a href="{{ route('language.switch', 'id') }}"
-                class="flex items-center px-4 py-1 text-sm text-gray-700 hover:bg-blue-100">
-                <img src="https://flagcdn.com/id.svg" class="w-7 h-5 mr-3">
-                <span>Indonesia</span>
-                <span class="ml-auto text-xs font-bold text-gray-400">ID</span>
-            </a>
+              <a href="{{ route('language.switch', 'en') }}"
+                  class="flex items-center px-4 py-1 text-sm text-gray-700 hover:bg-blue-100">
+                  <img src="https://flagcdn.com/gb.svg" class="w-7 h-5 mr-3">
+                  <span class="text-black">English</span>
+                  <span class="ml-auto text-xs font-bold text-gray-400">EN</span>
+              </a>
+          </div>
+      </div>
 
-            <a href="{{ route('language.switch', 'en') }}"
-                class="flex items-center px-4 py-1 text-sm text-gray-700 hover:bg-blue-100">
-                <img src="https://flagcdn.com/gb.svg" class="w-7 h-5 mr-3">
-                <span>English</span>
-                <span class="ml-auto text-xs font-bold text-gray-400">EN</span>
-            </a>
-        </div>
-    </div>
-
-  </nav>
-</header>
+    </nav>
+  </header>
 
 
   <!-- HERO -->
@@ -308,31 +324,45 @@
   const desktopNav = document.getElementById('desktopNav');
   const desktopBtn = document.getElementById('desktopBtn');
 
-  function onScrollHeader() {
+    function onScrollHeader() {
       if (window.scrollY > 40) {
-          // Tambahkan class solid
           header.classList.add('solid', 'bg-white', 'shadow-md');
 
-          desktopNav.classList.add('text-gray-800');
+          // Desktop nav → hitam
+          desktopNav.classList.add('text-gray-900');
           desktopNav.classList.remove('text-white');
 
+          // Buttons
           desktopBtn.querySelectorAll('a').forEach(a => {
               a.classList.remove('text-white', 'border-white');
               a.classList.add('text-gray-900');
           });
 
+          // LANG BUTTON → hitam
+          document.querySelectorAll('#langBtn span, #langBtnMobile span').forEach(el => {
+              el.style.color = '#1f2937';
+          });
+
       } else {
-          // Kembalikan transparan
           header.classList.remove('solid', 'bg-white', 'shadow-md');
 
+          // Desktop nav → putih
           desktopNav.classList.remove('text-gray-800');
           desktopNav.classList.add('text-white');
 
+          // Buttons
           desktopBtn.querySelectorAll('a').forEach(a => {
               a.classList.add('text-white');
           });
+
+          // LANG BUTTON → putih
+          document.querySelectorAll('#langBtn span, #langBtnMobile span').forEach(el => {
+              el.style.color = 'white';
+          });
+
       }
   }
+
 
   onScrollHeader();
   window.addEventListener('scroll', onScrollHeader);
@@ -362,16 +392,6 @@
           dropdownMobile.classList.add("hidden");
       }
   });
-
-  const langBtn = document.getElementById('langBtn');
-
-  if (window.scrollY > 40) {
-      langBtn.classList.remove('text-white');
-      langBtn.classList.add('text-gray-800');
-  } else {
-      langBtn.classList.add('text-white');
-      langBtn.classList.remove('text-gray-800');
-  }
 
   document.getElementById('year').textContent = new Date().getFullYear();
 

@@ -133,15 +133,47 @@
 @push('js')
 <script>
 // [PERUBAHAN DI SINI] Inisialisasi TinyMCE
-    tinymce.init({
-        // Gunakan selector class untuk menargetkan SEMUA editor
-        selector: 'textarea.rich-text-editor',
-        plugins: 'lists link code fullscreen',
-        toolbar: 'undo redo | blocks | bold italic | bullist numlist | link code | fullscreen',
-        menubar: false,
-        height: 250,
-        license_key: 'gpl',
+document.addEventListener('DOMContentLoaded', function () {
+
+    function initTinyMCE() {
+        tinymce.remove();
+
+        tinymce.init({
+            selector: 'textarea.rich-text-editor',
+            height: 280,
+            menubar: false,
+            license_key: 'gpl',
+
+            plugins: 'advlist autolink lists link image charmap preview anchor ' +
+                'searchreplace visualblocks code fullscreen ' +
+                'insertdatetime media table paste help wordcount',
+
+            toolbar:
+                'undo redo | blocks | ' +
+                'bold italic underline | link code |' +
+                'alignleft aligncenter alignright alignjustify | ' +
+                'bullist numlist outdent indent | ' +
+                'link image media table | code fullscreen',
+        });
+    }
+
+    // 🟩 TINY MCE ON CREATE
+    $('#createModal').on('shown.bs.modal', function() {
+        initTinyMCE();
     });
+
+    // 🟦 TINY MCE ON EDIT
+    $('#editModal').on('shown.bs.modal', function() {
+        initTinyMCE();
+        setTimeout(() => {
+            tinymce.get('edit_deskripsi_id')?.setContent(window._editData?.deskripsi?.id || '');
+            tinymce.get('edit_deskripsi_en')?.setContent(window._editData?.deskripsi?.en || '');
+        }, 150);
+    });
+
+});
+
+
 
 $(document).ready(function() {
     // --- Inisialisasi Select2 Phyphox untuk Modal EDIT ---
