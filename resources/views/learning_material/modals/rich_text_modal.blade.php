@@ -1,5 +1,5 @@
 <div class="modal fade" id="addRichTextModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-lg"> {{-- Dibuat lebih besar (modal-lg) --}}
+    <div class="modal-dialog modal-dialog-centered modal-xl"> {{-- Dibuat lebih besar (modal-lg) --}}
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">{{ __('admin.material_modal.add_rich_text') }}</h5>

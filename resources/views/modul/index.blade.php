@@ -131,16 +131,19 @@
 
 @endsection
 @push('js')
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 <script>
 // [PERUBAHAN DI SINI] Inisialisasi TinyMCE
 document.addEventListener('DOMContentLoaded', function () {
 
     function initTinyMCE() {
-        tinymce.remove();
+
+        // Hapus instance yang sudah pernah dibuat
+        tinymce.remove('textarea.rich-text-editor');
 
         tinymce.init({
             selector: 'textarea.rich-text-editor',
-            height: 280,
+            height: 250,
             menubar: false,
             license_key: 'gpl',
 
@@ -150,26 +153,72 @@ document.addEventListener('DOMContentLoaded', function () {
 
             toolbar:
                 'undo redo | blocks | ' +
-                'bold italic underline | link code |' +
-                'alignleft aligncenter alignright alignjustify | ' +
-                'bullist numlist outdent indent | ' +
+                'bold italic underline |' +
+                'alignleft aligncenter alignright alignjustify| mathjax | ' +
+                'bullist numlist| ' +
                 'link image media table | code fullscreen',
+
+            setup: function (editor) {
+                editor.ui.registry.addButton('mathjax', {
+                    text: '∑ Math',
+                    tooltip: 'Insert Math Formula',
+                    onAction: function () {
+                        editor.windowManager.open({
+                            title: 'Insert Math Formula (LaTeX)',
+                            body: {
+                                type: 'panel',
+                                items: [
+                                    {
+                                        type: 'textarea',
+                                        name: 'latex',
+                                        label: 'LaTeX Code',
+                                        placeholder: '\\frac{1}{2}mv^2'
+                                    }
+                                ]
+                            },
+                            buttons: [
+                                { type: 'cancel', text: 'Cancel' },
+                                { type: 'submit', text: 'Insert', primary: true }
+                            ],
+                            onSubmit: function (api) {
+                                const latex = api.getData().latex;
+                                if (latex.trim() !== '') {
+                                    editor.insertContent(`\\(${latex}\\)`);
+                                }
+                                api.close();
+                            }
+                        });
+                    }
+                });
+            },
+
+            style_formats: [
+                { title: 'Heading 1', format: 'h1' },
+                { title: 'Heading 2', format: 'h2' },
+                { title: 'Heading 3', format: 'h3' },
+                { title: 'Paragraph', format: 'p' }
+            ]
         });
     }
 
+
     // 🟩 TINY MCE ON CREATE
-    $('#createModal').on('shown.bs.modal', function() {
+    // Modal Create
+    $('#createModal').on('shown.bs.modal', function () {
         initTinyMCE();
     });
 
-    // 🟦 TINY MCE ON EDIT
-    $('#editModal').on('shown.bs.modal', function() {
+    // Modal Edit
+    $('#editModal').on('shown.bs.modal', function () {
         initTinyMCE();
-        setTimeout(() => {
+
+        // Setelah editor siap → isi konten edit
+        setTimeout(function () {
             tinymce.get('edit_deskripsi_id')?.setContent(window._editData?.deskripsi?.id || '');
             tinymce.get('edit_deskripsi_en')?.setContent(window._editData?.deskripsi?.en || '');
         }, 150);
     });
+
 
 });
 

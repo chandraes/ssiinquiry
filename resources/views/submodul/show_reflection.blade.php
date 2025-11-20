@@ -105,18 +105,51 @@
 
         toolbar:
             'undo redo | blocks | ' +
-            'bold italic underline | link code |' +
-            'alignleft aligncenter alignright alignjustify | ' +
-            'bullist numlist outdent indent | ' +
+            'bold italic underline |' +
+            'alignleft aligncenter alignright alignjustify| mathjax | ' +
+            'bullist numlist| ' +
             'link image media table | code fullscreen',
 
-        // OPTIONAL: biar style heading lebih modern
+        setup: function (editor) {
+            editor.ui.registry.addButton('mathjax', {
+                text: '∑ Math',
+                tooltip: 'Insert Math Formula',
+                onAction: function () {
+                    editor.windowManager.open({
+                        title: 'Insert Math Formula (LaTeX)',
+                        body: {
+                            type: 'panel',
+                            items: [
+                                {
+                                    type: 'textarea',
+                                    name: 'latex',
+                                    label: 'LaTeX Code',
+                                    placeholder: '\\frac{1}{2}mv^2'
+                                }
+                            ]
+                        },
+                        buttons: [
+                            { type: 'cancel', text: 'Cancel' },
+                            { type: 'submit', text: 'Insert', primary: true }
+                        ],
+                        onSubmit: function (api) {
+                            const latex = api.getData().latex;
+                            if (latex.trim() !== '') {
+                                editor.insertContent(`\\(${latex}\\)`);
+                            }
+                            api.close();
+                        }
+                    });
+                }
+            });
+        },
+
         style_formats: [
             { title: 'Heading 1', format: 'h1' },
             { title: 'Heading 2', format: 'h2' },
             { title: 'Heading 3', format: 'h3' },
             { title: 'Paragraph', format: 'p' }
-        ],
+        ]
     });
     // ===================================================================
     // == [BARU] LOGIKA FORM DINAMIS (PILIHAN GANDA)

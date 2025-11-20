@@ -165,6 +165,8 @@
 @include('submodul.edit_modal')
 @endsection
 @push('js')
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
 <script>
 
     // [PERUBAHAN DI SINI] Inisialisasi TinyMCE
@@ -190,12 +192,56 @@
 
         toolbar:
             'undo redo | blocks | ' +
-            'bold italic underline | link code |' +
-            'alignleft aligncenter alignright alignjustify | ' +
-            'bullist numlist outdent indent | ' +
-            'link image media table | code fullscreen',
+            'bold italic underline |' +
+            'alignleft aligncenter alignright alignjustify | mathjax |' +
+            'bullist numlist| ' +
+            'link image media table | ' +
+            'code fullscreen',
 
-        // OPTIONAL: biar style heading lebih modern
+        // Tambah plugin mathjax sederhana
+        setup: function (editor) {
+            editor.ui.registry.addButton('mathjax', {
+                text: '∑ Math',
+                tooltip: 'Insert Math Formula',
+                onAction: function () {
+                    editor.windowManager.open({
+                        title: 'Insert Math Formula (LaTeX)',
+                        body: {
+                            type: 'panel',
+                            items: [
+                                {
+                                    type: 'input',
+                                    name: 'latex',
+                                    label: 'LaTeX Code',
+                                    multiline: true,
+                                    minHeight: 160,
+                                    placeholder: '\\frac{1}{2}mv^2'
+                                }
+                            ]
+                        },
+                        buttons: [
+                            { type: 'cancel', text: 'Cancel' },
+                            {
+                                type: 'submit',
+                                text: 'Insert',
+                                primary: true
+                            }
+                        ],
+                        onSubmit: function (api) {
+                            const data = api.getData();
+                            const latex = data.latex;
+
+                            if (latex.trim() !== '') {
+                                editor.insertContent(`\\(${latex}\\)`); // inline MathJax
+                            }
+
+                            api.close();
+                        }
+                    });
+                }
+            });
+        },
+
         style_formats: [
             { title: 'Heading 1', format: 'h1' },
             { title: 'Heading 2', format: 'h2' },
@@ -203,7 +249,6 @@
             { title: 'Paragraph', format: 'p' }
         ],
     });
-
 
     /**
      * 1. FUNGSI UNTUK MENGISI MODAL EDIT (DIBERSIHKAN)
