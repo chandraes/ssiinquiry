@@ -133,17 +133,36 @@
         height: 250,
         menubar: false,
         license_key: 'gpl',
-        z_index: 999999,
-        plugins: 'advlist autolink lists link image charmap preview anchor ' +
-            'searchreplace visualblocks code fullscreen ' +
-            'insertdatetime media table help wordcount',
+
+        plugins: [
+            'advlist autolink lists link image charmap preview anchor',
+            'searchreplace visualblocks code fullscreen',
+            'insertdatetime media table paste help wordcount',
+            'fontfamily fontsize'
+        ].join(' '),
 
         toolbar:
-            'undo redo | blocks | ' +
-            'bold italic underline |' +
-            'alignleft aligncenter alignright alignjustify| mathjax | ' +
-            'bullist numlist| ' +
-            'link image media table | code fullscreen',
+            'undo redo | fontfamily fontsize | blocks | ' +
+            'bold italic underline | ' +
+            'alignleft aligncenter alignright alignjustify | ' +
+            'mathjax | ' +
+            'bullist numlist | link image media table | code fullscreen',
+
+        /* Daftar Font */
+        font_family_formats:
+            "Arial=arial,helvetica,sans-serif;" +
+            "Arial Black=arial black,avant garde;" +
+            "Comic Sans MS=comic sans ms,sans-serif;" +
+            "Courier New=courier new,courier,monospace;" +
+            "Georgia=georgia,palatino;" +
+            "Tahoma=tahoma,arial,helvetica,sans-serif;" +
+            "Times New Roman=times new roman,times;" +
+            "Verdana=verdana,geneva;" +
+            "Poppins=Poppins,sans-serif;" +
+            "Roboto=Roboto,sans-serif;",
+
+        /* Font size (optional) */
+        fontsize_formats: "10px 12px 14px 16px 18px 24px 36px 48px",
 
         setup: function (editor) {
             editor.ui.registry.addButton('mathjax', {
@@ -177,14 +196,7 @@
                     });
                 }
             });
-        },
-
-        style_formats: [
-            { title: 'Heading 1', format: 'h1' },
-            { title: 'Heading 2', format: 'h2' },
-            { title: 'Heading 3', format: 'h3' },
-            { title: 'Paragraph', format: 'p' }
-        ]
+        }
     });
 
     /**
