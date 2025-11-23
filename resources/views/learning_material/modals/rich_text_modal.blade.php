@@ -1,4 +1,8 @@
-<div class="modal fade" id="addRichTextModal" tabindex="-1">
+<div class="modal fade" id="addRichTextModal" tabindex="-1"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+    data-bs-focus="false"
+    >
     <div class="modal-dialog modal-dialog-centered modal-xl"> {{-- Dibuat lebih besar (modal-lg) --}}
         <div class="modal-content">
             <div class="modal-header">

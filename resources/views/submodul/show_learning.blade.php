@@ -123,11 +123,18 @@
 @include('learning_material.modals.edit_modal') {{-- <-- [BARU] Sertakan Modal Edit --}}
 
 @endsection
+@push('css')
 
+@endpush
 @push('js')
 {{-- [BARU] JavaScript untuk Edit dan Delete Material --}}
 <script>
-    // [PERUBAHAN DI SINI] Inisialisasi TinyMCE
+
+    $(document).on('focusin', function(e) {
+        if ($(e.target).closest(".tox-tinymce, .tox-tinymce-aux, .moxman-window, .ui-datepicker, .modal").length) {
+            e.stopImmediatePropagation();
+        }
+    });
     tinymce.init({
         selector: 'textarea.rich-text-editor',
         height: 250,
@@ -140,8 +147,17 @@
             'insertdatetime media table paste help wordcount',
             'fontfamily fontsize'
         ].join(' '),
+        plugins: 'advlist autolink lists link image charmap preview anchor ' +
+            'searchreplace visualblocks code fullscreen ' +
+            'insertdatetime media table help wordcount',
 
         toolbar:
+            'undo redo | blocks fontfamily fontsize |' +
+            'bold italic underline |' +
+            'alignleft aligncenter alignright alignjustify| mathjax | ' +
+            'bullist numlist| ' +
+            'link image media table | code fullscreen',
+        extended_valid_elements: 'span[class|data-latex]',
             'undo redo | fontfamily fontsize | blocks | ' +
             'bold italic underline | ' +
             'alignleft aligncenter alignright alignjustify | ' +
@@ -165,6 +181,54 @@
         fontsize_formats: "10px 12px 14px 16px 18px 24px 36px 48px",
 
         setup: function (editor) {
+                // Fungsi untuk merender LaTeX di dalam editor
+            const renderMathInEditor = () => {
+                // Hentikan perulangan tak terbatas
+                editor.off('SetContent', renderMathInEditor);
+
+                let content = editor.getContent();
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = content;
+
+                let hasChanges = false;
+
+                // Cari semua elemen dengan kelas 'latex-math' dan render dengan KaTeX
+                tempDiv.querySelectorAll('.latex-math').forEach(el => {
+                    const latex = el.textContent;
+                    try {
+                        const renderedHtml = katex.renderToString(latex, {
+                            throwOnError: false
+                        });
+                        // Hanya update jika ada perubahan untuk mencegah loop tak terbatas
+                        if (el.innerHTML !== renderedHtml) {
+                            el.innerHTML = renderedHtml;
+                            hasChanges = true;
+                        }
+                    } catch (e) {
+                        console.error("KaTeX rendering error:", e);
+                        el.style.color = 'red';
+                        el.textContent = "Error: " + latex;
+                        hasChanges = true;
+                    }
+                });
+
+                // Perbarui konten editor HANYA jika ada perubahan
+                if (hasChanges) {
+                    editor.setContent(tempDiv.innerHTML);
+                }
+
+                // Aktifkan kembali event listener
+                editor.on('SetContent', renderMathInEditor);
+            };
+
+            // Gunakan NodeChange untuk pemicu yang paling andal
+            editor.on('NodeChange', renderMathInEditor);
+            // Event ini tetap diperlukan untuk konten yang dimuat saat init
+            editor.on('SetContent', renderMathInEditor);
+            // Trigger rendering saat editor pertama kali siap
+            editor.on('init', function() {
+                renderMathInEditor();
+            });
             editor.ui.registry.addButton('mathjax', {
                 text: '∑ Math',
                 tooltip: 'Insert Math Formula',
@@ -316,4 +380,8 @@
         // (Anda bisa tambahkan konfirmasi untuk form 'create' di sini jika mau)
     });
 </script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzYC1a7FwFJkU2JgA" crossorigin="anonymous"></script>
+
+<!-- (Opsional) Auto-render extension untuk memudahkan -->
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
 @endpush
