@@ -140,128 +140,159 @@
         height: 250,
         menubar: false,
         license_key: 'gpl',
+        z_index: 999999,
 
-        plugins: [
-            'advlist autolink lists link image charmap preview anchor',
-            'searchreplace visualblocks code fullscreen',
-            'insertdatetime media table paste help wordcount',
-            'fontfamily fontsize'
-        ].join(' '),
-        plugins: 'advlist autolink lists link image charmap preview anchor ' +
-            'searchreplace visualblocks code fullscreen ' +
-            'insertdatetime media table help wordcount',
+        // 1. PENTING: Load CSS KaTeX ke dalam iframe TinyMCE agar styling equation muncul
+        content_css: [
+            'https://cdn.jsdelivr.net/npm/katex@0.16.25/dist/katex.min.css'
+        ],
 
-        toolbar:
-            'undo redo | blocks fontfamily fontsize |' +
-            'bold italic underline |' +
-            'alignleft aligncenter alignright alignjustify| mathjax | ' +
-            'bullist numlist| ' +
-            'link image media table | code fullscreen',
-        extended_valid_elements: 'span[class|data-latex]',
-            'undo redo | fontfamily fontsize | blocks | ' +
-            'bold italic underline | ' +
-            'alignleft aligncenter alignright alignjustify | ' +
-            'mathjax | ' +
-            'bullist numlist | link image media table | code fullscreen',
+        plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table help wordcount',
 
-        /* Daftar Font */
-        font_family_formats:
-            "Arial=arial,helvetica,sans-serif;" +
-            "Arial Black=arial black,avant garde;" +
-            "Comic Sans MS=comic sans ms,sans-serif;" +
-            "Courier New=courier new,courier,monospace;" +
-            "Georgia=georgia,palatino;" +
-            "Tahoma=tahoma,arial,helvetica,sans-serif;" +
-            "Times New Roman=times new roman,times;" +
-            "Verdana=verdana,geneva;" +
-            "Poppins=Poppins,sans-serif;" +
-            "Roboto=Roboto,sans-serif;",
-
-        /* Font size (optional) */
-        fontsize_formats: "10px 12px 14px 16px 18px 24px 36px 48px",
+        toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline | alignleft aligncenter alignright alignjustify| mathjax | bullist numlist| link image media table | code fullscreen',
 
         setup: function (editor) {
-                // Fungsi untuk merender LaTeX di dalam editor
+
+            // Fungsi untuk merender LaTeX
             const renderMathInEditor = () => {
-                // Hentikan perulangan tak terbatas
-                editor.off('SetContent', renderMathInEditor);
+                // Kita akses 'window.katex' dari parent (halaman utama)
+                // atau pastikan library katex sudah terload di halaman utama
+                const katex = window.katex || window.parent.katex;
 
-                let content = editor.getContent();
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = content;
-
-                let hasChanges = false;
-
-                // Cari semua elemen dengan kelas 'latex-math' dan render dengan KaTeX
-                tempDiv.querySelectorAll('.latex-math').forEach(el => {
-                    const latex = el.textContent;
-                    try {
-                        const renderedHtml = katex.renderToString(latex, {
-                            throwOnError: false
-                        });
-                        // Hanya update jika ada perubahan untuk mencegah loop tak terbatas
-                        if (el.innerHTML !== renderedHtml) {
-                            el.innerHTML = renderedHtml;
-                            hasChanges = true;
-                        }
-                    } catch (e) {
-                        console.error("KaTeX rendering error:", e);
-                        el.style.color = 'red';
-                        el.textContent = "Error: " + latex;
-                        hasChanges = true;
-                    }
-                });
-
-                // Perbarui konten editor HANYA jika ada perubahan
-                if (hasChanges) {
-                    editor.setContent(tempDiv.innerHTML);
+                if (!katex) {
+                    console.warn('KaTeX library not found');
+                    return;
                 }
 
-                // Aktifkan kembali event listener
-                editor.on('SetContent', renderMathInEditor);
+                // Cari semua elemen dengan class 'latex-math' di dalam editor
+                const mathElements = editor.dom.select('.latex-math');
+
+                mathElements.forEach(el => {
+                    // Cek apakah sudah dirender untuk mencegah re-render berulang
+                    if (el.getAttribute('data-rendered') === 'true') return;
+
+                    const latexCode = el.getAttribute('data-latex');
+                    if (!latexCode) return;
+
+                    try {
+                        // Render ke HTML string
+                        const renderedHtml = katex.renderToString(latexCode, {
+                            throwOnError: false,
+                            displayMode: false // Ubah true jika ingin display block
+                        });
+
+                        // Masukkan HTML yang sudah dirender ke dalam span
+                        // Kita set contentEditable=false agar user tidak sengaja mengedit HTML hasil render
+                        el.innerHTML = renderedHtml;
+                        el.setAttribute('contenteditable', 'false');
+                        el.setAttribute('data-rendered', 'true'); // Tandai sudah dirender
+
+                        // Tambahkan event listener agar saat diklik bisa diedit (Opsional)
+                        el.style.cursor = 'pointer';
+
+                    } catch (e) {
+                        el.innerHTML = '<span style="color:red">Error rendering LaTeX</span>';
+                    }
+                });
             };
 
-            // Gunakan NodeChange untuk pemicu yang paling andal
+            // Jalankan render saat konten berubah
             editor.on('NodeChange', renderMathInEditor);
-            // Event ini tetap diperlukan untuk konten yang dimuat saat init
             editor.on('SetContent', renderMathInEditor);
-            // Trigger rendering saat editor pertama kali siap
-            editor.on('init', function() {
-                renderMathInEditor();
+
+            // 2. PENTING: Tambahkan event double click untuk mengedit rumus
+            editor.on('DblClick', function(e) {
+                const target = e.target.closest('.latex-math');
+                if (target) {
+                    const currentLatex = target.getAttribute('data-latex');
+                    // Buka kembali dialog insert dengan value yang ada
+                    openMathDialog(currentLatex, target);
+                }
             });
+
+            // Fungsi Helper untuk membuka dialog
+            const openMathDialog = (initialValue = '', targetElement = null) => {
+                editor.windowManager.open({
+                    title: 'Insert/Edit Math Formula (LaTeX)',
+                    body: {
+                        type: 'panel',
+                        items: [{
+                            type: 'textarea',
+                            name: 'latex',
+                            label: 'LaTeX Code',
+                            placeholder: '\\frac{1}{2}mv^2',
+                        }]
+                    },
+                    initialData: {
+                        latex: initialValue
+                    },
+                    buttons: [
+                        { type: 'cancel', text: 'Cancel' },
+                        { type: 'submit', text: targetElement ? 'Update' : 'Insert', primary: true }
+                    ],
+                    onSubmit: function (api) {
+                        const latex = api.getData().latex;
+                        if (latex.trim() !== '') {
+                            // 3. PENTING: Kita bungkus dengan SPAN dan CLASS yang spesifik
+                            // Kita simpan kode asli di attribute 'data-latex'
+                            const content = `<span class="latex-math" data-latex="${latex}">\\(${latex}\\)</span>&nbsp;`;
+
+                            if (targetElement) {
+                                // Jika mode edit, ganti elemen lama
+                                editor.dom.replace(editor.dom.createFragment(content), targetElement);
+                            } else {
+                                // Jika insert baru
+                                editor.insertContent(content);
+                            }
+
+                            // Trigger render manual
+                            setTimeout(renderMathInEditor, 50);
+                        }
+                        api.close();
+                    }
+                });
+            }
+
             editor.ui.registry.addButton('mathjax', {
                 text: '∑ Math',
                 tooltip: 'Insert Math Formula',
                 onAction: function () {
-                    editor.windowManager.open({
-                        title: 'Insert Math Formula (LaTeX)',
-                        body: {
-                            type: 'panel',
-                            items: [
-                                {
-                                    type: 'textarea',
-                                    name: 'latex',
-                                    label: 'LaTeX Code',
-                                    placeholder: '\\frac{1}{2}mv^2'
-                                }
-                            ]
-                        },
-                        buttons: [
-                            { type: 'cancel', text: 'Cancel' },
-                            { type: 'submit', text: 'Insert', primary: true }
-                        ],
-                        onSubmit: function (api) {
-                            const latex = api.getData().latex;
-                            if (latex.trim() !== '') {
-                                editor.insertContent(`\\(${latex}\\)`);
-                            }
-                            api.close();
-                        }
-                    });
+                openMathDialog();
                 }
             });
         }
     });
+
+    // Fungsi untuk membersihkan status render agar dikalkulasi ulang oleh KaTeX
+    function prepareContentForEditor(content) {
+        if (!content) return '';
+
+        // 1. Jika content adalah raw text LaTeX biasa (misal: \( E=mc^2 \))
+        // dan belum dibungkus span (kasus migrasi data lama), kita bungkus dulu.
+        // Regex ini mencari pola \( ... \) yang belum punya class latex-math
+        if (!content.includes('class="latex-math"')) {
+            content = content.replace(/\\\((.*?)\\\)/g, function(match, capture) {
+                return `<span class="latex-math" data-latex="${capture}">\\(${capture}\\)</span>`;
+            });
+        }
+
+        // 2. Reset atribut data-rendered dari konten yang sudah ada
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = content;
+
+        const mathElements = tempDiv.querySelectorAll('.latex-math');
+        mathElements.forEach(el => {
+            // Hapus flag 'data-rendered' agar script init TinyMCE mau merender ulang
+            el.removeAttribute('data-rendered');
+            // Reset contentEditable
+            el.setAttribute('contenteditable', 'false');
+            // Opsional: Kembalikan isi ke format raw agar transisi render terlihat bersih
+            // (Hanya jika innerHTML rusak, jika tidak baris ini bisa di-skip)
+            // el.innerHTML = '\\(' + el.getAttribute('data-latex') + '\\)';
+        });
+
+        return tempDiv.innerHTML;
+    }
 
     /**
      * 1. FUNGSI UNTUK MENGISI MODAL EDIT
@@ -283,46 +314,42 @@
             modal.find('[name="title[id]"]').val(data.title.id);
             modal.find('[name="title[en]"]').val(data.title.en);
 
-            // Reset semua editor sebelum digunakan
-            if (tinymce.get('edit_content_rich_text_id')) {
-                tinymce.get('edit_content_rich_text_id').setContent('');
-            }
-            if (tinymce.get('edit_content_rich_text_en')) {
-                tinymce.get('edit_content_rich_text_en').setContent('');
-            }
+            // --- BAGIAN RICH TEXT ---
+            const editorId = tinymce.get('edit_content_rich_text_id');
+            const editorEn = tinymce.get('edit_content_rich_text_en');
 
-            // Cek tipe konten
+            // Reset editor
+            if (editorId) editorId.setContent('');
+            if (editorEn) editorEn.setContent('');
+
             if (data.type === 'rich_text') {
-                // Tampilkan field Rich Text, sembunyikan URL
                 $('#edit-richtext-field').show();
                 $('#edit-url-field').hide();
 
-                // Isi textarea (TinyMCE pakai API)
-                if (tinymce.get('edit_content_rich_text_id')) {
-                    tinymce.get('edit_content_rich_text_id').setContent(data.content.id ?? '');
-                }
-                if (tinymce.get('edit_content_rich_text_en')) {
-                    tinymce.get('edit_content_rich_text_en').setContent(data.content.en ?? '');
-                }
+                // Helper untuk set content dengan aman
+                const setEditorContentSafe = (editor, contentRaw) => {
+                    if (editor && contentRaw) {
+                        // 1. Bersihkan konten (hapus data-rendered="true")
+                        const cleanContent = prepareContentForEditor(contentRaw);
 
-                // Kosongkan field URL
+                        // 2. Set Content
+                        editor.setContent(cleanContent);
+
+                        // 3. PENTING: Clear Undo Manager
+                        // Agar saat user tekan Ctrl+Z, editor tidak kosong (awal load dianggap state 0)
+                        editor.undoManager.clear();
+                    }
+                };
+
+                setEditorContentSafe(editorId, data.content.id);
+                setEditorContentSafe(editorEn, data.content.en);
+
                 modal.find('#edit_content_url').val('');
 
             } else {
-                // Tampilkan field URL, sembunyikan Rich Text
                 $('#edit-richtext-field').hide();
                 $('#edit-url-field').show();
-
-                // Isi input URL
                 modal.find('#edit_content_url').val(data.content_url ?? '');
-
-                // Kosongkan isi editor Rich Text
-                if (tinymce.get('edit_content_rich_text_id')) {
-                    tinymce.get('edit_content_rich_text_id').setContent('');
-                }
-                if (tinymce.get('edit_content_rich_text_en')) {
-                    tinymce.get('edit_content_rich_text_en').setContent('');
-                }
             }
 
             // Tampilkan modal
@@ -380,8 +407,4 @@
         // (Anda bisa tambahkan konfirmasi untuk form 'create' di sini jika mau)
     });
 </script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzYC1a7FwFJkU2JgA" crossorigin="anonymous"></script>
-
-<!-- (Opsional) Auto-render extension untuk memudahkan -->
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
 @endpush
