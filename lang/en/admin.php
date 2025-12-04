@@ -354,6 +354,10 @@ return [
         'no_reflection' => 'No reflection questions available for this submodule.',
         'student_answer' => 'Student Answers',
         'student_answer_instruction' => 'Student answers per class will be displayed here.',
+        'time_setting' => 'Time Setting',
+        'start_time' => 'Start Time',
+        'end_time' => 'End Time',
+        'set_time' => 'Set Time',
     ],
 
     'forum' => [

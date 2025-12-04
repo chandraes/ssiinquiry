@@ -83,7 +83,7 @@ class SubModulController extends Controller
         return view('submodul.show_learning', compact('subModul'));
     }
 
-   public function showJson(SubModule $subModul)
+    public function showJson(SubModule $subModul)
     {
         return response()->json([
             'id' => $subModul->id,

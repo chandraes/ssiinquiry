@@ -84,8 +84,27 @@
 
             {{-- [PERBAIKAN TOTAL] Loop Pertanyaan --}}
             @php
-                // Tentukan status "Terkunci" di awal
-                $isLocked = ($currentProgress && $currentProgress->completed_at);
+                $today = now();
+                $start = $subModule->debate_start_time;
+                $end   = $subModule->debate_end_time;
+
+                dd($start, $end, $today);
+                $isLocked = false;
+
+                // Kondisi 1 — Sudah selesai
+                if($currentProgress && $currentProgress->completed_at) {
+                    $isLocked = true;
+                }
+
+                // Kondisi 2 — Belum mulai diskusi
+                elseif ($start && $today < $start) {
+                    $isLocked = true;
+                }
+
+                // Kondisi 3 — Waktu sudah lewat
+                elseif ($end && $today > $end) {
+                    $isLocked = true;
+                }
             @endphp
 
             @forelse ($subModule->reflectionQuestions->sortBy('order') as $question)
@@ -97,7 +116,7 @@
                     {{-- Pertanyaan --}}
                     <div class="mb-3">
                         <span class="badge bg-primary me-2">{{__('admin.siswa.show_reflection.question')}} {{ $loop->iteration }}</span>
-                        <h5 class="d-inline">{{ $question->question_text }}</h5>
+                        <h5 class="d-inline">{!! $question->question_text !!}</h5>
                     </div>
 
                     {{-- Container Jawaban --}}

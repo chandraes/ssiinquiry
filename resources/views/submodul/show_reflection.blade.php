@@ -33,7 +33,7 @@
                             @else
                                 <span class="badge bg-secondary me-2">Esai</span>
                             @endif
-                            {{ $question->question_text }}
+                            {!! $question->question_text !!}
                         </h6>
                         <small class="text-muted">Urutan: {{ $question->order }}</small>
 
@@ -74,6 +74,35 @@
                     {{__('admin.reflection.no_reflection')}}
                 </div>
             @endforelse
+            {{-- Pengaturan Waktu (Tidak berubah) --}}
+            <form action="{{ route('reflection_time.update', $subModul->id) }}" method="POST">
+                @csrf
+                @method('PUT')
+
+                <div class="row border">
+                    <div class="card-header px-0">
+                        <h5 class="mx-0">{{ __('admin.reflection.time_setting') }}</h5>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">{{ __('admin.reflection.start_time') }}</label>
+                        <input type="datetime-local" name="debate_start_time" class="form-control" 
+                            value="{{ $subModul->debate_start_time?->format('Y-m-d\TH:i') }}">
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">{{ __('admin.reflection.end_time') }}</label>
+                        <input type="datetime-local" name="debate_end_time" class="form-control" 
+                            value="{{ $subModul->debate_end_time?->format('Y-m-d\TH:i') }}">
+                    </div>
+
+                    <div class="col-md-12 mb-3 text-end">
+                        <button type="submit" class="btn btn-primary">
+                            {{ __('admin.reflection.set_time') }}
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
         <div class="card-footer">
             <div class="col-md-12">
@@ -101,7 +130,7 @@
 
         plugins: 'advlist autolink lists link image charmap preview anchor ' +
             'searchreplace visualblocks code fullscreen ' +
-            'insertdatetime media table paste help wordcount',
+            'insertdatetime media table help wordcount',
 
         toolbar:
             'undo redo | blocks | ' +
@@ -268,34 +297,37 @@
         $('#edit_mc_options_container').hide();
 
         $.get(url, function(data) {
-            // Gunakan route update Laravel
-            var updateUrl = "{{ route('reflection_question.update', ':id') }}";
-            updateUrl = updateUrl.replace(':id', data.id); // Ganti :id dengan ID pertanyaan aktual
+            var updateUrl = "{{ route('reflection_question.update', ':id') }}"
+                .replace(':id', data.id);
 
             form.attr('action', updateUrl);
-            form.attr('method', 'POST'); // karena HTML form hanya support GET/POST
-            // tambahkan _method=PUT agar cocok dengan Laravel
+
             if (!form.find('input[name="_method"]').length) {
                 form.append('<input type="hidden" name="_method" value="PUT">');
             }
 
-            // Isi field dengan data dari server
-            modal.find('#edit_question_text_id').val(data.question_text.id ?? '');
-            modal.find('#edit_question_text_en').val(data.question_text.en ?? '');
+            // === SET DATA TINYMCE (INI YANG PENTING!) ===
+            setTimeout(() => {
+                tinymce.get('edit_question_text_id').setContent(data.question_text.id ?? '');
+                tinymce.get('edit_question_text_en').setContent(data.question_text.en ?? '');
+            }, 200);
+
+            // Input lain tetap dengan val
             modal.find('#edit_question_order').val(data.order ?? '');
             modal.find('#edit_question_type').val(data.type ?? '');
 
-            // Tampilkan opsi jika multiple choice
-            if (data.type === 'multiple_choice' && Array.isArray(data.options) && data.options.length > 0) {
-                data.options.forEach((option, index) => {
-                    const optionHtml = createOptionHtml('edit', index, option);
-                    editList.append(optionHtml);
+            // Multiple choice
+            editList.empty();
+            if (data.type === 'multiple_choice' && Array.isArray(data.options)) {
+                data.options.forEach((option, i) => {
+                    editList.append(createOptionHtml('edit', i, option));
                 });
                 $('#edit_mc_options_container').show();
             }
 
-            modal.modal('show'); // tampilkan modal edit
+            modal.modal('show');
         });
+
     }
 
 
