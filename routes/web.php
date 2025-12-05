@@ -98,6 +98,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/{subModul}', [SubModulController::class, 'show_reflection'])->name('reflection_question.show');
         Route::post('/store', [ReflectionQuestionController::class, 'store'])->name('reflection_question.store');
         Route::put('/time/{id}', [ReflectionQuestionController::class, 'updateTime'])->name('reflection_time.update');
+        Route::post('/reset-progress/{id}', [ReflectionQuestionController::class, 'resetProgress'])->name('progress.reset');
+
 
         // [TAMBAHKAN INI] Route untuk mengambil data JSON (dipanggil oleh JS)
         Route::get('/{question}/edit', [ReflectionQuestionController::class, 'edit'])->name('reflection_question.edit');

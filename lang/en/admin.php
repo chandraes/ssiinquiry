@@ -355,6 +355,7 @@ return [
         'student_answer' => 'Student Answers',
         'student_answer_instruction' => 'Student answers per class will be displayed here.',
         'time_setting' => 'Time Setting',
+        'reset_progress' => 'Reset Student Progress',
         'start_time' => 'Start Time',
         'end_time' => 'End Time',
         'set_time' => 'Set Time',

@@ -362,6 +362,7 @@ return [
         'student_answer' => 'Jawaban Siswa',
         'student_answer_instruction' => 'Tampilan untuk jawaban siswa per kelas akan muncul di sini.',
         'time_setting' => 'Pengaturan Waktu',
+        'reset_progress' => 'Reset Progres Siswa',
         'start_time' => 'Waktu Mulai',
         'end_time' => 'Waktu Selesai',
         'set_time' => 'Atur Waktu',
