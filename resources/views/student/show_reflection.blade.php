@@ -88,7 +88,6 @@
                 $start = $subModule->debate_start_time;
                 $end   = $subModule->debate_end_time;
 
-                dd($start, $end, $today);
                 $isLocked = false;
 
                 // Kondisi 1 — Sudah selesai
