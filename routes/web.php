@@ -97,6 +97,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => 'reflection-question', 'middleware' => ['role:admin,guru']], function () {
         Route::get('/{subModul}', [SubModulController::class, 'show_reflection'])->name('reflection_question.show');
         Route::post('/store', [ReflectionQuestionController::class, 'store'])->name('reflection_question.store');
+        Route::put('/time/{id}', [ReflectionQuestionController::class, 'updateTime'])->name('reflection_time.update');
 
         // [TAMBAHKAN INI] Route untuk mengambil data JSON (dipanggil oleh JS)
         Route::get('/{question}/edit', [ReflectionQuestionController::class, 'edit'])->name('reflection_question.edit');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Exception;
 use App\Models\Kelas;
+use App\Models\SubModule;
 use Illuminate\Http\Request;
 use App\Models\ReflectionAnswer;
 use Illuminate\Support\Facades\DB; // <-- [BARU] Untuk transaction
@@ -20,8 +21,6 @@ class ReflectionQuestionController extends Controller
      */
     public function store(Request $request)
     {
-
-
         $request->validate([
             'sub_module_id' => 'required|exists:sub_modules,id',
             'type' => 'required|in:essay,multiple_choice', // <-- [BARU] Validasi tipe
@@ -141,6 +140,24 @@ class ReflectionQuestionController extends Controller
             return redirect()->back()->with('error', 'Gagal memperbarui pertanyaan: ' . $e->getMessage());
         }
     }
+
+    public function updateTime(Request $request, $id)
+    {
+        
+        // dd($id);
+        $validated = $request->validate([
+            'debate_start_time' => 'nullable|date',
+            'debate_end_time'   => 'nullable|date',
+        ]);
+
+        $subModul = SubModule::findOrFail($id);
+        $subModul->debate_start_time = $validated['debate_start_time'];
+        $subModul->debate_end_time   = $validated['debate_end_time'];
+        $subModul->save();
+
+        return back()->with('success', 'Waktu berhasil diperbarui.');
+    }
+
 
     /**
      * Hapus pertanyaan refleksi.
