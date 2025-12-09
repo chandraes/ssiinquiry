@@ -74,38 +74,56 @@
                     {{__('admin.reflection.no_reflection')}}
                 </div>
             @endforelse
+            
             {{-- Pengaturan Waktu (Tidak berubah) --}}
-            <form action="{{ route('reflection_time.update', $subModul->id) }}" method="POST">
-                @csrf
-                @method('PUT')
+            <div class="mb-3 border p-3">
+                <div class="card-header p-0 m-0 align-items-center d-flex justify-content-between mb-3">
+                    <h5 class="my-3">{{ __('admin.reflection.time_setting') }}</h5>
 
-                <div class="row border">
-                    <div class="card-header px-0">
-                        <h5 class="mx-0">{{ __('admin.reflection.time_setting') }}</h5>
-                    </div>
+                    {{-- Form Reset DIPISAH --}}
+                    <div class="d-flex mb-2">
+                        <form id="reset-progress-form-{{ $subModul->id }}" 
+                            action="{{ route('progress.reset', $subModul->id) }}" 
+                            method="POST" 
+                            class="d-inline">
+                            @csrf
+                        </form>
 
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">{{ __('admin.reflection.start_time') }}</label>
-                        <input type="datetime-local" name="debate_start_time" class="form-control" 
-                            value="{{ $subModul->debate_start_time?->format('Y-m-d\TH:i') }}">
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">{{ __('admin.reflection.end_time') }}</label>
-                        <input type="datetime-local" name="debate_end_time" class="form-control" 
-                            value="{{ $subModul->debate_end_time?->format('Y-m-d\TH:i') }}">
-                    </div>
-
-                    <div class="col-md-12 mb-3 text-end">
-                        <button type="submit" class="btn btn-primary">
-                            {{ __('admin.reflection.set_time') }}
+                        <button onclick="resetProgress({{ $subModul->id }})"
+                                class="btn btn-warning btn-sm p-2">
+                            {{__('admin.reflection.reset_progress')}}
                         </button>
                     </div>
                 </div>
-            </form>
+
+                <form action="{{ route('reflection_time.update', $subModul->id) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">{{ __('admin.reflection.start_time') }}</label>
+                            <input type="datetime-local" name="debate_start_time" class="form-control" 
+                                value="{{ $subModul->debate_start_time?->format('Y-m-d\TH:i') }}">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">{{ __('admin.reflection.end_time') }}</label>
+                            <input type="datetime-local" name="debate_end_time" class="form-control" 
+                                value="{{ $subModul->debate_end_time?->format('Y-m-d\TH:i') }}">
+                        </div>
+
+                        <div class="col-md-12 mb-3 text-end">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                {{ __('admin.reflection.set_time') }}
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
         <div class="card-footer">
-            <div class="col-md-12">
+            <div class="col-md-12 align-items-between d-flex justify-content-between">
                 <a href="{{ route('modul.show', $subModul->modul_id) }}" class="btn btn-secondary button-lg">
                     <i class="fa fa-arrow-left me-1"></i> {{ __('admin.button.back_to') }}{{ __('admin.modul.detail.title') }}
                 </a>
@@ -329,6 +347,24 @@
         });
 
     }
+
+    function resetProgress(id) {
+        Swal.fire({
+            title: 'Reset Progress?',
+            text: 'Semua progress mahasiswa akan dihapus. Apakah Anda yakin?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, Reset',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('reset-progress-form-' + id).submit();
+            }
+        })
+    }
+
 
 
     // --- (Fungsi deleteQuestion tidak berubah) ---

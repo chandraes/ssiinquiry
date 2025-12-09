@@ -158,6 +158,13 @@ class ReflectionQuestionController extends Controller
         return back()->with('success', 'Waktu berhasil diperbarui.');
     }
 
+    public function resetProgress($id)
+    {
+        SubmoduleProgress::where('sub_module_id', $id)
+            ->update(['completed_at' => null]);
+
+        return back()->with('success', 'Progress berhasil direset');
+    }
 
     /**
      * Hapus pertanyaan refleksi.
